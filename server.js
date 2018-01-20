@@ -1,11 +1,14 @@
 var express = require('express');
+var handlebars = require('express-handlebars').create({defaultLayout:'main'});
 
 var app = express();
-var handlebars = require('express-handlebars').create({defaultLayout:'main'});
+
+var server_port = process.env.OPENSHIFT_NODEJS_PORT || 8080;
+var server_ip_address = process.env.OPENSHIFT_NODEJS_IP || 'localhost';
 
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
-app.set('port', 3000);
+app.set('port', server_port);
 
 app.get('/', function(request, result) {
 	result.render('home');
@@ -29,6 +32,5 @@ app.use(function(error, request, result, next) {
 	result.render('500');
 });
 
-app.listen(app.get('port'), function() {
-	console.log('Server started on http://localhost:' + app.get('port') + '; press Ctrl-C to terminate.');
-});
+app.listen(server_port, server_ip_address);
+console.log('Server running on http://%s:%s', server_ip_address, server_port);
