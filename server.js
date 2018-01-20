@@ -32,6 +32,5 @@ app.use(function(error, request, result, next) {
 	result.render('500');
 });
 
-app.listen(app.get('port'), function() {
-	console.log('Server started on ' + server_ip_address + ':' + app.get('port') + '; press Ctrl-C to terminate.');
-});
+app.listen(server_port, server_ip_address);
+console.log('Server running on http://%s:%s', server_ip_address, server_port);
