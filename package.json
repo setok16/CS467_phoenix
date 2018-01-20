@@ -1,5 +1,5 @@
 {
-  "name": "Project Phoenix",
+  "name": "ProjectPhoenix",
   "version": "1.0.0",
   "description": "WEB3",
   "main": "index.js",
@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/setok16/CS476_phoenix/issues"
   },
-  "homepage": "https://github.com/setok16/CS476_phoenix#readme"
+  "homepage": "https://github.com/setok16/CS476_phoenix#readme",
+  "dependencies": {
+    "express": "^4.16.2",
+    "express-handlebars": "^3.0.0"
+  }
 }
