@@ -17,15 +17,24 @@ router.post('/', function(req, res, next) {
 	// Password processing (async)
 	const saltRounds = 10;
 	const plainTextPass = req.body.password;
-	var hash = bcrypt.genSalt(saltRounds, function(err, salt) {
+	bcrypt.genSalt(saltRounds, function(err, salt) {
+		if (err) {
+			console.log("ERROR GENERATING SALT: " + err);
+			res.send("ERROR GENERATING SALT: " + err);
+		}
 		bcrypt.hash(plainTextPass, salt, function(err, hash) {
+			if (err) {
+				console.log("ERROR HASHING: " + err);
+				res.send("ERROR HASHING: " + err);
+			}
 			console.log("email: " + req.body.email + " pass: " + hash + " imgPath: " + imgFullPath);
-			/* THIS IS FOR THE DB IS READY
+			/* THIS IS FOR WHEN THE DB IS READY
 			mysql.pool.query("INSERT INTO users (`email`, `hash`, `imgPath`) VALUES (?,?,?",
 			[req.body.email, hash, imgFullPath],
 			function(err, res) {
 				if (err) {
-					res.send('SERVER ERROR');
+					console.log('SERVER ERROR: ' + err);
+					res.send('SERVER ERROR: ' + err);
 				}
 				res.send('Sign up for \"' +  req.body.email + '\" is successfull. Signature saved in: ' + imgFullPath);
 			});
