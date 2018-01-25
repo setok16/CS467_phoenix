@@ -7,6 +7,8 @@ var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
+var registration = require('./routes/registration');
+var addUser = require('./routes/addUser');
 
 var app = express();
 
@@ -22,8 +24,15 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Using to include packages directly from node_modules into views
+app.use('/scripts', express.static(__dirname + '/node_modules'));
+// Using as path to public
+app.use('/public', express.static(__dirname + '/public'));
+
 app.use('/', index);
 app.use('/users', users);
+app.use('/registration', registration);
+app.use('/add_user', addUser);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
