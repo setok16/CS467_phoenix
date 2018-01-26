@@ -64,6 +64,9 @@
 		if (fname == '' || lname == '' || email == '' || password == '' || rptPassword == '') {
 			warning.innerHTML = "All fields must be filled";
 			warning.style.display = "block";
+		} else if (fname.length > 50 || lname.length > 50 || email > 50 || password > 50){ 
+			warning.innerHTML = "Maximum of 50 characters per field"
+			warning.style.display = "block";
 		} else if (signaturePad.isEmpty()) { 
 			warning.innerHTML = "Please enter your signature"
 			warning.style.display = "block";
