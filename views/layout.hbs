@@ -1,10 +1,50 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>{{title}}</title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    {{{body}}}
-  </body>
+﻿<!doctype html>
+<html lang="en">
+<head>
+	<title>{{title}}</title>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<link href="stylesheets/sticky-footer-navbar.css" rel="stylesheet" />
+	{{{customHeader}}}
+</head>
+<body>
+
+	<!-- Fixed navbar -->
+	<!-- Fixed navbar -->
+	<header>
+		<div class="container">
+			<nav class="navbar fixed-top navbar-dark navbar-expand-lg bg-faded bg-theme" role="navigation">
+				<div class="navbar-center navbar-brand h-100">
+					<h1>Employee Recognition System</h1>
+				</div>
+				<button {{hideNav}} id="menubutton" class="navbar-toggler float-right" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div id="navgroup" id="navbarNavDropdown" class="navbar-collapse collapse float-right">
+					<ul class="navbar-nav mr-auto"></ul>
+					<button {{hideNav}} class="btn btn-outline-info m-sm-1" type="button">My Account</button>
+					<button {{hideNav}} class="btn btn-outline-info m-sm-1" type="button">Logout</button>
+				</div>
+			</nav>
+		</div>
+	</header>
+
+	<!-- Begin page content -->
+	<main role="main" class="container">
+		{{{body}}}
+	</main>
+
+	<footer class="footer bg-theme">
+		<div class="container">
+			<div class="text-light my-2 my-sm-0"><span class="brand-text">ERS</span> &copy;2018</div>
+		</div>
+	</footer>
+
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.amd.js"></script>
+</body>
 </html>
