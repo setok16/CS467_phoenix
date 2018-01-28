@@ -1,0 +1,15 @@
+<h1>{{title}}</h1>
+<p>Welcome to {{title}}</p>
+
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+	<li class="nav-item">
+		<a class="nav-link active" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="true">Profile</a>
+	</li>
+	<li class="nav-item">
+		<a class="nav-link" id="awards-tab" data-toggle="tab" href="#awards" role="tab" aria-controls="awards" aria-selected="false">Awards Management</a>
+	</li>
+</ul>
+<div class="tab-content" id="myTabContent">
+	<div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">profile info {{> partial}}</div>
+	<div class="tab-pane fade" id="awards" role="tabpanel" aria-labelledby="awards-tab">awards management {{> partial}}</div>
+</div>
