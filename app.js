@@ -5,17 +5,6 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var hbs = require('hbs');
-//var jquery = require('jquery');
-//var popperjs = require('popper.js');
-//global.jQuery = global.$ = require('jquery');
-
-////bootstrapping
-//var bootstrap = require('bootstrap');
-//bootstrap.init({
-//	minified: false, //todo: minify later
-//	path: bootstrap //this is default value
-//});
-
 
 var index = require('./routes/index');
 var users = require('./routes/users');

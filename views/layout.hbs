@@ -15,19 +15,22 @@
 	<!-- Fixed navbar -->
 	<header>
 		<div class="container">
-			<nav class="navbar fixed-top navbar-dark navbar-expand-lg bg-faded bg-theme" role="navigation">
-				<div class="navbar-center navbar-brand h-100">
-					<h1>Employee Recognition System</h1>
-				</div>
-				<button {{hideNav}} id="menubutton" class="navbar-toggler float-right" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+			<nav class="navbar fixed-top navbar-toggleable-md navbar-dark navbar-expand-lg bg-faded bg-theme" role="navigation">
+				<button {{hideNav}} class="navbar-toggler navbar-toggler-right align-right" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon"></span>
 				</button>
-				<div id="navgroup" id="navbarNavDropdown" class="navbar-collapse collapse float-right">
-					<ul class="navbar-nav mr-auto"></ul>
-					<button {{hideNav}} class="btn btn-outline-info m-sm-1" type="button">My Account</button>
-					<button {{hideNav}} class="btn btn-outline-info m-sm-1" type="button">Logout</button>
+				<div class="navbar-brand navbar-center h-100">
+					<h1>Employee Recognition System</h1>
 				</div>
-			</nav>
+				<div {{hideNav}} class="collapse navbar-collapse navbar-right align-right" id="navbarNavDropdown">
+					<ul class="navbar-nav mr-auto mt-2 mt-md-0">
+						</ul>
+						<div class="navbar-nav navbar-right align-right">
+							<button {{hideNav}} class="btn btn-outline-info m-sm-1" type="button">My Account</button>
+							<button {{hideNav}} class="btn btn-outline-info m-sm-1" type="button">Logout</button>
+						</div>
+				</div>
+			</nav>	
 		</div>
 	</header>
 

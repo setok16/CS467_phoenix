@@ -25,7 +25,6 @@ body {
 
 .bg-theme {
 	background-color: #213e4a;
-	height: 70px;
 }
 
 body > .container {
@@ -39,16 +38,14 @@ body > .container {
 	text-align: right;
 }
 
-.navbar-center
-{
-	position: absolute;
-	width: 100%;
-	left: 0;
-	top: 0;
+.navbar-center {
+	position: center;
 	text-align: center;
-	margin: auto;
-	height:100%;
+	width: 100%;
+	display: inline-block;
 }
+
+
 
 
 
