@@ -28,3 +28,6 @@ node_modules
 
 # Debug log from npm
 npm-debug.log
+
+# Holds environmental variables from npm dotenv package
+.env

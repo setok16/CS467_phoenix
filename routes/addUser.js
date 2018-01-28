@@ -7,11 +7,13 @@ var mysql = require('../dbcon.js');
 /* POST registration page */
 router.post('/', function(req, res, next) {
 
-	// Image processing
+	// Image processing (no longer used)
+	/*
 	var imgPath = 'public/signatures/';
-	var imgName = req.body.email+'_sigature';
+	var imgName = req.body.email+'_signature';
 	var imgFullPath = '/' + imgPath + imgName + '.png';
 	base64Img.imgSync(req.body.base64, imgPath, imgName);
+	*/
 
 	// Password processing (async)
 	const saltRounds = 10;
