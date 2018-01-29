@@ -109,11 +109,10 @@
 
 			req.addEventListener('load', function() {
 				if (req.status == 200) {
-					alert('login success'); // Don't use alerts later
-					window.location = '/registration';
-					//window.location = '/login';
+					window.location = '/';
 				} else {
-					alert('Something seriously went wrong'); // Do not use alert boxes later
+					console.log('Something seriously went wrong'); 
+					// TODO
 				}
 			});
 		}
