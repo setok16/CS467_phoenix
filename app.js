@@ -4,16 +4,20 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var hbs = require('hbs');
 var dotenv = require('dotenv').config();
 
 var index = require('./routes/index');
 var users = require('./routes/users');
+var admin = require('./routes/admin');
 var registration = require('./routes/registration');
 var addUser = require('./routes/addUser');
 
 var app = express();
 
 // view engine setup
+hbs.registerPartials(__dirname + '/views/partials');
+
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
@@ -32,6 +36,7 @@ app.use('/public', express.static(__dirname + '/public'));
 
 app.use('/', index);
 app.use('/users', users);
+app.use('/admin', admin);
 app.use('/registration', registration);
 app.use('/add_user', addUser);
 
