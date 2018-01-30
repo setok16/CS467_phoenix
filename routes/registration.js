@@ -5,6 +5,11 @@ var mysql = require('../dbcon.js');
 
 /* GET registration page */
 router.get('/', function(req, res, next) {
+
+	if (req.session.email) {
+		res.redirect('/');
+	}
+
 	var context = {};
 	context.title = 'Registration';
 
