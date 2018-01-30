@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var base64Img = require('base64-img');
 var bcrypt = require('bcrypt');
-var mysql = require('../dbcon.js');
+var mysql = require('../dbcon_local.js');
 
 /* POST registration page */
 router.post('/', function(req, res, next) {
