@@ -42,6 +42,3 @@ npm-debug.log
 
 # Holds environmental variables from npm dotenv package
 .env
-
-# ignore local dbcon.js
-dbcon_local.js

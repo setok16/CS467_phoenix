@@ -1,5 +1,5 @@
-var assert = require('assert');
-var mysql = require('../dbcon_local.js');
+var mysql = require('../dbcon.js');
+var should = require('chai').should();
 
 describe("Database", function () {
 	describe("Connection",
@@ -11,36 +11,28 @@ describe("Database", function () {
 							done(err);
 							return;
 						}
-						connection.query('SELECT 1;',
-							function(err, rows, fields) {
-								assert.ifError(err);
-								assert.deepEqual(rows, [{ 1: 1 }]);
-								assert.equal(fields[0].name, "1");
+						mysql.pool.query('SELECT 1;',
+							function (err, rows, fields) {
+								should.not.exist(err);
+								rows.should.deep.equal([{ 1: 1 }]);
+								fields[0].name.should.equal(1);
 							});
 						done();
 					});
 				});
 
-			it("Should find user table",
-				function(done) {
-					mysql.pool.getConnection(function(err, connection) {
-							if (err) {
-								done(err);
-								return;
-							}
-							//todo: should this user connection instead of mysql?
-							connection.query('SELECT * FROM information_schema.tables WHERE table_name = ?;',
-								"user",
-								function(err, rows, fields) {
-									console.log(rows);
-									assert.ifError(err);
-									assert.equal(rows.length, 1);
-									assert.equal(rows[0].TABLE_NAME, 'user');
-								});
-							connection.release();
-							done();
+			it("Should have a table named user",
+				function (done) {
+					mysql.pool.query('SELECT * FROM information_schema.tables WHERE table_name = "user"', function (err, rows, fields) {
+						if (err) {
+							done(err);
+							return;
 						}
-					);
+						rows.length.should.equal(1);
+						rows[0].TABLE_NAME.should.equal('user');
+						should.not.exist(err);
+						done();
+					});
 				});
 		});
 });
