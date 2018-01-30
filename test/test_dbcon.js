@@ -1,3 +1,4 @@
+require('dotenv').config();
 var mysql = require('../dbcon.js');
 var should = require('chai').should();
 
