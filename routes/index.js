@@ -13,16 +13,11 @@ router.get('/', function(req, res, next) {
 	}
 
 	res.render('index', {
-		title: 'Some Page',
+		title: 'Login',
 		hideNav: 'hidden',
 		customHeader: '<link href="stylesheets/signin.css" rel="stylesheet" />'
 	}
 	);
 });
-
-function removeNavigation() {
-	document.getElementById("meunbutton").style.display = 'none';
-	document.getElementById("navgroup").style.display = 'none';
-} 
 
 module.exports = router;

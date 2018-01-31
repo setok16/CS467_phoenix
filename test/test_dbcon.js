@@ -29,8 +29,22 @@ describe("Database", function () {
 							done(err);
 							return;
 						}
-						rows.length.should.equal(1);
+						rows.length.should.deep.equal(1);
 						rows[0].TABLE_NAME.should.equal('user');
+						should.not.exist(err);
+						done();
+					});
+				});
+
+			it("Should have a table named award",
+				function (done) {
+					mysql.pool.query('SELECT * FROM information_schema.tables WHERE table_name = "award"', function (err, rows, fields) {
+						if (err) {
+							done(err);
+							return;
+						}
+						rows.length.should.deep.equal(1);
+						rows[0].TABLE_NAME.should.equal('award');
 						should.not.exist(err);
 						done();
 					});

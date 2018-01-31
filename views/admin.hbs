@@ -13,7 +13,79 @@
 	</li>
 </ul>
 <div class="tab-content" id="myTabContent">
-	<div class="tab-pane fade show active" id="basic" role="tabpanel" aria-labelledby="basic-tab">basic user info {{> partial}}</div>
+	<div class="tab-pane fade show active" id="basic" role="tabpanel" aria-labelledby="basic-tab">
+		<h5>Total Normal Users: {{count}}</h5>
+
+		<button type="button" class="btn btn-info m-1 btn-lg float-right" data-toggle="modal" data-target="#AddUser">
+			Add User
+		</button>
+
+		<!-- Modal -->
+		<div class="modal fade" id="AddUser" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+							<form>
+								<div class="form-row">
+									<div class="form-group col-md-6">
+										<label for="inputEmail">Email</label>
+										<input type="email" class="form-control" id="inputEmail" placeholder="Email">
+									</div>
+									<div class="form-group col-md-6">
+										<label for="inputPassword">Password</label>
+										<input type="password" class="form-control" id="inputPassword" placeholder="Password">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="firstName">First Name</label>
+									<input type="text" class="form-control" id="firstName" placeholder="First Name">
+								</div>
+								<div class="form-group">
+									<label for="lastName">Last Name</label>
+									<input type="text" class="form-control" id="lastName" placeholder="Last Name">
+								</div>
+							</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-primary">Create User</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th scope="col">Id</th>
+					<th scope="col">First Name</th>
+					<th scope="col">Last Name</th>
+					<th scope="col">Registration Date</th>
+					<th scope="col">Signature</th>
+					<th scope="col">Action</th>
+				</tr>
+			</thead>
+			<tbody>
+				{{#each data}}
+				<tr>
+					<td scope="col">Id</th>
+					<td scope="col">{{fname}} {{lname}}</th>
+					<td scope="col">{{email}}</th>
+					<td scope="col">Registration Date</th>
+					<td scope="col">Signature</th>
+					<td scope="col"><button type="button" class="btn btn-outline-warning  m-sm-1">Edit</button><button type="button" class="btn btn-outline-danger  m-sm-1">Delete</button></th>
+				</tr>
+				{{/each}}
+			</tbody>
+		</table>
+		{{> partial}}
+	</div>
 	<div class="tab-pane fade" id="admin" role="tabpanel" aria-labelledby="admin-tab">admin user management {{> partial}}</div>
 	<div class="tab-pane fade" id="report" role="tabpanel" aria-labelledby="report-tab">show reports {{> partial}}</div>
 </div>
