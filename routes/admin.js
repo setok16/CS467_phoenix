@@ -9,9 +9,9 @@ router.get('/', function (req, res, next) {
 	if (req.session.u_type == 'admin') {
 
 		var context = {};
-		context.title = 'Admin Page';
-
-		context.data =
+		context.title = 'Admin Account';
+		context.session = { email: req.session.email };
+		context.userData =
 			[
 				{
 					'email': 'email1@emailserver1.com',
@@ -74,6 +74,70 @@ router.get('/', function (req, res, next) {
 					'creation_datetime': '2018 - 01 - 27T16: 02:36.000Z'
 				}
 			];
+
+		context.adminData =
+		[
+			{
+				'email': 'email1@emailserver1.com',
+				'fname': 'fName1',
+				'lname': 'lName1',
+				'creation_datetime': '2018 - 01 - 27T16: 02:36.000Z'
+			},
+			{
+				'email': 'email1@emailserver1.com',
+				'fname': 'fName1',
+				'lname': 'lName1',
+				'creation_datetime': '2018 - 01 - 27T16: 02:36.000Z'
+			},
+			{
+				'email': 'email1@emailserver1.com',
+				'fname': 'fName1',
+				'lname': 'lName1',
+				'creation_datetime': '2018 - 01 - 27T16: 02:36.000Z'
+			},
+			{
+				'email': 'email1@emailserver1.com',
+				'fname': 'fName1',
+				'lname': 'lName1',
+				'creation_datetime': '2018 - 01 - 27T16: 02:36.000Z'
+			},
+			{
+				'email': 'email1@emailserver1.com',
+				'fname': 'fName1',
+				'lname': 'lName1',
+				'creation_datetime': '2018 - 01 - 27T16: 02:36.000Z'
+			},
+			{
+				'email': 'email1@emailserver1.com',
+				'fname': 'fName1',
+				'lname': 'lName1',
+				'creation_datetime': '2018 - 01 - 27T16: 02:36.000Z'
+			},
+			{
+				'email': 'email1@emailserver1.com',
+				'fname': 'fName1',
+				'lname': 'lName1',
+				'creation_datetime': '2018 - 01 - 27T16: 02:36.000Z'
+			},
+			{
+				'email': 'email1@emailserver1.com',
+				'fname': 'fName1',
+				'lname': 'lName1',
+				'creation_datetime': '2018 - 01 - 27T16: 02:36.000Z'
+			},
+			{
+				'email': 'email1@emailserver1.com',
+				'fname': 'fName1',
+				'lname': 'lName1',
+				'creation_datetime': '2018 - 01 - 27T16: 02:36.000Z'
+			},
+			{
+				'email': 'email1@emailserver1.com',
+				'fname': 'fName1',
+				'lname': 'lName1',
+				'creation_datetime': '2018 - 01 - 27T16: 02:36.000Z'
+			}
+		];
 
 		context.count = 2;
 

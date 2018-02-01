@@ -12,7 +12,7 @@ describe("Database", function () {
 							done(err);
 							return;
 						}
-						mysql.pool.query('SELECT 1;',
+						connection.query('SELECT 1;',
 							function (err, rows, fields) {
 								should.not.exist(err);
 								rows.should.deep.equal([{ 1: 1 }]);
@@ -22,29 +22,29 @@ describe("Database", function () {
 					});
 				});
 
-			it("Should have a table named user",
+			it("Should have a table named User",
 				function (done) {
-					mysql.pool.query('SELECT * FROM information_schema.tables WHERE table_name = "user"', function (err, rows, fields) {
+					mysql.pool.query('SELECT * FROM information_schema.tables WHERE table_name = "User"', function (err, rows, fields) {
 						if (err) {
 							done(err);
 							return;
 						}
 						rows.length.should.deep.equal(1);
-						rows[0].TABLE_NAME.should.equal('user');
+						rows[0].TABLE_NAME.should.equal('User');
 						should.not.exist(err);
 						done();
 					});
 				});
 
-			it("Should have a table named award",
+			it("Should have a table named Award",
 				function (done) {
-					mysql.pool.query('SELECT * FROM information_schema.tables WHERE table_name = "award"', function (err, rows, fields) {
+					mysql.pool.query('SELECT * FROM information_schema.tables WHERE table_name = "Award"', function (err, rows, fields) {
 						if (err) {
 							done(err);
 							return;
 						}
 						rows.length.should.deep.equal(1);
-						rows[0].TABLE_NAME.should.equal('award');
+						rows[0].TABLE_NAME.should.equal('Award');
 						should.not.exist(err);
 						done();
 					});

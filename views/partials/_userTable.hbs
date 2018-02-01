@@ -1,0 +1,26 @@
+<thead>
+	<tr>
+		<th scope="col">Id</th>
+		<th scope="col">First Name</th>
+		<th scope="col">Last Name</th>
+		<th scope="col">Registration Date</th>
+		{{#if normalUser}}
+		<th scope="col">Signature</th>
+		{{/if}}
+		<th scope="col">Action</th>
+	</tr>
+</thead>
+<tbody>
+	{{#each data}}
+	<tr>
+		<td scope="col">Id</th>
+		<td scope="col">{{fname}} {{lname}}</th>
+		<td scope="col">{{email}}</th>
+		<td scope="col">Registration Date</th>
+		{{#if normalUser}}
+		<td scope="col">Signature</th>
+			{{/if}}
+		<td scope="col"><button type="button" class="btn btn-outline-warning  m-sm-1">Edit</button><button type="button" class="btn btn-outline-danger  m-sm-1">Delete</button></th>
+	</tr>
+	{{/each}}
+</tbody>
