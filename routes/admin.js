@@ -4,17 +4,29 @@ var mysql = require('../dbcon.js');
 var pool = mysql.pool;
 
 /* GET users listing. */
-router.get('/', getAllUsers, renderAdminPage);
+router.get('/', getNormalUsers, getAdminUsers, renderAdminPage);
 
-
-function getAllUsers(req, res, next) {
-	pool.query("SELECT email, fname, lname, creation_datetime from User",
+function getNormalUsers(req, res, next) {
+	pool.query("SELECT u_id, email, fname, lname, creation_datetime, signature from User where u_type like 'normal'",
 		function (err, rows, fields) {
 			if (err) {
 				console.log(err);
 				next(err, null);
 			} else {
-				req.allUsers = rows;
+				req.getNormalUsers = rows;
+				next();
+			}
+		});
+};
+
+function getAdminUsers(req, res, next) {
+	pool.query("SELECT u_id, email, fname, lname, creation_datetime from User where u_type like 'admin'",
+		function (err, rows, fields) {
+			if (err) {
+				console.log(err);
+				next(err, null);
+			} else {
+				req.getAdminUsers = rows;
 				next();
 			}
 		});
@@ -28,9 +40,9 @@ function renderAdminPage (req, res) {
 		context.title = 'Admin Account';
 		context.session = { email: req.session.email };
 
-		context.adminData = req.allUsers;
-		context.userData = req.allUsers;
-
+		context.userData = req.getNormalUsers;
+		context.adminData = req.getAdminUsers;
+		
 		context.countUsers = context.userData.length;
 		context.countAdmin = context.adminData.length;
 
