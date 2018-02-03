@@ -19,26 +19,21 @@
 <div class="tab-content" id="myTabContent">
 	<div class="tab-pane fade show active" id="basic" role="tabpanel" aria-labelledby="basic-tab">
 		<div class="container">
-			<div class="row">
-				<div class="col-sm">
-					<h5 class="text-center m-3">Total Normal Users: {{count}}</h5>
-				</div>
-				<div class="col-sm">
-					{{> _addUserButtonModal userType="Normal"}}
-				</div>
-		</div>
-
+			<div class="d-flex">
+				<div class="p-2"><h5>Total Normal Users: {{countUsers}}</h5></div>			
+				<div class="ml-auto p-2">{{> _addUserButtonModal userType="Normal"}}</div>
+			</div>
 		<table class="table table-striped">
 			{{> _userTable data=userData normalUser="true" }}
 		</table>
-		{{> partial}}
 	</div>
+		</div>
 		<div class="tab-pane fade" id="admin" role="tabpanel" aria-labelledby="admin-tab">
 			<div class="tab-pane fade show active" id="basic" role="tabpanel" aria-labelledby="basic-tab">
 				<div class="container">
-					<div class="row">
+					<div class="row m-3">
 						<div class="col-sm">
-							<h5 class="text-center m-3">Total Normal Users: {{count}}</h5>
+							<h5 class="text-center m-3">Total Normal Users: {{countAdmin}}</h5>
 						</div>
 						<div class="col-sm">
 							{{> _addUserButtonModal userType="Admin"}}
@@ -48,8 +43,8 @@
 					<table class="table table-striped">
 						{{> _userTable data=adminData }}
 					</table>
-					{{> partial}}
 				</div>
 			</div>
 			<div class="tab-pane fade" id="report" role="tabpanel" aria-labelledby="report-tab">show reports {{> partial}}</div>
 		</div>
+</div>

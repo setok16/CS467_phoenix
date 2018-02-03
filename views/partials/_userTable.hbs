@@ -11,16 +11,26 @@
 	</tr>
 </thead>
 <tbody>
+	{{#if normalUser}}
 	{{#each data}}
 	<tr>
 		<td scope="col">Id</th>
 		<td scope="col">{{fname}} {{lname}}</th>
 		<td scope="col">{{email}}</th>
-		<td scope="col">Registration Date</th>
-		{{#if normalUser}}
-		<td scope="col">Signature</th>
-			{{/if}}
+		<td scope="col">{{creation_datetime}}</th>
+		<td scope="col">{{signature}}</th>
 		<td scope="col"><button type="button" class="btn btn-outline-warning  m-sm-1">Edit</button><button type="button" class="btn btn-outline-danger  m-sm-1">Delete</button></th>
 	</tr>
 	{{/each}}
+	{{else}}
+	{{#each data}}
+	<tr>
+		<td scope="col">Id</th>
+		<td scope="col">{{fname}} {{lname}}</th>
+		<td scope="col">{{email}}</th>
+		<td scope="col">{{creation_datetime}}</th>
+		<td scope="col"><button type="button" class="btn btn-outline-warning  m-sm-1">Edit</button><button type="button" class="btn btn-outline-danger  m-sm-1">Delete</button></th>
+	</tr>
+	{{/each}}
+	{{/if}}
 </tbody>

@@ -1,6 +1,6 @@
-﻿				</div>
+﻿				
 <div class="col-sm">
-	<button type="button" class="btn btn-info m-1 btn-lg float-right" data-toggle="modal" data-target="#AddUser">
+	<button type="button" class="btn btn-info btn-lg float-right" data-toggle="modal" data-target="#Add{{userType}}User">
 		Add {{userType}} User
 	</button>
 </div>
@@ -16,16 +16,6 @@
 			</div>
 			<div class="modal-body">
 				<form>
-					<div class="form-row">
-						<div class="form-group col-md-6">
-							<label for="inputEmail">Email</label>
-							<input type="email" class="form-control" id="inputEmail" placeholder="Email">
-						</div>
-						<div class="form-group col-md-6">
-							<label for="inputPassword">Password</label>
-							<input type="password" class="form-control" id="inputPassword" placeholder="Password">
-						</div>
-					</div>
 					<div class="form-group">
 						<label for="firstName">First Name</label>
 						<input type="text" class="form-control" id="firstName" placeholder="First Name">
@@ -34,12 +24,46 @@
 						<label for="lastName">Last Name</label>
 						<input type="text" class="form-control" id="lastName" placeholder="Last Name">
 					</div>
+					<div class="form-group">
+						<label for="inputEmail">Email</label>
+						<input type="email" class="form-control" id="inputEmail" placeholder="Email">
+					</div>
+					<div class="form-row">
+						<div class="form-group col-md-6">
+							<label for="inputPassword">Password</label>
+							<input type="password" class="form-control" id="inputPassword" placeholder="Password">
+						</div>
+						<div class="form-group col-md-6">
+							<label for="inputPassword">Confirm Password</label>
+							<input type="password" class="form-control" id="confirmPassword" placeholder="Confirm Password">
+						</div>
+					</div>
 				</form>
+				<div id="accordion">
+					<div class="card">
+						<div class="card-header" id="passwordRequiermentHeading">
+							<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#passwordRequierment" aria-expanded="true" aria-controls="passwordRequierment">
+								Password Requirements
+							</button>
+						</div>
+
+						<div id="passwordRequierment" class="collapse" aria-labelledby="passwordRequiermentHeading" data-parent="#accordion">
+							<div class="card-body">
+								<ul>
+									<li>At least 8 characters</li>
+									<li>Lowercase Alphabet</li>
+									<li>Uppercase Alphabet</li>
+									<li>Number</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary">Create User</button>
+				</div>
 			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-				<button type="button" class="btn btn-primary">Create User</button>
-			</div>
-		</div>
 	</div>
 </div>
