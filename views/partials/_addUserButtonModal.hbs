@@ -14,56 +14,59 @@
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
-			<div class="modal-body">
-				<form>
+			<form action="/admin/create/user" method="POST">
+				<div class="modal-body">
 					<div class="form-group">
-						<label for="firs{{userType}}tName">First Name</label>
-						<input type="text" class="form-control" id="firs{{userType}}tName" placeholder="First Name">
+						<label for="first{{userType}}Name">First Name</label>
+						<input type="text" class="form-control" name="fname" id="firs{{userType}}tName" placeholder="First Name">
 					</div>
 					<div class="form-group">
 						<label for="last{{userType}}Name">Last Name</label>
-						<input type="text" class="form-control" id="last{{userType}}Name" placeholder="Last Name">
+						<input type="text" class="form-control" name="lname" id="last{{userType}}Name" placeholder="Last Name">
 					</div>
 					<div class="form-group">
 						<label for="input{{userType}}Email">Email</label>
-						<input type="email" class="form-control" id="input{{userType}}Email" placeholder="Email">
+						<input type="email" class="form-control" name="email" id="input{{userType}}Email" placeholder="Email">
 					</div>
 					<div class="form-row">
 						<div class="form-group col-md-6">
 							<label for="input{{userType}}Password">Password</label>
-							<input type="password" class="form-control" id="input{{userType}}Password" placeholder="Password">
+							<input type="password" class="form-control" name="password" id="input{{userType}}Password" placeholder="Password">
 						</div>
 						<div class="form-group col-md-6">
 							<label for="confirm{{userType}}Password">Confirm Password</label>
-							<input type="password" class="form-control" id="confirm{{userType}}Password" placeholder="Confirm Password">
+							<input type="password" class="form-control" name="confirmed_password" id="confirm{{userType}}Password" placeholder="Confirm Password">
+						</div>
+						<div hidden>
+							<input type="text" class="form-control" name="usertype" value="{{userType}}">
 						</div>
 					</div>
-				</form>
-				<div id="accordion">
-					<div class="card">
-						<div class="card-header" id="password{{userType}}RequiermentHeading">
-							<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#password{{userType}}Requierment" aria-expanded="true" aria-controls="password{{userType}}Requierment">
-								Password Requirements
-							</button>
-						</div>
+					<div id="accordion">
+						<div class="card">
+							<div class="card-header" id="password{{userType}}RequiermentHeading">
+								<button class="btn btn-link collapsed" data-toggle="collapse" data-target="#password{{userType}}Requierment" aria-expanded="true" aria-controls="password{{userType}}Requierment">
+									Password Requirements
+								</button>
+							</div>
 
-						<div id="password{{userType}}Requierment" class="collapse" aria-labelledby="password{{userType}}RequiermentHeading" data-parent="#accordion">
-							<div class="card-body">
-								<ul>
-									<li>At least 8 characters</li>
-									<li>Lowercase Alphabet</li>
-									<li>Uppercase Alphabet</li>
-									<li>Number</li>
-								</ul>
+							<div id="password{{userType}}Requierment" class="collapse" aria-labelledby="password{{userType}}RequiermentHeading" data-parent="#accordion">
+								<div class="card-body">
+									<ul>
+										<li>At least 8 characters</li>
+										<li>Lowercase Alphabet</li>
+										<li>Uppercase Alphabet</li>
+										<li>Number</li>
+									</ul>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-					<button type="button" class="btn btn-primary">Create User</button>
+					<button type="submit" class="btn btn-primary" onclick="">Create User</button>
 				</div>
+			</form>
 			</div>
 	</div>
 </div>

@@ -13,7 +13,7 @@
 <tbody>
 	{{#if normalUser}}
 	{{#each data}}
-	<tr>
+	<tr id="userRow_{{u_id}}">
 		<td scope="col">{{u_id}}</th>
 		<td scope="col">{{fname}} {{lname}}</th>
 		<td scope="col">{{email}}</th>
@@ -24,7 +24,7 @@
 	{{/each}}
 	{{else}}
 	{{#each data}}
-	<tr>
+	<tr id="userRow_{{u_id}}">
 		<td scope="col">{{u_id}}</th>
 		<td scope="col">{{fname}} {{lname}}</th>
 		<td scope="col">{{email}}</th>
