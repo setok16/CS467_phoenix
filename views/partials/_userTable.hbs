@@ -14,22 +14,27 @@
 	{{#if normalUser}}
 	{{#each data}}
 	<tr id="userRow_{{u_id}}">
-		<td scope="col">{{u_id}}</th>
-		<td scope="col">{{fname}} {{lname}}</th>
-		<td scope="col">{{email}}</th>
-		<td scope="col">{{creation_datetime}}</th>
-		<td scope="col">{{signature}}</th>
-		<td scope="col"><button type="button" class="btn btn-outline-warning  m-sm-1">Edit</button><button type="button" class="btn btn-outline-danger  m-sm-1">Delete</button></th>
+		<td scope="col">{{u_id}}</td>
+		<td scope="col">{{fname}} {{lname}}</td>
+		<td scope="col">{{email}}</td>
+		<td scope="col">{{creation_datetime}}</td>
+		<td scope="col">{{signature}}</td>
+		<td scope="col">
+			<button type="button" class="btn btn-outline-warning  m-sm-1">Edit</button>
+			<form method="POST" action="/admin/delete/{{u_id}}?_method=DELETE">
+				<button type="submit" class="btn btn-outline-danger  m-sm-1" >Delete</button>
+			</form>
+		</td>
 	</tr>
 	{{/each}}
 	{{else}}
 	{{#each data}}
 	<tr id="userRow_{{u_id}}">
-		<td scope="col">{{u_id}}</th>
-		<td scope="col">{{fname}} {{lname}}</th>
-		<td scope="col">{{email}}</th>
-		<td scope="col">{{creation_datetime}}</th>
-		<td scope="col"><button type="button" class="btn btn-outline-warning  m-sm-1">Edit</button><button type="button" class="btn btn-outline-danger  m-sm-1">Delete</button></th>
+		<td scope="col">{{u_id}}</td>
+		<td scope="col">{{fname}} {{lname}}</td>
+		<td scope="col">{{email}}</td>
+		<td scope="col">{{creation_datetime}}</td>
+		<td scope="col"><button type="button" class="btn btn-outline-warning  m-sm-1">Edit</button><button type="button" class="btn btn-outline-danger  m-sm-1">Delete</button></td>
 	</tr>
 	{{/each}}
 	{{/if}}

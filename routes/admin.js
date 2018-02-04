@@ -4,6 +4,30 @@ var mysql = require('../dbcon.js');
 var pool = mysql.pool;
 const bcrypt = require('bcrypt');
 
+
+function validateSession(req, res, next) {
+	//if (req.SESSION_SECRET === process.env.SESSION_SECRET) {
+	//	console.log("session verified");
+	//	next();
+	//}
+	//console.log("session is unverifiable");
+	//res.redirect('/');
+	console.log(req);
+	return next();
+}
+
+function deleteUser(req, res, next) {
+	console.log("delete user with id: " + req.params.id);
+	console.log(req);
+	next();
+}
+
+function redirectToAdmin(req, res, next) {
+	res.redirect('/admin');
+}
+
+router.delete('/delete/:id', validateSession, deleteUser, redirectToAdmin);
+
 function checkUserType(req, res, next) {
 	req.body.usertype = req.body.usertype.toLowerCase();
 	if (req.body.usertype === 'admin' || req.body.usertype === 'normal') {
@@ -22,8 +46,6 @@ function saltPassword(req, res, next) {
 				console.log('SERVER ERROR: ' + err);
 				next(err);
 			}
-			console.log(req.body);
-			console.log("SALT:::::::::::::: " +salt);
 			bcrypt.hash(req.body.password,
 				salt,
 				function(err, hash) {
@@ -55,11 +77,7 @@ function createUser(req, res, next) {
 		});
 };
 
-function redirectToAdmin(req, res, next) {
-	res.redirect('/admin');
-}
-
-router.post('/create/user', checkUserType, saltPassword ,createUser, redirectToAdmin);
+router.post('/create/user', validateSession, checkUserType, saltPassword ,createUser, redirectToAdmin);
 
 /* GET users listing. */
 router.get('/', getNormalUsers, getAdminUsers, renderAdminPage);
