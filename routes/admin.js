@@ -5,6 +5,14 @@ var pool = mysql.pool;
 const bcrypt = require('bcrypt');
 
 
+
+function updateUser(req, res, next) {
+	console.log("update user happens here");
+	next();
+}
+
+router.put('/update/:id', validateSession, updateUser, redirectToAdmin);
+
 function validateSession(req, res, next) {
 	//if (req.SESSION_SECRET === process.env.SESSION_SECRET) {
 	//	console.log("session verified");
@@ -12,14 +20,21 @@ function validateSession(req, res, next) {
 	//}
 	//console.log("session is unverifiable");
 	//res.redirect('/');
-	console.log(req);
 	return next();
 }
 
 function deleteUser(req, res, next) {
-	console.log("delete user with id: " + req.params.id);
-	console.log(req);
-	next();
+	pool.query("DELETE FROM User WHERE u_id = ? AND email <> ?",
+		[req.params.id, 'admin@oregonstate.edu'],
+		function (err, result) {
+			if (err) {
+				console.log('SERVER ERROR: ' + err);
+				next(err);
+				return;
+			} else {
+				next();
+			}
+		});
 }
 
 function redirectToAdmin(req, res, next) {
@@ -70,8 +85,6 @@ function createUser(req, res, next) {
 				next(err);
 				return;
 			} else {
-				console.log("user should be created here" + result);
-				console.log(req.body);
 				next();
 			}
 		});
@@ -83,7 +96,7 @@ router.post('/create/user', validateSession, checkUserType, saltPassword ,create
 router.get('/', getNormalUsers, getAdminUsers, renderAdminPage);
 
 function getNormalUsers(req, res, next) {
-	pool.query("SELECT u_id, email, fname, lname, creation_datetime, signature from User where u_type like 'normal'",
+	pool.query("SELECT u_id, email, fname, lname, DATE_FORMAT(creation_datetime, \"%M %d %Y\") as creation_datetime, signature from User where u_type like 'normal'",
 		function (err, rows, fields) {
 			if (err) {
 				console.log(err);
@@ -116,7 +129,7 @@ function getNormalUsers(req, res, next) {
 //};
 
 function getAdminUsers(req, res, next) {
-	pool.query("SELECT u_id, email, fname, lname, creation_datetime from User where u_type like 'admin'",
+	pool.query("SELECT u_id, email, fname, lname, DATE_FORMAT(creation_datetime, \"%M %d %Y\") as creation_datetime from User where u_type like 'admin'",
 		function (err, rows, fields) {
 			if (err) {
 				console.log(err);
@@ -133,12 +146,13 @@ function renderAdminPage (req, res) {
 	if (req.session.u_type == 'admin') {
 
 		var context = {};
+		context.customScript =
+			"$('#updateModal').on('show.bs.modal', function (event) {\r\n  var button = $(event.relatedTarget) // Button that triggered the modal\r\n  var recipient = button.data('whatever') // Extract info from data-* attributes\r\n  // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).\r\n  // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.\r\n  var modal = $(this)\r\n  modal.find('.modal-title').text('New message to ' + recipient)\r\n  modal.find('.modal-body input').val(recipient)\r\n})";
+
 		context.title = 'Admin Account';
 		context.session = { email: req.session.email };
-
 		context.userData = req.normalUsers;
 		context.adminData = req.adminUsers;
-		
 		context.countUsers = context.userData.length;
 		context.countAdmin = context.adminData.length;
 		
