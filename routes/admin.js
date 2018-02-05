@@ -3,15 +3,23 @@ var router = express.Router();
 var mysql = require('../dbcon.js');
 var pool = mysql.pool;
 const bcrypt = require('bcrypt');
-
+var adminEmail = 'admin@oregonstate.edu';
 
 
 function updateUser(req, res, next) {
-	console.log("update user happens here");
-	next();
+	pool.query("UPDATE User SET `fname` = ?, `lname` =  ?, `email` = ? WHERE  `u_id` = ? AND `email` <> ?",
+		[req.body.fname, req.body.lname, req.body.email, req.body.uid, adminEmail],
+		function (err, result) {
+			if (err) {
+				console.log('SERVER ERROR: ' + err);
+				next(err);
+			} else {
+				next();
+			}
+		});
 }
 
-router.put('/update/:id', validateSession, updateUser, redirectToAdmin);
+router.put('/update', validateSession, updateUser, redirectToAdmin);
 
 function validateSession(req, res, next) {
 	//if (req.SESSION_SECRET === process.env.SESSION_SECRET) {
@@ -25,7 +33,7 @@ function validateSession(req, res, next) {
 
 function deleteUser(req, res, next) {
 	pool.query("DELETE FROM User WHERE u_id = ? AND email <> ?",
-		[req.params.id, 'admin@oregonstate.edu'],
+		[req.params.id, adminEmail],
 		function (err, result) {
 			if (err) {
 				console.log('SERVER ERROR: ' + err);
@@ -147,7 +155,19 @@ function renderAdminPage (req, res) {
 
 		var context = {};
 		context.customScript =
-			"$('#updateModal').on('show.bs.modal', function (event) {\r\n  var button = $(event.relatedTarget) // Button that triggered the modal\r\n  var recipient = button.data('whatever') // Extract info from data-* attributes\r\n  // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).\r\n  // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.\r\n  var modal = $(this)\r\n  modal.find('.modal-title').text('New message to ' + recipient)\r\n  modal.find('.modal-body input').val(recipient)\r\n})";
+			"$('#updateModal').on('show.bs.modal', function (event) { \r\n" +
+			"var button = $(event.relatedTarget) \r\n" +
+			"var lname = button.data('lname') \r\n" +
+			"var fname = button.data('fname') \r\n" +
+			"var email = button.data('email') \r\n" +
+			"var uid = button.data('uid') \r\n" +
+			"var modal = $(this) \r\n" +
+			"modal.find('.modal-body input[name=lname]').val(lname) \r\n" +
+			"modal.find('.modal-body input[name=fname]').val(fname) \r\n" +
+			"modal.find('.modal-body input[name=email]').val(email) \r\n" +
+			"modal.find('.modal-body input[name=uid]').val(uid) \r\n" +
+			//"modal.find('.modal-body form[name=editFrom').attr('action', '/admin/update/' + uid + '?_method=PUT') \r\n" +
+			"})";
 
 		context.title = 'Admin Account';
 		context.session = { email: req.session.email };
