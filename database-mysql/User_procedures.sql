@@ -4,6 +4,7 @@ delimiter $$
 /* Use the following MySQL command to call the stored procedure:
     CALL addNormalUser(email_str, pwd_hashed_str, fname_str, lname_str, sig_base64);
 */
+DROP PROCEDURE IF EXISTS addNormalUser$$
 CREATE PROCEDURE addNormalUser (
     IN input_email varchar(63),
     IN input_pwd_hashed varchar(63),
@@ -18,6 +19,7 @@ END$$
 
 
 
+DROP PROCEDURE IF EXISTS addAdminUser$$
 CREATE PROCEDURE addAdminUser (
     IN input_email varchar(63),
     IN input_pwd_hashed varchar(63)
@@ -29,20 +31,41 @@ END$$
 
 
 
+DROP PROCEDURE IF EXISTS selectUserByEmail$$
 CREATE PROCEDURE selectUserByEmail (IN input_email varchar(63))
 BEGIN
+    /* Note: Returned creation timestamp is displayed in US-Pacific time */
+    SET time_zone = 'US/Pacific';
     SELECT * FROM `User` WHERE `email` = input_email;
+    SET time_zone = @@global.time_zone;
 END$$
 
 
 
+DROP PROCEDURE IF EXISTS selectUserByID$$
 CREATE PROCEDURE selectUserByID (IN input_id int)
 BEGIN
+    /* Note: Returned creation timestamp is displayed in US-Pacific time */
+    SET time_zone = 'US/Pacific';
     SELECT * FROM `User` WHERE `u_id` = input_id;
+    SET time_zone = @@global.time_zone;
 END$$
 
 
 
+DROP PROCEDURE IF EXISTS selectUserByUserType$$
+CREATE PROCEDURE selectUserByUserType (IN input_u_type enum('normal', 'admin'))
+/* input_u_type: Use 1 for 'normal' and 2 for 'admin' */
+BEGIN
+    /* Note: Returned creation timestamp is displayed in US-Pacific time */
+    SET time_zone = 'US/Pacific';
+    SELECT * FROM `User` WHERE `u_type` = input_u_type;
+    SET time_zone = @@global.time_zone;
+END$$
+
+
+
+DROP PROCEDURE IF EXISTS deleteUserByEmail$$
 CREATE PROCEDURE deleteUserByEmail (IN input_email varchar(63))
 BEGIN
     DELETE FROM `User` WHERE `email` = input_email;
@@ -50,6 +73,7 @@ END$$
 
 
 
+DROP PROCEDURE IF EXISTS deleteUserByID$$
 CREATE PROCEDURE deleteUserByID (IN input_id int)
 BEGIN
     DELETE FROM `User` WHERE `u_id` = input_id;
@@ -57,6 +81,7 @@ END$$
 
 
 
+DROP PROCEDURE IF EXISTS changeUserNameByEmail$$
 CREATE PROCEDURE changeUserNameByEmail (
     IN input_email varchar(63),
     IN input_fname varchar(63),
@@ -70,6 +95,7 @@ END$$
 
 
 
+DROP PROCEDURE IF EXISTS changeUserNameByID$$
 CREATE PROCEDURE changeUserNameByID (
     IN input_id int,
     IN input_fname varchar(63),
@@ -86,8 +112,9 @@ delimiter ;
 
 /* Useful MySQL Commands:
 
-1. Show stored procedures created from this file:
+1. Show stored procedures:
     SHOW PROCEDURE STATUS LIKE '%User%';
+    SHOW PROCEDURE STATUS WHERE name LIKE '%User%' OR name LIKE '%Award%';
 
 2. Show the definition of a stored procedure (e.g. sp_name):
     SHOW CREATE PROCEDURE sp_name;
