@@ -27,7 +27,6 @@
 <script src="/scripts/signature_pad/dist/signature_pad.min.js"></script>
 
 <script>
-
 	// Signature_Pad code
 	var canvas = document.getElementById('signature-pad');
 	var signaturePad = new SignaturePad(canvas, {
@@ -60,30 +59,43 @@
 		var base64 = signaturePad.toDataURL();
 		var warning = document.getElementById('warning-box');
 
+		// Loading exising user emails for validation
+		var userExists = false;
+		var emails = {{{emails}}};
+		for (var i = 0; i < emails.length; i++) {
+			console.log(emails[i].email);
+			if (emails[i].email == email) {
+				userExists = true;
+			}
+		}
+
 		// Form input validation
 		if (fname == '' || lname == '' || email == '' || password == '' || rptPassword == '') {
 			warning.innerHTML = "All fields must be filled";
 			warning.style.display = "block";
+		} else if (userExists){ 
+			warning.innerHTML = "This email is already taken";
+			warning.style.display = "block";
 		} else if (fname.length > 50 || lname.length > 50 || email > 50 || password > 50){ 
-			warning.innerHTML = "Maximum of 50 characters per field"
+			warning.innerHTML = "Maximum of 50 characters per field";
 			warning.style.display = "block";
 		} else if (signaturePad.isEmpty()) { 
-			warning.innerHTML = "Please enter your signature"
+			warning.innerHTML = "Please enter your signature";
 			warning.style.display = "block";
 		} else if (password != rptPassword) { 
-			warning.innerHTML = "Passwords must be matching"
+			warning.innerHTML = "Passwords must be matching";
 			warning.style.display = "block";
 		} else if (password.length < 8) {
-			warning.innerHTML = "Password must contain at least 8 characters"
+			warning.innerHTML = "Password must contain at least 8 characters";
 			warning.style.display = "block";
 		} else if (!password.match(/[0-9]/i)){
-			warning.innerHTML = "Password must contain a number"
+			warning.innerHTML = "Password must contain a number";
 			warning.style.display = "block";
 		} else if (!password.match(/[a-z]/i)){
-			warning.innerHTML = "Password must contain a lowercase letter"
+			warning.innerHTML = "Password must contain a lowercase letter";
 			warning.style.display = "block";
 		} else if (!password.match(/[A-Z]/i)){
-			warning.innerHTML = "Password must contain an uppercase letter"
+			warning.innerHTML = "Password must contain an uppercase letter";
 			warning.style.display = "block";
 		} else {
 			var formData = {fname, lname, email, password, base64}; // We're just sending password as plaintext. Must be changed later maybe
@@ -97,11 +109,10 @@
 
 			req.addEventListener('load', function() {
 				if (req.status == 200) {
-					alert('login success'); // Don't use alerts later
-					window.location = '/registration';
-					//window.location = '/login';
+					window.location = '/';
 				} else {
-					alert('Something seriously went wrong'); // Do not use alert boxes later
+					console.log('Something seriously went wrong'); 
+					// TODO
 				}
 			});
 		}
