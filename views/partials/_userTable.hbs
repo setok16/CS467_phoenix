@@ -18,17 +18,18 @@
 		<td scope="col">{{fname}} {{lname}}</td>
 		<td scope="col">{{email}}</td>
 		<td scope="col">{{creation_datetime}}</td>
-		<td scope="col">signature</td>
+		<td scope="col"><img style="width:150px;height:75px;" src="{{signature}}" alt="" /></td>
 		<td scope="col">
-			<button type="button" class="btn btn-outline-warning  m-sm-1" data-toggle="modal" 
-					data-target="#updateModal" 
-					data-lname="{{lname}}"
-					data-fname="{{fname}}"
-					data-email="{{email}}"
-					data-uid="{{u_id}}"
-					>Edit</button>
 			<form method="POST" action="/admin/delete/{{u_id}}?_method=DELETE">
-				<button type="submit" class="btn btn-outline-danger  m-sm-1">Delete</button>
+				<button type="button" class="btn btn-outline-warning  m-sm-1 btn-block" data-toggle="modal"
+						data-target="#updateModal"
+						data-lname="{{lname}}"
+						data-fname="{{fname}}"
+						data-email="{{email}}"
+						data-uid="{{u_id}}">
+					Edit
+				</button>
+				<button type="submit" class="btn btn-outline-danger  m-sm-1 btn-block">Delete</button>
 			</form>
 		</td>
 	</tr>
@@ -41,14 +42,15 @@
 		<td scope="col">{{email}}</td>
 		<td scope="col">{{creation_datetime}}</td>
 		<td scope="col">
-			<button type="button" class="btn btn-outline-warning  m-sm-1" data-toggle="modal"
-					data-target="#updateModal"
-					data-lname="{{lname}}"
-					data-fname="{{fname}}"
-					data-email="{{email}}"
-					data-uid="{{u_id}}"
-					>Edit</button>
-			<form method="POST" action="/admin/delete/{{u_id}}?_method=DELETE">
+			<form class="form-inline" method="POST" action="/admin/delete/{{u_id}}?_method=DELETE">
+				<button type="button" class="btn btn-outline-warning  m-sm-1" data-toggle="modal"
+						data-target="#updateModal"
+						data-lname="{{lname}}"
+						data-fname="{{fname}}"
+						data-email="{{email}}"
+						data-uid="{{u_id}}">
+					Edit
+				</button>
 				<button type="submit" class="btn btn-outline-danger  m-sm-1">Delete</button>
 			</form>
 		</td>
@@ -56,4 +58,4 @@
 	{{/each}}
 	{{/if}}
 </tbody>
-{{> _updateUserModal}}
+

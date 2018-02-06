@@ -178,6 +178,7 @@ function renderAdminPage (req, res) {
 		context.adminData = req.adminUsers;
 		context.countUsers = context.userData.length;
 		context.countAdmin = context.adminData.length;
+		context.activeTab = "basic";
 		
 		res.render('admin', context);
 

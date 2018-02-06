@@ -22,12 +22,12 @@
 			<div class="d-flex">
 				<div class="p-2">
 					<h5>Total Basic Users: {{countUsers}}</h5>
-				</div>			
+				</div>
 				<div class="ml-auto p-2">{{> _addUserButtonModal userType="Basic"}}</div>
 			</div>
-		<table class="table table-striped">
-			{{> _userTable data=userData normalUser="true" }}
-		</table>
+			<table class="table table-striped">
+				{{> _userTable data=userData normalUser="true" }}
+			</table>
 		</div>
 	</div>
 	<div class="tab-pane fade" id="admin" role="tabpanel" aria-labelledby="admin-tab">
@@ -41,9 +41,10 @@
 				</div>
 			</div>
 			<table class="table table-striped">
-				{{> _userTable data=adminData normalUser="false" }}
+				{{> _userTable data=adminData }}
 			</table>
 		</div>
 	</div>
 	<div class="tab-pane fade" id="report" role="tabpanel" aria-labelledby="report-tab">show reports {{> partial}}</div>
 </div>
+{{> _updateUserModal}}
