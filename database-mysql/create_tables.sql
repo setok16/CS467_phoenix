@@ -3,6 +3,7 @@ CREATE TABLE `User` (
   `u_type` enum('normal', 'admin') NOT NULL DEFAULT 'normal',
   `email` varchar(63) NOT NULL UNIQUE,
   `pwd_hashed` varchar(63) NOT NULL,
+  `recovery_code` varchar(63) NULL,
   `fname` varchar(63) NULL,
   `lname` varchar(63) NULL,
   `creation_datetime` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
