@@ -1,120 +1,133 @@
 <h2>{{title}}</h2>
 <div id="registration">
-	<div class="alert alert-danger" id="warning-box" style="display:none; width:400px;">
-	</div>
-	<input type="text" placeholder="First Name" id="fname"><br>
-	<input type="text" placeholder="Last Name" id="lname"><br>
-	<input type="email" placeholder="Email" id="email"><br>
-	<input type="password" placeholder="Password" id="password"><br>
-	<input type="password" placeholder="Repeat Password" id="rpt-password"><br>
-	*Passwords must be at least 8 characters long and must contain the following: 
-	<ul>
-		<li>Lowercase Alphabet</li>
-		<li>Uppercase Alphabet</li>
-		<li>Number</li>
-	</ul>
-	<br>
-	<div>
-		Signature:<br>
-		<canvas id="signature-pad" style="border:black 1px solid;"></canvas>
-	</div>
-	<button id="undo">Undo</button> 
-	<button id="clear">Clear</button> 
-	<p>By creating an account with us, you agree to our <a href="#">Terms & Privacy</a>.</p>
-	<input type="button" value="Sign Up" id="submit" onclick="addUser()">
+  <div id="alert-box" style="display:none; width:400px;">
+  </div>
+  <input type="text" placeholder="First Name" id="fname"><br>
+  <input type="text" placeholder="Last Name" id="lname"><br>
+  <input type="email" placeholder="Email" id="email"><br>
+  <input type="password" placeholder="Password" id="password"><br>
+  <input type="password" placeholder="Repeat Password" id="rpt-password"><br>
+  *Passwords must be at least 8 characters long and must contain the following: 
+  <ul>
+    <li>Lowercase Alphabet</li>
+    <li>Uppercase Alphabet</li>
+    <li>Number</li>
+  </ul>
+  <br>
+  <div>
+    Signature:<br>
+    <canvas id="signature-pad" style="border:black 1px solid;"></canvas>
+  </div>
+  <button id="undo">Undo</button> 
+  <button id="clear">Clear</button> 
+  <p>By creating an account with us, you agree to our <a href="#">Terms & Privacy</a>.</p>
+  <input type="button" value="Sign Up" id="submit" onclick="addUser()">
 </div>
 
 <script src="/scripts/signature_pad/dist/signature_pad.min.js"></script>
 
 <script>
-	// Signature_Pad code
-	var canvas = document.getElementById('signature-pad');
-	var signaturePad = new SignaturePad(canvas, {
-		backgroundColor: 'rgba(255, 255, 255, 0)',
-		penColor: 'rgb(0, 0, 0)'
-	});
+  // Signature_Pad code
+  var canvas = document.getElementById('signature-pad');
+  var signaturePad = new SignaturePad(canvas, {
+    backgroundColor: 'rgba(255, 255, 255, 0)',
+    penColor: 'rgb(0, 0, 0)'
+  });
 
-	var clearBtn = document.getElementById('clear');
-	var undoBtn = document.getElementById('undo');
+  var clearBtn = document.getElementById('clear');
+  var undoBtn = document.getElementById('undo');
 
-	clearBtn.addEventListener('click', function (event) {
-		signaturePad.clear();
-	});
-	undoBtn.addEventListener('click', function (event) {
-		var data = signaturePad.toData();
-		if (data) {
-			data.pop();
-			signaturePad.fromData(data); 
-		}
-	});
+  clearBtn.addEventListener('click', function (event) {
+    signaturePad.clear();
+  });
+  undoBtn.addEventListener('click', function (event) {
+    var data = signaturePad.toData();
+    if (data) {
+      data.pop();
+      signaturePad.fromData(data); 
+    }
+  });
 
-	/* Sends form info to POST /addUser */
-	function addUser() {
+  /* Sends form info to POST /addUser */
+  function addUser() {
 
-		var fname = document.getElementById('fname').value;
-		var lname = document.getElementById('lname').value;
-		var email = document.getElementById('email').value;
-		var password = document.getElementById('password').value;
-		var rptPassword = document.getElementById('rpt-password').value;
-		var base64 = signaturePad.toDataURL();
-		var warning = document.getElementById('warning-box');
+    var fname = document.getElementById('fname').value;
+    var lname = document.getElementById('lname').value;
+    var email = document.getElementById('email').value;
+    var password = document.getElementById('password').value;
+    var rptPassword = document.getElementById('rpt-password').value;
+    var base64 = signaturePad.toDataURL();
+    var alertBox = document.getElementById('alert-box');
 
-		// Loading exising user emails for validation
-		var userExists = false;
-		var emails = {{{emails}}};
-		for (var i = 0; i < emails.length; i++) {
-			console.log(emails[i].email);
-			if (emails[i].email == email) {
-				userExists = true;
-			}
-		}
+    // Loading exising user emails for validation
+    var userExists = false;
+    var emails = {{{emails}}};
+    for (var i = 0; i < emails.length; i++) {
+      console.log(emails[i].email);
+      if (emails[i].email == email) {
+        userExists = true;
+      }
+    }
 
-		// Form input validation
-		if (fname == '' || lname == '' || email == '' || password == '' || rptPassword == '') {
-			warning.innerHTML = "All fields must be filled";
-			warning.style.display = "block";
-		} else if (userExists){ 
-			warning.innerHTML = "This email is already taken";
-			warning.style.display = "block";
-		} else if (fname.length > 50 || lname.length > 50 || email > 50 || password > 50){ 
-			warning.innerHTML = "Maximum of 50 characters per field";
-			warning.style.display = "block";
-		} else if (signaturePad.isEmpty()) { 
-			warning.innerHTML = "Please enter your signature";
-			warning.style.display = "block";
-		} else if (password != rptPassword) { 
-			warning.innerHTML = "Passwords must be matching";
-			warning.style.display = "block";
-		} else if (password.length < 8) {
-			warning.innerHTML = "Password must contain at least 8 characters";
-			warning.style.display = "block";
-		} else if (!password.match(/[0-9]/i)){
-			warning.innerHTML = "Password must contain a number";
-			warning.style.display = "block";
-		} else if (!password.match(/[a-z]/i)){
-			warning.innerHTML = "Password must contain a lowercase letter";
-			warning.style.display = "block";
-		} else if (!password.match(/[A-Z]/i)){
-			warning.innerHTML = "Password must contain an uppercase letter";
-			warning.style.display = "block";
-		} else {
-			var formData = {fname, lname, email, password, base64}; // We're just sending password as plaintext. Must be changed later maybe
+    // Form input validation
+    if (fname == '' || lname == '' || email == '' || password == '' || rptPassword == '') {
+      alertBox.className = "alert alert-danger"
+      alertBox.innerHTML = "All fields must be filled";
+      alertBox.style.display = "block";
+    } else if (userExists){ 
+      alertBox.className = "alert alert-danger"
+      alertBox.innerHTML = "This email is already taken";
+      alertBox.style.display = "block";
+    } else if (fname.length > 50 || lname.length > 50 || email > 50 || password > 50){ 
+      alertBox.className = "alert alert-danger"
+      alertBox.innerHTML = "Maximum of 50 characters per field";
+      alertBox.style.display = "block";
+    } else if (signaturePad.isEmpty()) { 
+      alertBox.className = "alert alert-danger"
+      alertBox.innerHTML = "Please enter your signature";
+      alertBox.style.display = "block";
+    } else if (password != rptPassword) { 
+      alertBox.className = "alert alert-danger"
+      alertBox.innerHTML = "Passwords must be matching";
+      alertBox.style.display = "block";
+    } else if (password.length < 8) {
+      alertBox.className = "alert alert-danger"
+      alertBox.innerHTML = "Password must contain at least 8 characters";
+      alertBox.style.display = "block";
+    } else if (!password.match(/[0-9]/i)){
+      alertBox.className = "alert alert-danger"
+      alertBox.innerHTML = "Password must contain a number";
+      alertBox.style.display = "block";
+    } else if (!password.match(/[a-z]/i)){
+      alertBox.className = "alert alert-danger"
+      alertBox.innerHTML = "Password must contain a lowercase letter";
+      alertBox.style.display = "block";
+    } else if (!password.match(/[A-Z]/i)){
+      alertBox.className = "alert alert-danger"
+      alertBox.innerHTML = "Password must contain an uppercase letter";
+      alertBox.style.display = "block";
+    } else {
+      var formData = {fname, lname, email, password, base64}; // We're just sending password as plaintext. Must be changed later maybe
 
-			var req = new XMLHttpRequest();
-			req.open('POST', '/add_user', true);
-			req.setRequestHeader("Content-Type", "application/json");
+      var req = new XMLHttpRequest();
+      req.open('POST', '/registration', true);
+      req.setRequestHeader("Content-Type", "application/json");
 
-			formData = JSON.stringify(formData);
-			req.send(formData);
+      formData = JSON.stringify(formData);
+      req.send(formData);
 
-			req.addEventListener('load', function() {
-				if (req.status == 200) {
-					window.location = '/';
-				} else {
-					console.log('Something seriously went wrong'); 
-					// TODO
-				}
-			});
-		}
-	}
+      req.addEventListener('load', function() {
+        if (req.status == 200) {
+          alertBox.className = "alert alert-success"
+          alertBox.innerHTML = "Account Registration Successful";
+          alertBox.style.display = "block";
+          setTimeout(function() {
+            window.location = '/';
+          }, 3000);
+        } else {
+          console.log('Something seriously went wrong'); 
+        }
+      });
+    }
+  }
 </script>
