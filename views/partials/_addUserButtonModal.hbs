@@ -26,7 +26,11 @@
 					</div>
 					<div class="form-group">
 						<label for="input{{userType}}Email">Email</label>
-						<input type="email" class="form-control" name="email" id="input{{userType}}Email" placeholder="Email">
+						<input type="email" class="form-control" name="email" id="input{{userType}}Email" placeholder="Email" onblur="checkEmailAvailability(this.value)">
+						<span id="email{{userType}}Warning"></span>
+					</div>
+					<div id="email{{userType}}AvailabilityAlert" class="alert alert-danger fade collapse" role="alert">
+						This is a danger alert—check it out!
 					</div>
 					<div class="form-row">
 						<div class="form-group col-md-6">
@@ -48,7 +52,6 @@
 									Password Requirements
 								</button>
 							</div>
-
 							<div id="password{{userType}}Requierment" class="collapse" aria-labelledby="password{{userType}}RequiermentHeading" data-parent="#accordion">
 								<div class="card-body">
 									<ul>
@@ -60,6 +63,9 @@
 								</div>
 							</div>
 						</div>
+					</div>
+					<div id="{{userType}}UpdateWarning" class="form-group alert alert-danger" role="alert">
+						This is a danger alert—check it out!
 					</div>
 				</div>
 				<div class="modal-footer">

@@ -18,9 +18,9 @@
 		<td scope="col">{{fname}} {{lname}}</td>
 		<td scope="col">{{email}}</td>
 		<td scope="col">{{creation_datetime}}</td>
-		<td scope="col"><img style="width:150px;height:75px;" src="{{signature}}" alt="" /></td>
+		<td scope="col"><img width="150" height="75" src="{{signature}}" alt="" /></td>
 		<td scope="col">
-			<form method="POST" action="/admin/delete/{{u_id}}?_method=DELETE">
+			<form method="POST" action="/api/users{{u_id}}?_method=DELETE">
 				<button type="button" class="btn btn-outline-warning  m-sm-1 btn-block" data-toggle="modal"
 						data-target="#updateModal"
 						data-lname="{{lname}}"

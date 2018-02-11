@@ -9,6 +9,7 @@ var hbs = require('hbs');
 var dotenv = require('dotenv').config();
 var session = require('express-session');
 
+var usersApi = require('./api/users');
 var index = require('./routes/index');
 var users = require('./routes/users');
 var admin = require('./routes/admin');
@@ -16,6 +17,7 @@ var registration = require('./routes/registration');
 var addUser = require('./routes/addUser');
 var login = require('./routes/login');
 var logout = require('./routes/logout');
+//var router = express.Router();
 
 var app = express();
 
@@ -26,7 +28,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
 // override with POST having ?_method=DELETE
-app.use(methodOverride('_method'))
+app.use(methodOverride('_method'));
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(methodOverride('X-HTTP-Method'));
@@ -43,6 +45,7 @@ app.use('/scripts', express.static(__dirname + '/node_modules'));
 app.use('/public', express.static(__dirname + '/public'));
 
 app.use('/', index);
+app.use('/api/users', usersApi);
 app.use('/users', users);
 app.use('/admin', admin);
 app.use('/registration', registration);
