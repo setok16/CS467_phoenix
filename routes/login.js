@@ -25,11 +25,13 @@ router.post('/', function(req, res, next) {
 					req.session.fname= authPass[0].fname;
 					req.session.lname= authPass[0].lname;
 					req.session.creation_datetime= authPass[0].creation_datetime;
+					//req.session.signature= authPass[0].signature;
 
+					/*
 					if (authPass[0].u_type == 'normal') {
 						req.session.justLoggedIn = true;	// for use in the 'Users' page
 					}
-					
+					*/
 					req.session.save(function(err) {
 						res.status(200).send('Login success');						
 						
