@@ -2,13 +2,17 @@ var express = require('express');
 var router = express.Router();
 var mysql = require('../dbcon.js');
 var pool = mysql.pool;
-var moment = require('moment');
+//var moment = require('moment');
+var moment_tz = require('moment-timezone');
+
+var signature_local = null;
 
 var validateNormalUser = function (req, res, next) {
 	console.log("Exectuing validateNormalUser");
 	
 	if (req.session.u_type == 'normal') { // If user has session and session variable shows a normal user
 		
+		/*
 		if (req.session.justLoggedIn) {	// User is just logged in, skip checking db
 			console.log("skip checking db");
 			req.session.justLoggedIn = false;
@@ -16,8 +20,10 @@ var validateNormalUser = function (req, res, next) {
 				next();
 			});
 		}
-		else {	// Compare user data with those in db
-			console.log("checking db");
+		else
+		*/
+		{	// Compare user data with those in db
+			console.log("checking User db");
 			pool.query("CALL selectUserByID(?)", [req.session.u_id], function(err, result, fields) {
 			
 				//console.log(typeof result); // Object
@@ -30,7 +36,7 @@ var validateNormalUser = function (req, res, next) {
 					console.log(err);
 					res.render('users_error', {
 						title: 'User Account - Error',
-						error_message: 'Database connection error.',
+						error_message: 'User table connection failed.',
 						redirect_message: 'Logging out in 5 seconds.',
 						redirect_location: '/logout',
 						timeout_ms: 5000
@@ -67,6 +73,7 @@ var validateNormalUser = function (req, res, next) {
 					if (result[0][0]['lname'] != req.session.lname) {
 						req.session.lname = result[0][0]['lname'];
 					}
+					signature_local = result[0][0]['signature'];
 					req.session.justLoggedIn = false;
 					req.session.save(function(err) {
 						next();
@@ -85,9 +92,48 @@ var validateNormalUser = function (req, res, next) {
 
 router.get('*', validateNormalUser, function(req, res) {
 
-	console.log(req.session.creation_datetime);
-	var creation_datetime_formatted = moment(req.session.creation_datetime).format('llll');
-	console.log(creation_datetime_formatted);
+	// Format the creation timestamp
+	//console.log(req.session.creation_datetime);
+	var creation_datetime_formatted = moment_tz(req.session.creation_datetime).format('llll');
+	//console.log(creation_datetime_formatted);
+
+	// Calculate the number of days since registration
+	var now_in_pacific = moment_tz.tz(new Date(), 'US/Pacific');
+	var creation_datetime_tz = moment_tz.tz(req.session.creation_datetime, 'US/Pacific');
+	var days = now_in_pacific.diff(creation_datetime_tz, 'days');
+	//console.log(days);
+
+	// Store the signature to be inserted to the .hbs html file
+	var signature_inserted_to_html = '';
+
+	if (signature_local) {	// signature is not Null
+		signature_inserted_to_html = '<img class="img-fluid" src="' + signature_local + '"/>';
+	} else {	// signature is Null
+		signature_inserted_to_html = 'No signature on file.';
+	}
+
+	// Import user-created awards
+	var user_num_of_awards = 0;
+
+	console.log("checking Award db");
+	pool.query("CALL selectAwardByUserID(?)", [req.session.u_id], function(err, award_result, fields) {
+
+		if (err) {	// Database connection error
+			console.log(err);
+			res.render('users_error', {
+				title: 'User Account - Error',
+				error_message: 'Award table connection failed.',
+				redirect_message: 'Logging out in 5 seconds.',
+				redirect_location: '/logout',
+				timeout_ms: 5000
+			});
+		}
+		else {
+			user_num_of_awards = award_result[0].length;
+		}
+
+	});
+	
 
 	var context = {};
 	context = {
@@ -96,7 +142,10 @@ router.get('*', validateNormalUser, function(req, res) {
 			email: req.session.email,
 			fname: req.session.fname,
 			lname: req.session.lname,
-			timestamp: creation_datetime_formatted
+			timestamp: creation_datetime_formatted,
+			signature: signature_inserted_to_html,
+			elapsed_days: days,
+			num_of_awards: user_num_of_awards
 		},
 		showProfileTab: 1
 	};

@@ -1,62 +1,124 @@
-<div>
-	<h1 class="m-3">{{session.fname}} {{session.lname}}</h1>
-	<button type="button" class="btn btn-primary btn-lg float-right" data-toggle="modal" data-target="#CreateAward">
-		Create a New Award
-	</button>
-</div>
+<div class="container-fluid">
 
-<div class="container">
-
-	<ul class="nav nav-tabs" id="myTab" role="tablist">
-		<li class="nav-item">
-			<a class="nav-link {{#if showProfileTab}}active{{/if}}" id="profile-tab" data-toggle="tab" href="#profile" role="tab"
-				aria-controls="profile" aria-selected="true"><h4><i class="fa fa-user"></i> Profile</h4></a>
-		</li>
-		<li class="nav-item">
-			<a class="nav-link {{#unless showProfileTab}}active{{/unless}}" id="awards-tab" data-toggle="tab" href="#awards" role="tab"
-				aria-controls="awards" aria-selected="false"><h4><i class="fa fa-trophy"></i> Awards Management</h4></a>
-		</li>
-	</ul>
-	<div class="tab-content" id="myTabContent">
-		<div class="tab-pane fade {{#if showProfileTab}}show active{{/if}}" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-
-			<div class="panel-body">
-            	<div class="row">
-                
-                	<div class=" col-md-9 col-lg-9 "> 
-                  		<table class="table table-user-information">
-                    		<tbody>
-                      			<tr>
-                        			<td>Email:</td>
-                        			<td><a href="mailto:{{session.email}}">{{session.email}}</a></td>
-									<td><a data-toggle="modal" href="#changeEmailModal">Change</a></td>
-                      			</tr>
-                      			<tr>
-                        			<td>Full Name:</td>
-                        			<td>{{session.fname}} {{session.lname}}</td>
-									<td><a data-toggle="modal" href="#editNameModal">Edit</a></td>
-                      			</tr>
-                      
-                      			<tr>
-                        			<td>User Type:</td>
-                        			<td>Normal User</td>
-                      			</tr>
-								<tr>
-                        			<td>Registration Timestamp:</td>
-                        			<td>{{session.timestamp}}  (US Pacific Time)
-                        			</td>
-                      			</tr>
-                     
-                    		</tbody>
-                  		</table>
-
-                	</div>
-              	</div>
-            </div>
-
+	<div class="row">
+		<div class="col">
+			<h1 class="m-3">{{session.fname}} {{session.lname}}
+				<button type="button" class="btn btn-success btn-lg float-right" data-toggle="modal" data-target="#CreateAward">
+					Create a New Award
+				</button>
+			</h1>
+			
 		</div>
-		<div class="tab-pane fade {{#unless showProfileTab}}show active{{/unless}}" id="awards" role="tabpanel" aria-labelledby="awards-tab">
 
+	</div>
+
+	<div class="row">
+    	<div class="col-md-9 col-lg-9">
+			<ul class="nav nav-tabs" id="myTab" role="tablist">
+				<li class="nav-item">
+					<a class="nav-link {{#if showProfileTab}}active{{/if}}" id="profile-tab" data-toggle="tab" href="#profile" role="tab"
+						aria-controls="profile" aria-selected="true"><h4><i class="fa fa-user"></i> Profile</h4></a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link {{#unless showProfileTab}}active{{/unless}}" id="awards-tab" data-toggle="tab" href="#awards" role="tab"
+						aria-controls="awards" aria-selected="false"><h4><i class="fa fa-trophy"></i> Awards Management</h4></a>
+				</li>
+			</ul>
+
+			<div class="tab-content" id="myTabContent">
+				<div class="tab-pane fade {{#if showProfileTab}}show active{{/if}}" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+
+					<div class="panel-body">
+            			<div class="row">
+                
+                			<div class="col">
+                  				<table class="table">
+                    				<tbody>
+                      					<tr>
+                        					<th>Email:</th>
+                        					<td><a href="mailto:{{session.email}}">{{session.email}}</a></td>
+											<td><a data-toggle="modal" href="#changeEmailModal">Change</a></td>
+                      					</tr>
+                      					<tr>
+                        					<th>Full Name:</th>
+                        					<td>{{session.fname}} {{session.lname}}</td>
+											<td><a data-toggle="modal" href="#editNameModal">Edit</a></td>
+                      					</tr>
+                      
+                      					<tr>
+                        					<th>User Type:</th>
+                        					<td>Normal User</td>
+                      					</tr>
+										<tr>
+                        					<th>Registration Timestamp:</th>
+                        					<td>{{session.timestamp}}  (US Pacific Time)
+                        					</td>
+                      					</tr>
+										<tr>
+											<td><button type="button" class="btn btn-warning" data-toggle="modal" data-target="#changePwdModal">
+												Change Account Password
+											</button></td>
+										</tr>
+										<tr>
+											<th>My Signature:</th>
+											<td>{{{session.signature}}}</td>
+											<td><a data-toggle="modal" href="#updateSigModal">Update</a></td>
+										</tr>
+                    				</tbody>
+                  				</table>
+
+                			</div>
+              			</div>
+            		</div>
+
+				</div>
+				<div class="tab-pane fade {{#unless showProfileTab}}show active{{/unless}}" id="awards" role="tabpanel" aria-labelledby="awards-tab">
+
+				</div>
+			</div>
+
+    	</div>
+
+
+		<div class="col-md-3 col-lg-3 d-flex align-items-center" align="center">
+			<div class="card bg-info float-right" align="center">
+  				<div class="card-header">
+					<h4><i class="fa fa-bar-chart"></i>
+						About Me
+					</h4>
+				</div>
+  				<div class="card-body">
+					<table class="table table-borderless">
+                    	<tbody>
+                      		<tr>
+                        		<th><h5><i class="fa fa-check-square-o"></i></h5></th>
+								<td><h5>{{session.elapsed_days}}</h5></td>
+                        		<td><h5>Days since registration</h5></td>
+                      		</tr>
+                      		<tr>
+                        		<th><h5><i class="fa fa-check-square-o"></i></h5></th>
+								<td><h5>{{session.num_of_awards}}</h5></td>
+                        		<td><h5>Created Awards</h5></td>
+           					</tr>
+                    	</tbody>
+                  	</table>
+					
+				</div> 
+			</div>
 		</div>
 	</div>
+
+	
+	
 </div>
+
+<style>
+	.table-borderless > tbody > tr > td,
+	.table-borderless > tbody > tr > th,
+	.table-borderless > tfoot > tr > td,
+	.table-borderless > tfoot > tr > th,
+	.table-borderless > thead > tr > td,
+	.table-borderless > thead > tr > th {
+    	border: none !important;
+	}
+</style>
