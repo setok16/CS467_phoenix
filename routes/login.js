@@ -6,7 +6,6 @@ var session = require('express-session');
 
 router.post('/', function(req, res, next) {
 	var pass = req.body.password;
-	console.log(req.body.email, " ", req.body.password);
 	mysql.pool.query('SELECT u_id, u_type, email, pwd_hashed, fname, lname, creation_datetime FROM User WHERE email = ?', [req.body.email], function(err, rows, fields) {
 		if (err) {
 			console.log(err);
@@ -28,7 +27,7 @@ router.post('/', function(req, res, next) {
 					req.session.save();
 					res.status(200).send('Login success');
 				} else {
-					res.status(401).send('Password is rubbish');
+					res.status(401).send('Incorrect password');
 				}
 			});
 		} else {

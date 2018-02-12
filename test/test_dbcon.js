@@ -16,7 +16,7 @@ describe("Database", function () {
 							function (err, rows, fields) {
 								should.not.exist(err);
 								rows.should.deep.equal([{ 1: 1 }]);
-								fields[0].name.should.equal(1);
+								fields[0].name.should.equal('1');
 							});
 						done();
 					});
