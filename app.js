@@ -13,8 +13,9 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 var admin = require('./routes/admin');
 var registration = require('./routes/registration');
-var addUser = require('./routes/addUser');
 var login = require('./routes/login');
+var passwordRecovery = require('./routes/passwordRecovery');
+var passwordChange = require('./routes/passwordChange');
 var logout = require('./routes/logout');
 
 var app = express();
@@ -49,8 +50,9 @@ app.use('/', index);
 app.use('/users', users);
 app.use('/admin', admin);
 app.use('/registration', registration);
-app.use('/add_user', addUser);
 app.use('/login', login);
+app.use('/password_recovery', passwordRecovery);
+app.use('/password_change', passwordChange);
 app.use('/logout', logout);
 
 // catch 404 and forward to error handler
