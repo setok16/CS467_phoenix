@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 var hbs = require('hbs');
 var dotenv = require('dotenv').config();
 var session = require('express-session');
+var MongoStore = require('connect-mongo')(session);
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -30,7 +31,13 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(session({secret:process.env.SESSION_SECRET,resave:false,saveUninitialized:true}));
+//app.use(session({secret:process.env.SESSION_SECRET,resave:false,saveUninitialized:true}));
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  store: new MongoStore({ url: process.env.MONGO_STORE_URL })
+}))
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Using to include packages directly from node_modules into views
