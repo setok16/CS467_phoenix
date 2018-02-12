@@ -147,7 +147,8 @@ router.get('*', validateNormalUser, function(req, res) {
 			elapsed_days: days,
 			num_of_awards: user_num_of_awards
 		},
-		showProfileTab: 1
+		showProfileTab: 1,
+		customHeader: '<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>'
 	};
 
 	if (req.query.tab == 'awards') { // could use /users?tab=awards in the URL to first display the awards tab

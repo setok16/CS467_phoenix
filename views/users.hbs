@@ -13,7 +13,7 @@
 	</div>
 
 	<div class="row">
-    	<div class="col-md-9 col-lg-9">
+    	<div class="col-md-8 col-lg-8">
 			<ul class="nav nav-tabs" id="myTab" role="tablist">
 				<li class="nav-item">
 					<a class="nav-link {{#if showProfileTab}}active{{/if}}" id="profile-tab" data-toggle="tab" href="#profile" role="tab"
@@ -29,20 +29,18 @@
 				<div class="tab-pane fade {{#if showProfileTab}}show active{{/if}}" id="profile" role="tabpanel" aria-labelledby="profile-tab">
 
 					<div class="panel-body">
-            			<div class="row">
-                
-                			<div class="col">
-                  				<table class="table">
+            		
+                  				<table class="table table-borderless h5">
                     				<tbody>
                       					<tr>
                         					<th>Email:</th>
                         					<td><a href="mailto:{{session.email}}">{{session.email}}</a></td>
-											<td><a data-toggle="modal" href="#changeEmailModal">Change</a></td>
+											<td><a data-toggle="modal" href="#changeEmailModal">Change Email</a></td>
                       					</tr>
                       					<tr>
                         					<th>Full Name:</th>
                         					<td>{{session.fname}} {{session.lname}}</td>
-											<td><a data-toggle="modal" href="#editNameModal">Edit</a></td>
+											<td><a data-toggle="modal" href="#editNameModal">Edit Name</a></td>
                       					</tr>
                       
                       					<tr>
@@ -51,7 +49,7 @@
                       					</tr>
 										<tr>
                         					<th>Registration Timestamp:</th>
-                        					<td>{{session.timestamp}}  (US Pacific Time)
+                        					<td>{{session.timestamp}}<br>(US Pacific Time)
                         					</td>
                       					</tr>
 										<tr>
@@ -62,13 +60,11 @@
 										<tr>
 											<th>My Signature:</th>
 											<td>{{{session.signature}}}</td>
-											<td><a data-toggle="modal" href="#updateSigModal">Update</a></td>
+											<td><a data-toggle="modal" href="#updateSigModal">Update Signature</a></td>
 										</tr>
                     				</tbody>
                   				</table>
 
-                			</div>
-              			</div>
             		</div>
 
 				</div>
@@ -80,25 +76,25 @@
     	</div>
 
 
-		<div class="col-md-3 col-lg-3 d-flex align-items-center" align="center">
+		<div class="col-md-4 col-lg-4 pt-5" align="center">
 			<div class="card bg-info float-right" align="center">
-  				<div class="card-header">
+  				<div class="card-header lead">
 					<h4><i class="fa fa-bar-chart"></i>
 						About Me
 					</h4>
 				</div>
   				<div class="card-body">
 					<table class="table table-borderless">
-                    	<tbody>
+                    	<tbody class="h5">
                       		<tr>
-                        		<th><h5><i class="fa fa-check-square-o"></i></h5></th>
-								<td><h5>{{session.elapsed_days}}</h5></td>
-                        		<td><h5>Days since registration</h5></td>
+                        		<th><i class="fa fa-check-square-o"></i></th>
+								<td>{{session.elapsed_days}}</td>
+                        		<td>Days since registration</td>
                       		</tr>
                       		<tr>
-                        		<th><h5><i class="fa fa-check-square-o"></i></h5></th>
-								<td><h5>{{session.num_of_awards}}</h5></td>
-                        		<td><h5>Created Awards</h5></td>
+                        		<th><i class="fa fa-check-square-o"></i></th>
+								<td>{{session.num_of_awards}}</td>
+                        		<td>Created Awards</td>
            					</tr>
                     	</tbody>
                   	</table>
@@ -113,6 +109,9 @@
 </div>
 
 <style>
+	body {
+    	padding-top: 60px;
+  	}
 	.table-borderless > tbody > tr > td,
 	.table-borderless > tbody > tr > th,
 	.table-borderless > tfoot > tr > td,
@@ -121,4 +120,14 @@
 	.table-borderless > thead > tr > th {
     	border: none !important;
 	}
+
+	.nav-link {
+    	color: #8A0868;
+	}
 </style>
+
+<script>
+
+	$("main[role='main']").attr('class', 'container-fluid px-4 py-5');
+	//document.getElementById("main_body").className = "container-fluid px-5 py-5";
+</script>
