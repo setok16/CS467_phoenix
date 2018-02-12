@@ -1,0 +1,9 @@
+<h2>Error</h2>
+<h2>{{error_message}}</h2>
+<h3>{{redirect_message}}</h3>
+
+<script>
+    setTimeout(function() {
+        window.location = "{{redirect_location}}";
+    }, {{timeout_ms}})
+</script>

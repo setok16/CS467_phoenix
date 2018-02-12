@@ -30,9 +30,9 @@
 		formData = JSON.stringify(formData);
 		req.send(formData);
 
-		req.addEventListener('load', function() {
+		function loginEventListener() {
 			if (req.status == 200) {
-				window.location = '/users';
+				window.location = '/';
 			} else if (req.status == 401) {
 				warning.innerHTML = "Incorrect password";
 				warning.style.display = "block";
@@ -40,7 +40,9 @@
 				warning.innerHTML = "User not found";
 				warning.style.display = "block";
 			}
-		});
+		}
+
+		req.addEventListener('load', loginEventListener);
 		return false; // prevents reload
 	}
 </script>

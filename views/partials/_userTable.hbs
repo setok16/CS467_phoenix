@@ -1,0 +1,61 @@
+<thead>
+	<tr>
+		<th scope="col">Id</th>
+		<th scope="col">First Name</th>
+		<th scope="col">Last Name</th>
+		<th scope="col">Registration Date</th>
+		{{#if normalUser}}
+		<th scope="col">Signature</th>
+		{{/if}}
+		<th scope="col">Action</th>
+	</tr>
+</thead>
+<tbody>
+	{{#if normalUser}}
+	{{#each data}}
+	<tr id="userRow_{{u_id}}">
+		<td scope="col">{{u_id}}</td>
+		<td scope="col">{{fname}} {{lname}}</td>
+		<td scope="col">{{email}}</td>
+		<td scope="col">{{creation_datetime}}</td>
+		<td scope="col"><img style="width:150px;height:75px;" src="{{signature}}" alt="" /></td>
+		<td scope="col">
+			<form method="POST" action="/admin/delete/{{u_id}}?_method=DELETE">
+				<button type="button" class="btn btn-outline-warning  m-sm-1 btn-block" data-toggle="modal"
+						data-target="#updateModal"
+						data-lname="{{lname}}"
+						data-fname="{{fname}}"
+						data-email="{{email}}"
+						data-uid="{{u_id}}">
+					Edit
+				</button>
+				<button type="submit" class="btn btn-outline-danger  m-sm-1 btn-block">Delete</button>
+			</form>
+		</td>
+	</tr>
+	{{/each}}
+	{{else}}
+	{{#each data}}
+	<tr id="userRow_{{u_id}}">
+		<td scope="col">{{u_id}}</td>
+		<td scope="col">{{fname}} {{lname}}</td>
+		<td scope="col">{{email}}</td>
+		<td scope="col">{{creation_datetime}}</td>
+		<td scope="col">
+			<form class="form-inline" method="POST" action="/admin/delete/{{u_id}}?_method=DELETE">
+				<button type="button" class="btn btn-outline-warning  m-sm-1" data-toggle="modal"
+						data-target="#updateModal"
+						data-lname="{{lname}}"
+						data-fname="{{fname}}"
+						data-email="{{email}}"
+						data-uid="{{u_id}}">
+					Edit
+				</button>
+				<button type="submit" class="btn btn-outline-danger  m-sm-1">Delete</button>
+			</form>
+		</td>
+	</tr>
+	{{/each}}
+	{{/if}}
+</tbody>
+

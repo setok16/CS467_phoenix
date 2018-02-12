@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/', function(req, res) {
 
 	if (req.session.email) {  // Redirect client to appropriate pages if they're already logged in
 		if (req.session.u_type == 'normal') {
@@ -11,18 +11,14 @@ router.get('/', function(req, res, next) {
 			res.redirect('/admin');
 		}
 	}
-
-	res.render('index', {
-		title: 'Some Page',
-		hideNav: 'hidden',
-		customHeader: '<link href="stylesheets/signin.css" rel="stylesheet" />'
+	else {
+		res.render('index', {
+			title: 'Login',
+			hideNav: 'hidden',
+			customHeader: '<link href="stylesheets/signin.css" rel="stylesheet" />'
+		});
 	}
-	);
+	
 });
-
-function removeNavigation() {
-	document.getElementById("meunbutton").style.display = 'none';
-	document.getElementById("navgroup").style.display = 'none';
-} 
 
 module.exports = router;
