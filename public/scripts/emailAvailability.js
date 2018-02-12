@@ -1,5 +1,10 @@
-﻿async function checkEmailAvailability(email) {
-	var emailAlert = document.getElementById("emailAdminAvailabilityAlert");
+﻿async function checkEmailAvailability(email, warningElementId, originalEmail) {
+	var emailAlert = document.getElementById(warningElementId);
+	if (originalEmail === email) {
+		emailAlert.innerHTML = "";
+		emailAlert.classList.remove("show");
+		return;
+	}
 	if (email) {
 		var isAvailable;
 		try {
@@ -10,7 +15,7 @@
 			console.log(error);
 		}
 		if (!isAvailable) {
-			emailAlert.innerHTML = "warning " + email + "is already in use";
+			emailAlert.innerHTML = "warning " + email + " is not available";
 			emailAlert.classList.add("show");
 			return;
 		}

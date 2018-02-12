@@ -6,10 +6,18 @@ const bcrypt = require('bcrypt');
 var adminEmail = 'admin@oregonstate.edu';
 
 router.delete('/:u_id',
-	function (req, res, next) {
-		var message = "deleting user with u_id " + req.params.u_id;
-		console.log(message);
-		res.send(message);
+	function (req, res, next) {	
+		pool.query("CALL deleteUserByID(?)",
+			[req.params.u_id],
+			function (err, result) {
+				if (err) {
+					console.log('SERVER ERROR: ' + err);
+					next(err);
+					return;
+				}
+				res.statusCode = 200;
+				res.send();
+			});
 	});
 
 router.get('/email/available/:email',

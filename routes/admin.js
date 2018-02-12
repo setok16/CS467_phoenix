@@ -176,26 +176,15 @@ function getAdminUsers(req, res, next) {
 
 function renderAdminPage (req, res) {
 	//res.send('respond with a resource');
-	if (req.session.u_type == 'admin') {
+	if (req.session.u_type === 'admin') {
 
 		var context = {};
-		context.customScript =
-			"$('#updateModal').on('show.bs.modal', function (event) { \r\n" +
-			"var button = $(event.relatedTarget) \r\n" +
-			"var lname = button.data('lname') \r\n" +
-			"var fname = button.data('fname') \r\n" +
-			"var email = button.data('email') \r\n" +
-			"var uid = button.data('uid') \r\n" +
-			"var modal = $(this) \r\n" +
-			"modal.find('.modal-body input[name=lname]').val(lname) \r\n" +
-			"modal.find('.modal-body input[name=fname]').val(fname) \r\n" +
-			"modal.find('.modal-body input[name=email]').val(email) \r\n" +
-			"modal.find('.modal-body input[name=uid]').val(uid) \r\n" +
-			//"modal.find('.modal-body form[name=editFrom').attr('action', '/admin/update/' + uid + '?_method=PUT') \r\n" +
-			"});";
 
-		context.customScriptReference = '<script src="public/scripts/emailAvailability.js"></script>';
-
+		context.customScript = '<script src="public/scripts/emailAvailability.js"></script>';
+		context.customScript += '<script src="public/scripts/passwordComplexity.js"></script>';
+		context.customScript += '<script src="public/scripts/adminFunctions.js"></script>';
+		context.customScript += '<script src="public/scripts/prefillUpdateModal.js"></script>';
+		
 		context.title = 'Admin Account';
 		//context.email = req.session.email;
 		context.session = { email: req.session.email };
@@ -205,7 +194,6 @@ function renderAdminPage (req, res) {
 		//context.adminData = req.adminUsers;
 		context.countUsers = req.userData.length;
 		context.countAdmin = req.adminUsers.length;
-		context.activeTab = "basic";
 		
 		res.render('admin', context);
 
