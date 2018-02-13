@@ -11,7 +11,7 @@ var pool = mysql.createPool({
 	password: process.env.RDS_PASSWORD,
 	database: process.env.RDS_DB_NAME,
 	multipleStatements: true,
-	dateStrings: true
+	dateStrings: true	// Parse the timestamp as a string
 });
 
 module.exports.pool = pool;
