@@ -3,10 +3,23 @@ var router = express.Router();
 var mysql = require('../dbcon.js');
 var pool = mysql.pool;
 //var moment = require('moment');
-var moment_tz = require('moment-timezone');
+var moment = require('moment-timezone');
+
+const { body,validationResult } = require('express-validator/check');
+const { sanitizeBody } = require('express-validator/filter');
+
+/*
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+*/
 
 var signature_local = null;
 
+
+// Function: validateNormalUser
 var validateNormalUser = function (req, res, next) {
 	console.log("Exectuing validateNormalUser");
 	
@@ -90,17 +103,69 @@ var validateNormalUser = function (req, res, next) {
 	}
 };
 
-router.get('*', validateNormalUser, function(req, res) {
+
+// Router: PATCH '/editName'
+router.patch('/editName',
+
+	// check fields
+	body('input_fname').trim().isLength({ min: 1 }).withMessage('First name must be specified.'),
+	body('input_lname').trim().isLength({ min: 1 }).withMessage('Last name must be specified.'),
+
+	// sanitize fields
+	sanitizeBody('input_fname').trim(),
+	sanitizeBody('input_lname').trim(),
+	
+	// validate user
+	validateNormalUser,
+
+	// Process request after validation and sanitization
+	function(req, res) {
+		
+		const errorFormatter = ({ location, msg, param, value, nestedErrors }) => {
+			return `${location}[${param}]: ${msg}`;
+		};
+		var validattion_errors = validationResult(req).formatWith(errorFormatter);
+
+        if (!validattion_errors.isEmpty()) {
+			// There are errors
+			console.log(validattion_errors.array().toString());
+			//res.setHeader('Content-Type', 'text/event-stream');
+			res.status(400).send(validattion_errors.array().toString());
+            return;
+        }
+        else {
+			// Data from form is valid. Update database entry
+			pool.query("CALL changeUserNameByID(?,?,?)", [req.session.u_id, req.body.input_fname, req.body.input_lname],
+				function(err, result, fields) {
+					if (err) {
+						//res.setHeader('Content-Type', 'text/event-stream');
+						res.status(403).send(err);
+            			return;
+					}
+					else {
+						//console.log(result);
+						//res.setHeader('Content-Type', 'text/event-stream');
+						res.status(200).send('Name changed successfully!');
+						// must send some string for 'fetch' to process on the client side
+					}
+			});
+
+		}
+	}
+);
+
+// Router: GET '/'
+router.get('/', validateNormalUser, function(req, res) {
 
 	// Format the creation timestamp
 	//console.log(req.session.creation_datetime);
-	var creation_datetime_formatted = moment_tz(req.session.creation_datetime).format('llll');
+	var creation_datetime_formatted = moment(req.session.creation_datetime).format('llll');
 	//console.log(creation_datetime_formatted);
 
 	// Calculate the number of days since registration
-	var now_in_pacific = moment_tz.tz(new Date(), 'US/Pacific');
-	var creation_datetime_tz = moment_tz.tz(req.session.creation_datetime, 'US/Pacific');
-	var days = now_in_pacific.diff(creation_datetime_tz, 'days');
+	var now_in_pacific = moment.tz(new Date(), 'US/Pacific');
+	var creation_datetime_in_pacific = moment.tz(req.session.creation_datetime, 'US/Pacific');
+	var days = now_in_pacific.diff(creation_datetime_in_pacific, 'days');
 	//console.log(days);
 
 	// Store the signature to be inserted to the .hbs html file
@@ -148,7 +213,7 @@ router.get('*', validateNormalUser, function(req, res) {
 			num_of_awards: user_num_of_awards
 		},
 		showProfileTab: 1,
-		customHeader: '<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>'
+		customHeader: '<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>',
 	};
 
 	if (req.query.tab == 'awards') { // could use /users?tab=awards in the URL to first display the awards tab
