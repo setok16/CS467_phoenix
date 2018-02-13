@@ -40,6 +40,7 @@
 		<td scope="col">{{email}}</td>
 		<td scope="col">{{creation_datetime}}</td>
 		<td scope="col">
+			<div>
 				<button type="button" class="btn btn-outline-warning m-sm-1 btn-block" data-toggle="modal"
 						data-target="#updateModal"
 						data-lname="{{lname}}"
@@ -48,7 +49,8 @@
 						data-uid="{{u_id}}">
 					Edit
 				</button>
-				<button type="button" class="btn btn-outline-danger m-sm-1 btn-block" onclick="deleteUser({{u_id}},userRow_{{u_id}})">Delete</button>
+				<button type="button" class="btn btn-outline-danger m-sm-1 btn-block" onclick="deleteUser({{u_id}},'userRow_{{u_id}}')">Delete</button>
+			</div>
 		</td>
 	</tr>
 	{{/each}}
