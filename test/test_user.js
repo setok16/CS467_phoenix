@@ -5,7 +5,7 @@ var should = require('chai').should();
 var chai = require('chai');
 var chaiHttp = require('chai-http');
 var sinon = require('sinon');
-
+app.use(require('body-parser').json());
 chai.use(chaiHttp);
 
 describe('api/users', function () {
@@ -58,5 +58,60 @@ describe('api/users', function () {
 						});
 				});
 		});
-	});
+	describe('POST',
+		function() {
+			it('should return status 400 (bad request) if password is not complex enough',
+				function(done) {
+					chai.request(app)
+						.post('/api/users/')
+						.set('content-type', 'application/json')
+						.send(JSON.stringify({
+							"email": "any@eamil",
+							"password": "password",
+							"usertype": "admin"
+						}))
+						//.field('email', 'any@any')
+						//.field('password', 'password')
+						//.field('usertype', 'admin')
+						//.send()
+						.end(function (err, res) {
+							//console.log(err);
+							//console.log(res);
+							res.should.have.status(400);
+							done();
+						});
+				});
+			it('should return status 200 (ok) with a valid password',
+				function (done) {
+					chai.request(app)
+						.post('/api/users/')
+						.set('content-type', 'application/json')
+						.send(JSON.stringify({
+							"email": "any@eamil",
+							"password": "Password2",
+							"usertype": "basic"
+						}))
+						//.send({email: "any@eamil",password: "Password1",usertype: "basic"})
+						//.field('email', 'any@any')
+						//.field('password', 'Password1')
+						//.field('usertype', 'admin')
+						.end(function (err, res) {
+							//console.log(err);
+							res.should.have.status(200);
+							done();
+						});
+				});
+		}
+	);
+});
+
+
+//describe('password Complexity check',
+//	function() {
+//		it('should return false for password less than 8 characters',
+//			function(done) {
+//				var isComplex = users.isPasswordComplex('12345678');
+//				isComplex.should.be.false;
+//			});
+//	});
 
