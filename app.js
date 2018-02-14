@@ -8,14 +8,16 @@ var bodyParser = require('body-parser');
 var hbs = require('hbs');
 var dotenv = require('dotenv').config();
 var session = require('express-session');
+var MongoStore = require('connect-mongo')(session);
 
 var usersApi = require('./api/users');
 var index = require('./routes/index');
 var users = require('./routes/users');
 var admin = require('./routes/admin');
 var registration = require('./routes/registration');
-var addUser = require('./routes/addUser');
 var login = require('./routes/login');
+var passwordRecovery = require('./routes/passwordRecovery');
+var passwordChange = require('./routes/passwordChange');
 var logout = require('./routes/logout');
 //var router = express.Router();
 
@@ -36,7 +38,13 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(session({secret:process.env.SESSION_SECRET,resave:false,saveUninitialized:true}));
+//app.use(session({secret:process.env.SESSION_SECRET,resave:false,saveUninitialized:true}));
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  store: new MongoStore({ url: process.env.MONGO_STORE_URL })
+}))
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Using to include packages directly from node_modules into views
@@ -49,8 +57,9 @@ app.use('/api/users', usersApi);
 app.use('/users', users);
 app.use('/admin', admin);
 app.use('/registration', registration);
-app.use('/add_user', addUser);
 app.use('/login', login);
+app.use('/password_recovery', passwordRecovery);
+app.use('/password_change', passwordChange);
 app.use('/logout', logout);
 
 // catch 404 and forward to error handler
@@ -67,6 +76,7 @@ app.use(function(err, req, res, next) {
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
   // render the error page
+  if (res.finished) return;
   res.status(err.status || 500);
   res.render('error');
 });
