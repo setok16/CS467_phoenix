@@ -1,4 +1,5 @@
 var express = require('express');
+var methodOverride = require('method-override');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -9,6 +10,7 @@ var dotenv = require('dotenv').config();
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 
+var usersApi = require('./api/users');
 var index = require('./routes/index');
 var users = require('./routes/users');
 var admin = require('./routes/admin');
@@ -17,6 +19,7 @@ var login = require('./routes/login');
 var passwordRecovery = require('./routes/passwordRecovery');
 var passwordChange = require('./routes/passwordChange');
 var logout = require('./routes/logout');
+//var router = express.Router();
 
 var app = express();
 
@@ -26,8 +29,11 @@ hbs.registerPartials(__dirname + '/views/partials');
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
+// override with POST having ?_method=DELETE
+app.use(methodOverride('_method'));
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(methodOverride('X-HTTP-Method'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -47,6 +53,7 @@ app.use('/scripts', express.static(__dirname + '/node_modules'));
 app.use('/public', express.static(__dirname + '/public'));
 
 app.use('/', index);
+app.use('/api/users', usersApi);
 app.use('/users', users);
 app.use('/admin', admin);
 app.use('/registration', registration);
