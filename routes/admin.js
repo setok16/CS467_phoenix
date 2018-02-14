@@ -54,12 +54,15 @@ router.delete('/delete/:id', validateSession, deleteUser, redirectToAdmin);
 
 
 function checkUserType(req, res, next) {
-	req.body.usertype = req.body.usertype.toLowerCase();
-	if (req.body.usertype === 'basic') {
-		req.body.usertype = 'normal';
-	}
-	if (req.body.usertype === 'admin' || req.body.usertype === 'normal') {
-		return next();
+	console.log(req.body);
+	if (req.body.usertype) {
+		req.body.usertype = req.body.usertype.toLowerCase();
+		if (req.body.usertype === 'basic') {
+			req.body.usertype = 'normal';
+		}
+		if (req.body.usertype === 'admin' || req.body.usertype === 'normal') {
+			return next();
+		}
 	} else {
 		console.log("The user type was not sent");
 		redirectToAdmin(req, res, next);

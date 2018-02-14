@@ -2,7 +2,7 @@
 	<h1 class="m-3">{{title}}</h1>
 </div>
 <div>
-	<h6 class="m-3">{{email}}</h6>
+	<h6 class="m-3">{{session.email}}</h6>
 </div>
 
 <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -25,7 +25,10 @@
 					<h5>Total Basic Users: {{countUsers}}</h5>
 				</div>
 				<div class="col-sm p-2">
-					<button type="button" class="btn btn-info btn-lg float-right" data-toggle="modal" data-target="#AddUser" onclick="addUserTypeToForm('normal')" >
+					<button type="button" class="btn btn-info btn-lg float-right" data-toggle="modal" 
+							data-target="#addUserModal" 
+							data-user-type="normal"
+							>
 						Add Basic User
 					</button>
 				</div>
@@ -43,7 +46,9 @@
 					<h5>Total Admin Users: {{countAdmin}}</h5>
 				</div>
 				<div class="col-sm p-2">
-					<button type="button" class="btn btn-info btn-lg float-right" data-toggle="modal" data-target="#AddUser" onclick="addUserTypeToForm('admin')">
+					<button type="button" class="btn btn-info btn-lg float-right" data-toggle="modal" 
+							data-target="#addUserModal" 
+							data-user-type="admin">
 						Add Admin User
 					</button>
 				</div>
