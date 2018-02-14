@@ -1,6 +1,8 @@
 ﻿function addUserTypeToForm(userType) {
 	var userTypeElement = document.getElementById("addUserId");
 	userTypeElement.value = userType;
+
+	//const response = await axios.post('/admin/create/user');
 }
 
 async function deleteUser(u_id, elementId) {
@@ -15,3 +17,11 @@ async function deleteUser(u_id, elementId) {
 		console.log(error);
 	}
 }
+
+
+$('#addUserModal').on('show.bs.modal', function (event) {
+	var button = $(event.relatedTarget);
+	var usertype = button.data('userType');
+	var modal = $(this);
+	modal.find('.modal-body #usertype').val(usertype);
+});
