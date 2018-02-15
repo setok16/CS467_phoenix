@@ -1,66 +1,66 @@
-<script>
-	$("main[role='main']").attr('class', 'container-fluid px-4 py-5');
-</script>
-
 <div class="container-fluid">
 
-	<!-- User Name (Title) and Create Award button -->
+	<!-- 1st row: User Name (Title) and Create Award button -->
 	<div class="row">
-		<div class="col">
-			<h1 class="m-3">{{session.fname}} {{session.lname}}
-				<button type="button" class="btn btn-success btn-lg float-right" data-toggle="modal" data-target="#CreateAward">
+		
+    	<div class="col-md-8 col-lg-8">
+			<h1 class="ml-3 mt-3">{{session.fname}} {{session.lname}}</h1>
+		</div>
+		
+		<div class="col-md-4 col-lg-4" align="center">
+			<h1 class="mt-3">
+				<button type="button" class="btn btn-success btn-lg" data-toggle="modal" data-target="#CreateAward">
 					Create a New Award
 				</button>
 			</h1>
-			
 		</div>
-
 	</div>
 
-	<!-- Below title -->
+
+	<!-- 2nd row: Tabs, Tab Content and About Me Card -->
 	<div class="row">
-		<!-- Tabs -->
-    	<div class="col-md-8 col-lg-8">
-			<ul class="nav nav-tabs" id="myTab" role="tablist">
-				<li class="nav-item">
-					<a class="nav-link {{#if showProfileTab}}active{{/if}}" id="profile-tab" data-toggle="tab" href="#profile" role="tab"
-						aria-controls="profile" aria-selected="true"><h4><i class="fa fa-user"></i> Profile</h4></a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link {{#unless showProfileTab}}active{{/unless}}" id="awards-tab" data-toggle="tab" href="#awards" role="tab"
-						aria-controls="awards" aria-selected="false"><h4><i class="fa fa-trophy"></i> Awards Management</h4></a>
-				</li>
-			</ul>
 
-			<!-- Tab Content -->
-			<div class="tab-content" id="myTabContent">
+		<!-- Left side: Tabs and tab Content -->
+		<div class="col-md-8 col-lg-8">
+					<ul class="nav nav-tabs" id="myTab" role="tablist">
+						<li class="nav-item">
+							<a class="nav-link {{#if showProfileTab}}active{{/if}}" id="profile-tab" data-toggle="tab" href="#profile" role="tab"
+								aria-controls="profile" aria-selected="true"><h4><i class="fa fa-user"></i> Profile</h4></a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link {{#unless showProfileTab}}active{{/unless}}" id="awards-tab" data-toggle="tab" href="#awards" role="tab"
+								aria-controls="awards" aria-selected="false"><h4><i class="fa fa-trophy"></i> Awards Management</h4></a>
+						</li>
+					</ul>
 
-				<!-- Profile Tab -->
-				<div class="tab-pane fade {{#if showProfileTab}}show active{{/if}}" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+					<!-- Tab Content -->
+					<div class="tab-content" id="myTabContent">
 
-					<div class="panel-body">
+						<!-- Profile Tab -->
+						<div class="tab-pane fade {{#if showProfileTab}}show active{{/if}}" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+
+							<div class="panel-body">
             		
                   				<table class="table table-borderless h5">
                     				<tbody>
-                      					<tr>
-                        					<th>Email:</th>
-                        					<td><a href="mailto:{{session.email}}">{{session.email}}</a></td>
+                    					<tr>
+                    						<th>Email:</th>
+                    						<td><a href="mailto:{{session.email}}">{{session.email}}</a></td>
 											<td><a data-toggle="modal" href="#changeEmailModal">Change Email</a></td>
-                      					</tr>
-                      					<tr>
-                        					<th>Full Name:</th>
-                        					<td>{{session.fname}} {{session.lname}}</td>
+                    					</tr>
+                    					<tr>
+                    						<th>Full Name:</th>
+                    						<td>{{session.fname}} {{session.lname}}</td>
 											<td><a data-toggle="modal" href="#editNameModal">Edit Name</a></td>
-                      					</tr>
+                    					</tr>
                       
-                      					<tr>
-                        					<th>User Type:</th>
-                        					<td>Normal User</td>
-                      					</tr>
+                    					<tr>
+                    						<th>User Type:</th>
+                    						<td>Normal User</td>
+                    					</tr>
 										<tr>
                         					<th>Registration Timestamp:</th>
-                        					<td>{{session.timestamp}}<br>(US Pacific Time)
-                        					</td>
+                        					<td>{{session.timestamp}}<br>(US Pacific Time)</td>
                       					</tr>
 										<tr>
 											<td><button type="button" class="btn btn-warning" data-toggle="modal" data-target="#changePwdModal">
@@ -75,21 +75,21 @@
                     				</tbody>
                   				</table>
 
-            		</div>
+            				</div>
 
-				</div>
+						</div>
 
-				<!-- Awards Management Tab -->
-				<div class="tab-pane fade {{#unless showProfileTab}}show active{{/unless}}" id="awards" role="tabpanel" aria-labelledby="awards-tab">
+						<!-- Awards Management Tab -->
+						<div class="tab-pane fade {{#unless showProfileTab}}show active{{/unless}}" id="awards" role="tabpanel" aria-labelledby="awards-tab">
 
-				</div>
-			</div>
+						</div>
+					</div>
+		</div>
 
-    	</div>
 
 		<!-- Right side: About Me Card -->
 		<div class="col-md-4 col-lg-4 pt-5" align="center">
-			<div class="card bg-info float-right" align="center">
+			<div class="card bg-info float-sm-right float-md-right" align="center">
   				<div class="card-header lead">
 					<h4><i class="fa fa-bar-chart"></i>
 						About Me
@@ -116,8 +116,6 @@
 		</div>
 	</div>
 
-	
-	
 </div>
 
 <!-- In-text CSS -->
@@ -138,6 +136,7 @@
 	.nav-link {
     	color: #8A0868;
 	}
+
 </style>
 
 
@@ -186,74 +185,155 @@
 	</div>
 </div>
 
-<!-- Scripts for Edit Name form -->
-<script>
 
-	function hard_reload() {
-		//window.location.href = '/users';
-		window.location.reload(true);
-	}
+<!-- Change Email Modal -->
+<div class="modal fade" id="changeEmailModal" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
 
-	window.addEventListener('load', function (e) {
-		
+			<!-- Dialog Box Header -->
+			<div class="modal-header">
+				<h4 class="modal-title" id="changeEmailModalLabel">Change Email</h4>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
 
-		// editName Listener
-		var editNameForm = document.getElementById("editNameForm");
-		editNameForm.addEventListener("submit", function (event) {
-		
-			event.preventDefault();
-			document.getElementById("editNameWarning").style.display = "none";
-			console.log('editNameForm submitted');
+			<!-- Form section -->
+			<form name="changeEmailForm" id="changeEmailForm" accept-charset="UTF-8" >
 
-			/*
-			var editNameFD = new FormData(editNameForm);
+				<!-- Dialog Box Body -->
+				<div class="modal-body">
+					<div class="alert alert-danger" id="changeEmailWarning" role="alert" style="display: none;">
+					
+					</div>
+					<div class="form-group">
+						<label for="changeEmail">Your Email Address</label>
+						<input type="email" required="required" class="form-control" id="input_email" name="input_email"
+							value="{{session.email}}">
+					</div>
+					
+				</div>
 
-			var ConvertedJSON= {};
-    		for (const [key, value]  of editNameFD.entries())
-    		{
-        		ConvertedJSON[key] = value;
-    		}
-			console.log(ConvertedJSON);
-			*/
-			editNameJson = {};
-			editNameJson["input_fname"] = document.getElementById("input_fname").value;
-			editNameJson["input_lname"] = document.getElementById("input_lname").value;
-			//console.log(editNameJson);
-
-			fetch('/users/editName', {
-				method: 'PATCH',
-				credentials: 'same-origin',
-				redirect: 'error',
-				headers: {
-					'content-type': 'application/json;charset=UTF-8'
-    			},
-  				body: JSON.stringify(editNameJson)
-			})
-			.then((response) => {
-				//alert('response!');
-				//console.log("response = " + response);
-
-				if(response.ok && response.status == 200) {
-					console.log("response 200 ok");
-					hard_reload();
-				}
-				else {
-					console.error('Error: ', response.status + ' ' + response.statusText);
-					$("#editNameWarning").fadeIn(300);
-				}
-			} )
-			.catch((error) => {
-				console.error('Error: ', error);
-				$("#editNameWarning").fadeIn(300);
-			});
+				<!-- Dialog Box Footer - Buttons -->
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+					<button type="submit" class="btn btn-primary">Submit</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
 
 
-		});
+<!-- Change Password Modal -->
+<div class="modal fade" id="changePwdModal" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
 
-		$('#editNameModal').on('show.bs.modal', function (e) {
-			document.getElementById("editNameWarning").style.display = "none";
-		})
-		
-	});
+			<!-- Dialog Box Header -->
+			<div class="modal-header">
+				<h4 class="modal-title" id="changePwdModalLabel">Change Account Password</h4>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
 
-</script>
+			<!-- Form section -->
+			<form name="changePwdForm" id="changePwdForm" accept-charset="UTF-8" >
+
+				<!-- Dialog Box Body -->
+				<div class="modal-body">
+					<div class="panel panel-default">
+  						<div class="panel-body">
+							Passwords must be at least 8 characters long and must contain the following:
+							<ul>
+								<li>At least one Lowercase Alphabet</li>
+								<li>At least one Uppercase Alphabet</li>
+								<li>At least one Number</li>
+							</ul>
+						</div>
+					</div>
+
+					<div class="alert alert-success" id="pwdChangeSuccess" role="alert" style="display: none;">
+						You have successfully changed your password!
+					</div>
+					<div class="alert alert-danger" id="changePwdWarning" role="alert" style="display: none;"></div>
+					<div class="form-group">
+						<label for="changePwd">Your New Password</label>
+						<div class="alert alert-warning" id="pwdRequirementsWarning" role="alert" style="display: none;"></div>
+						<!-- password input field: "required" not needed here, controlled by jQuery scripts -->
+						<input type="password" class="form-control" id="input_pwd" name="input_pwd">
+					</div>
+					<div class="form-group">
+						<label for="verifyPwd">Re-enter the New Password <span id='pwdMatchMsg'></span></label>
+						<!-- password input field: "required" not needed here, controlled by jQuery scripts -->
+						<input type="password" class="form-control" id="input_pwd_verify" name="input_pwd_verify">
+					</div>
+					
+				</div>
+
+				<!-- Dialog Box Footer - Buttons -->
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+					<button type="submit" class="btn btn-primary" disabled id="pwdChangeSubmitBtn">Submit</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+
+
+<!-- Update Signature Modal -->
+<div class="modal fade" id="updateSigModal" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" style="width:700px;">
+		<div class="modal-content">
+
+			<!-- Dialog Box Header -->
+			<div class="modal-header">
+				<h4 class="modal-title" id="updateSigModalLabel">Update Signature</h4>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+
+			<!-- Form section -->
+			<form name="updateSigForm" id="updateSigForm" >
+
+				<!-- Dialog Box Body -->
+				<div class="modal-body">
+					<div class="alert alert-danger" id="updateSigWarning" role="alert" style="display: none;">
+					
+					</div>
+					<div class="form-group">
+						<div class="row">
+  							<div class="col-12" align="center">
+								<label for="updateSig">Your New Signature</label>
+							</div>
+						</div>
+						<div class="row">
+  							<div class="col-12" align="center">
+								<canvas id="update_sig_pad"
+									style="border:black 1px solid;">
+								</canvas>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-12" align="center">
+							<button type="button" class="btn btn-info" id="undo_sig">Undo</button>
+							<button type="button" class="btn btn-info" id="clear_sig">Clear</button>
+						</div>
+					</div>
+					
+				</div>
+
+				<!-- Dialog Box Footer - Buttons -->
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+					<button type="submit" class="btn btn-primary">Submit</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
