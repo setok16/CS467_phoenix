@@ -122,6 +122,36 @@ END$$
 
 
 
+/*
+Email is an UNIQUE field.
+Need to check if the new email is available BEFORE calling this procedure.
+*/
+DROP PROCEDURE IF EXISTS changeEmailByID$$
+CREATE PROCEDURE changeEmailByID (
+    IN input_id int,
+    IN input_email varchar(63)
+    )
+BEGIN
+    UPDATE `User`
+    SET `email` = input_email
+    WHERE `u_id` = input_id;
+END$$
+
+
+
+DROP PROCEDURE IF EXISTS changePwdByID$$
+CREATE PROCEDURE changePwdByID (
+    IN input_id int,
+    IN input_pwd_hashed varchar(63)
+    )
+BEGIN
+    UPDATE `User`
+    SET `pwd_hashed` = input_pwd_hashed
+    WHERE `u_id` = input_id;
+END$$
+
+
+
 DROP PROCEDURE IF EXISTS setRecoveryCodeByID$$
 CREATE PROCEDURE setRecoveryCodeByID (
     IN input_id int,
