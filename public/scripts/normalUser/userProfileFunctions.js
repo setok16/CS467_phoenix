@@ -143,7 +143,7 @@ window.addEventListener('load', function (window_load_event) {
     var space = new RegExp('[\\s]');
 
     // Change Password - check requirements listener
-    $('#input_pwd, #input_pwd_verify').on('keyup', function () {
+    $('#input_pwd, #input_pwd_verify').on('keyup change', function () {
         if ( $('#input_pwd').val().match(space) ) {
             //document.getElementById("pwdRequirementsWarning").style.display = "none";
             document.getElementById("pwdRequirementsWarning").innerHTML = "Password must NOT contain any space";
@@ -247,6 +247,11 @@ window.addEventListener('load', function (window_load_event) {
 
                     document.getElementById("input_pwd").value = "";
                     document.getElementById("input_pwd_verify").value = "";
+                    
+                    document.getElementById("pwdChangeSubmitBtn").disabled = true;
+                    pwd1OK = false;
+                    pwd2OK = false;
+
                     $("#pwdMatchMsg").html("");
                     
                     setTimeout(function() {

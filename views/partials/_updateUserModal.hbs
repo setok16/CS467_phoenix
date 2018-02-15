@@ -19,8 +19,10 @@
 					</div>
 					<div class="form-group">
 						<label for="editEmail">Email</label>
-						<input type="email" class="form-control" name="email" placeholder="Email">
+						<input id="editEmail" type="email" class="form-control" name="email" placeholder="Email" 
+							   onchange="checkEmailAvailability(this.value, 'emailUpdateAvailabilityAlert', this.dataset.originalEmail)">
 					</div>
+					<div id="emailUpdateAvailabilityAlert" class="alert alert-danger fade collapse" role="alert"></div>
 					<div class="form-group" hidden>
 						<label for="uid">Id</label>
 						<input type="number" class="form-control" name="uid" placeholder="uid">

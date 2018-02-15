@@ -1,15 +1,10 @@
 ﻿				
-<div class="col-sm">
-	<button type="button" class="btn btn-info btn-lg float-right" data-toggle="modal" data-target="#Add{{userType}}User">
-		Add {{userType}} User
-	</button>
-</div>
 <!-- Modal -->
-<div class="modal fade" id="Add{{userType}}User" tabindex="-1" role="dialog" aria-labelledby="add{{userType}} UserModal" aria-hidden="true">
+<div class="modal fade" id="addUserModal" tabindex="-1" role="dialog" aria-labelledby="addUserModal" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title">Add {{userType}} User</h5>
+				<h5 class="modal-title">Add User</h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
@@ -17,56 +12,70 @@
 			<form action="/admin/create/user" method="POST">
 				<div class="modal-body">
 					<div class="form-group">
-						<label for="first{{userType}}Name">First Name</label>
-						<input type="text" class="form-control" name="fname" id="first{{userType}}Name" placeholder="First Name">
+						<label for="firstName">First Name</label>
+						<input type="text" class="form-control" name="fname" id="firstName" placeholder="First Name">
 					</div>
 					<div class="form-group">
-						<label for="last{{userType}}Name">Last Name</label>
-						<input type="text" class="form-control" name="lname" id="last{{userType}}Name" placeholder="Last Name">
+						<label for="lastName">Last Name</label>
+						<input type="text" class="form-control" name="lname" id="lastName" placeholder="Last Name">
 					</div>
 					<div class="form-group">
-						<label for="input{{userType}}Email">Email</label>
-						<input type="email" class="form-control" name="email" id="input{{userType}}Email" placeholder="Email">
+						<label for="inputEmail">Email</label>
+						<input type="email" class="form-control" name="email" id="inputEmail" placeholder="Email" onblur="checkEmailAvailability(this.value,'emailAvailabilityAlert')">
+						<span id="emailWarning"></span>
 					</div>
+					<div id="emailAvailabilityAlert" class="alert alert-danger fade collapse" role="alert"></div>
 					<div class="form-row">
 						<div class="form-group col-md-6">
-							<label for="input{{userType}}Password">Password</label>
-							<input type="password" class="form-control" name="password" id="input{{userType}}Password" placeholder="Password">
+							<label for="inputPassword">Password</label>
+							<input type="password" class="form-control" name="password" id="inputPassword" placeholder="Password"
+								   onchange="checkPasswordComplexity(this.value,document.getElementById('confirmPassword').value,'passwordComplexityAlert')">
 						</div>
 						<div class="form-group col-md-6">
-							<label for="confirm{{userType}}Password">Confirm Password</label>
-							<input type="password" class="form-control" name="confirmed_password" id="confirm{{userType}}Password" placeholder="Confirm Password">
-						</div>
-						<div hidden>
-							<input type="text" class="form-control" name="usertype" value="{{userType}}">
+							<label for="confirmPassword">Confirm Password</label>
+							<input id="confirmPassword" type="password" class="form-control" name="confirmed_password" placeholder="Confirm Password" 
+								   onchange="checkPasswordComplexity(document.getElementById('inputPassword').value,this.value,'passwordComplexityAlert')")>
 						</div>
 					</div>
-					<div id="accordion">
-						<div class="card">
-							<div class="card-header" id="password{{userType}}RequiermentHeading">
-								<button type="button" class="btn btn-link collapsed" data-toggle="collapse" data-target="#password{{userType}}Requierment" aria-expanded="true" aria-controls="password{{userType}}Requierment">
-									Password Requirements
-								</button>
-							</div>
+					<div id="passwordComplexityAlert" class="alert alert-danger fade collapse" role="alert"></div>
+					<div hidden>
+						<input id="usertype" type="text" class="form-control" name="usertype">
+					</div>
+				</div>
+				<div>
 
-							<div id="password{{userType}}Requierment" class="collapse" aria-labelledby="password{{userType}}RequiermentHeading" data-parent="#accordion">
-								<div class="card-body">
-									<ul>
-										<li>At least 8 characters</li>
-										<li>Lowercase Alphabet</li>
-										<li>Uppercase Alphabet</li>
-										<li>Number</li>
-									</ul>
+					</div>
+					<div class="form-group">
+						<div id="accordion">
+							<div class="card">
+								<div class="card-header" id="passwordRequiermentHeading">
+									<button type="button" class="btn btn-link collapsed" data-toggle="collapse" data-target="#passwordRequierment" aria-expanded="true" aria-controls="passwordRequierment">
+										Password Requirements
+									</button>
+								</div>
+								<div id="passwordRequierment" class="collapse" aria-labelledby="passwordRequiermentHeading" data-parent="#accordion">
+									<div class="card-body">
+										<ul>
+											<li>At least 8 characters</li>
+											<li>Lowercase Alphabet</li>
+											<li>Uppercase Alphabet</li>
+											<li>Number</li>
+										</ul>
+									</div>
 								</div>
 							</div>
 						</div>
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-					<button type="submit" class="btn btn-primary" onclick="">Create User</button>
-				</div>
-			</form>
+						</div>
+							<div class="form-group">
+								<div id="addUserWarning" class="alert alert-danger fade collapse" role="alert">
+									This is a danger alert—check it out!
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+								<button type="submit" class="btn btn-primary">Create User</button>
+						</div>
+				</form>
 			</div>
 	</div>
 </div>

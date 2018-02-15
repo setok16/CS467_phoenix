@@ -51,17 +51,42 @@ function redirectToAdmin(req, res, next) {
 
 router.delete('/delete/:id', validateSession, deleteUser, redirectToAdmin);
 
+
+
 function checkUserType(req, res, next) {
-	req.body.usertype = req.body.usertype.toLowerCase();
-	if (req.body.usertype === 'basic') {
-		req.body.usertype = 'normal';
-	}
-	if (req.body.usertype === 'admin' || req.body.usertype === 'normal') {
-		return next();
+	console.log(req.body);
+	if (req.body.usertype) {
+		req.body.usertype = req.body.usertype.toLowerCase();
+		if (req.body.usertype === 'basic') {
+			req.body.usertype = 'normal';
+		}
+		if (req.body.usertype === 'admin' || req.body.usertype === 'normal') {
+			return next();
+		}
 	} else {
 		console.log("The user type was not sent");
 		redirectToAdmin(req, res, next);
 	}
+}
+
+function validateCreateRequest(req, res, next) {
+	if (req.body.password.length < 8) {
+		res.invalidreq.passwordTooShort = true;
+	}
+	if (!req.body.password.match(/[0-9]/i)) {
+		res.invalidreq.passwordNoNumber = true;
+	}
+	if (!req.body.password.match(/[A-Z]/i)) {
+		res.invalidreq.passwordNoUpperCase = true;
+	}
+	if (!req.body.password.match(/[a-z]/i)) {
+		res.invalidreq.passwordNoLowerCase = true;
+	}
+	if (res.invalidreq) {
+		res.statusCode(400);
+	}
+	console.log("validate request here");
+	next();
 }
 
 function saltPassword(req, res, next) {
@@ -101,7 +126,7 @@ function createUser(req, res, next) {
 		});
 };
 
-router.post('/create/user', validateSession, checkUserType, saltPassword ,createUser, redirectToAdmin);
+router.post('/create/user', validateSession, checkUserType, validateCreateRequest, saltPassword ,createUser, redirectToAdmin);
 
 /* GET users listing. */
 router.get('/', getNormalUsers, getAdminUsers, renderAdminPage);
@@ -113,7 +138,7 @@ function getNormalUsers(req, res, next) {
 				console.log(err);
 				next(err, null);
 			} else {
-				req.normalUsers = rows;
+				req.userData = rows;
 				next();
 			}
 		});
@@ -154,31 +179,24 @@ function getAdminUsers(req, res, next) {
 
 function renderAdminPage (req, res) {
 	//res.send('respond with a resource');
-	if (req.session.u_type == 'admin') {
+	if (req.session.u_type === 'admin') {
 
 		var context = {};
-		context.customScript =
-			"$('#updateModal').on('show.bs.modal', function (event) { \r\n" +
-			"var button = $(event.relatedTarget) \r\n" +
-			"var lname = button.data('lname') \r\n" +
-			"var fname = button.data('fname') \r\n" +
-			"var email = button.data('email') \r\n" +
-			"var uid = button.data('uid') \r\n" +
-			"var modal = $(this) \r\n" +
-			"modal.find('.modal-body input[name=lname]').val(lname) \r\n" +
-			"modal.find('.modal-body input[name=fname]').val(fname) \r\n" +
-			"modal.find('.modal-body input[name=email]').val(email) \r\n" +
-			"modal.find('.modal-body input[name=uid]').val(uid) \r\n" +
-			//"modal.find('.modal-body form[name=editFrom').attr('action', '/admin/update/' + uid + '?_method=PUT') \r\n" +
-			"})";
 
+		context.customScript = '<script src="public/scripts/emailAvailability.js"></script>';
+		context.customScript += '<script src="public/scripts/passwordComplexity.js"></script>';
+		context.customScript += '<script src="public/scripts/adminFunctions.js"></script>';
+		context.customScript += '<script src="public/scripts/prefillUpdateModal.js"></script>';
+		
 		context.title = 'Admin Account';
+		//context.email = req.session.email;
 		context.session = { email: req.session.email };
-		context.userData = req.normalUsers;
 		context.adminData = req.adminUsers;
-		context.countUsers = context.userData.length;
-		context.countAdmin = context.adminData.length;
-		context.activeTab = "basic";
+		context.userData = req.userData;
+		//context.userData = req.normalUsers;
+		//context.adminData = req.adminUsers;
+		context.countUsers = req.userData.length;
+		context.countAdmin = req.adminUsers.length;
 		
 		res.render('admin', context);
 
