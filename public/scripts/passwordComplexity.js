@@ -1,4 +1,4 @@
-﻿async function checkPasswordComplexity(password, confPassword, warningElementId) {
+async function checkPasswordComplexity(password, confPassword, warningElementId) {
 
 	var warningElement = document.getElementById(warningElementId);
 	warningElement.innerHTML = "";

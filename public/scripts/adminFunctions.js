@@ -1,4 +1,4 @@
-﻿function addUserTypeToForm(userType) {
+function addUserTypeToForm(userType) {
 	var userTypeElement = document.getElementById("addUserId");
 	userTypeElement.value = userType;
 

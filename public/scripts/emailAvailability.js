@@ -1,4 +1,4 @@
-﻿async function checkEmailAvailability(email, warningElementId, originalEmail) {
+async function checkEmailAvailability(email, warningElementId, originalEmail) {
 	var emailAlert = document.getElementById(warningElementId);
 	if (originalEmail === email) {
 		emailAlert.innerHTML = "";

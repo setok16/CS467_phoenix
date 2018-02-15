@@ -13,6 +13,7 @@ var MongoStore = require('connect-mongo')(session);
 var usersApi = require('./api/users');
 var index = require('./routes/index');
 var users = require('./routes/users');
+var users_error = require('./routes/users_error');
 var admin = require('./routes/admin');
 var registration = require('./routes/registration');
 var login = require('./routes/login');
@@ -52,15 +53,17 @@ app.use('/scripts', express.static(__dirname + '/node_modules'));
 // Using as path to public
 app.use('/public', express.static(__dirname + '/public'));
 
-app.use('/', index);
 app.use('/api/users', usersApi);
 app.use('/users', users);
+app.use('/users_error', users_error);
 app.use('/admin', admin);
 app.use('/registration', registration);
 app.use('/login', login);
 app.use('/password_recovery', passwordRecovery);
 app.use('/password_change', passwordChange);
 app.use('/logout', logout);
+app.use('/', index);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

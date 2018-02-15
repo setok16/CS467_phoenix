@@ -11,13 +11,14 @@ router.get('/', function(req, res, next) {
 			res.redirect('/admin');
 		}
 	}
-
-	res.render('index', {
-		title: 'Login',
-		hideNav: 'hidden',
-		customHeader: '<link href="stylesheets/signin.css" rel="stylesheet" />'
+	else {
+		res.render('index', {
+			title: 'Login',
+			hideNav: 'hidden',
+			customHeader: '<link href="stylesheets/signin.css" rel="stylesheet" />'
+		});
 	}
-	);
+	
 });
 
 module.exports = router;
