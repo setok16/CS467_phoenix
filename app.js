@@ -11,6 +11,7 @@ var session = require('express-session');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
+var users_error = require('./routes/users_error');
 var admin = require('./routes/admin');
 var registration = require('./routes/registration');
 var addUser = require('./routes/addUser');
@@ -44,6 +45,7 @@ app.use('/public', express.static(__dirname + '/public'));
 
 
 app.use('/users', users);
+app.use('/users_error', users_error);
 app.use('/admin', admin);
 app.use('/registration', registration);
 app.use('/add_user', addUser);
