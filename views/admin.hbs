@@ -58,7 +58,11 @@
 			</table>
 		</div>
 	</div>
-	<div class="tab-pane fade" id="report" role="tabpanel" aria-labelledby="report-tab">show reports {{> partial}}</div>
+	<!--REPORT TAB-->
+	<div class="tab-pane fade" id="report" role="tabpanel" aria-labelledby="report-tab">
+		<div id="chart_user_type"></div>
+		<div id="chart_award_type" class="float-right"></div>
+	</div>
 </div>
 {{> _updateUserModal}}
 {{> _addUserButtonModal}}
