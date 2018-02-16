@@ -14,6 +14,7 @@ router.get('/', function(req, res, next) {
 
 	var context = {};
 	context.title = 'Registration';
+  context.hideNav = 'hidden';
 
 	// Getting a list of user emails
 	mysql.pool.query("SELECT email from User", function(err, rows, fields) {
