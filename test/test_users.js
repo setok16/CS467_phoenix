@@ -58,7 +58,7 @@ describe('/users', function() {
         });
     });
 
-    it ('should return 401 if no names aren\'t specified', function(done) {
+    it ('should return 401 if no names are specified', function(done) {
 
       var agent = chai.request.agent(app);
       agent // Retaining session cookie
