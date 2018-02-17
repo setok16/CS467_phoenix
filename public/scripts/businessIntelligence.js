@@ -21,26 +21,41 @@ function drawChart() {
 
 	drawUserTypeChart();
 	drawAwardTypeChart();
-	drawUserAwardsChart();
+	drawAwardsByUserChart();
 
 }
 
-function drawUserAwardsChart() {
+async function drawAwardsByUserChart() {
 
-	var jsonData =
-	[
-		['User', 'Weekly', 'Monthly'],
-		['George Washington', 17, 55],
-		['Harry Potter', 27, 22],
-		['Uma Thurman', 28, 19],
-		['Clyde Drexler', 15, 1]
-	];
+	//var jsonData =
+	//[
+	//	['User', 'Weekly', 'Monthly'],
+	//	['George Washington', 17, 55],
+	//	['Harry Potter', 27, 22],
+	//	['Uma Thurman', 28, 19],
+	//	['Clyde Drexler', 15, 1]
+	//];
 
-	var data = google.visualization.arrayToDataTable(jsonData);
+	var apiData;
+
+	try {
+		const response = await axios.get('/api/reports/awardsbyuser');
+		apiData = response.data;
+		//console.log(response.data);
+	} catch (error) {
+		console.log(error);
+		return;
+	}
+
+	var data = new google.visualization.DataTable();
+	data.addColumn('string', 'User');
+	data.addColumn('number', 'weekly');
+	data.addColumn('number', 'monthly');
+	data.addRows(apiData);
 
 	var options = {
-		width: 600,
-		height: 400,
+		'width': 700,
+		'height': 700,
 		legend: { position: 'right' },
 		bar: { groupWidth: '75%' },
 		isStacked: true
@@ -50,20 +65,31 @@ function drawUserAwardsChart() {
 	chart.draw(data, options);
 };
 
-function drawAwardTypeChart() {
-	var data = new google.visualization.DataTable();
-	data.addColumn('string', 'Award Type');
-	data.addColumn('number', 'Total');
-	data.addRows([
-		['weekly', 15],
-		['monthly', 150]
-	]);
+async function drawAwardTypeChart() {
+
+
+	var apiData;
+	try {
+		const response = await axios.get('/api/reports/awardsbytype');
+		apiData = response.data;
+	} catch (error) {
+		console.log(error);
+		return;
+	}
+
+	var data = new google.visualization.arrayToDataTable(apiData);
+	//data.addColumn('string', 'Award Type');
+	//data.addColumn('number', 'Total');
+	//data.addRows(apiData);
+	//data.addRows([
+	//	['weekly', 15],
+	//	['monthly', 150]
+	//]);
 
 	// Set chart options
 	var options = {
-		'title': 'Award Types',
-		'width': 500,
-		'height': 500,
+		'width': 700,
+		'height': 700,
 		is3D: true
 	};
 
@@ -72,31 +98,42 @@ function drawAwardTypeChart() {
 	chart.draw(data, options);
 }
 
-function drawUserTypeChart() {
-	var data = new google.visualization.DataTable();
-	data.addColumn('string', 'User Type');
-	data.addColumn('number', 'Total');
-	data.addRows([
-		['admin', 15],
-		['normal', 150]
-	]);
-	//data.addRows([
-	//	['Mushrooms', 3],
-	//	['Onions', 1],
-	//	['Olives', 1],
-	//	['Zucchini', 1],
-	//	['Pepperoni', 2]
-	//]);
+async function drawUserTypeChart() {
+
+	//var jsonData = [
+	//	[
+	//		{ label: 'User', type: 'string' },
+	//		{ label: 'Total', type: 'number' }
+	//	],
+	//	['admin', 15],
+	//	['normal', 150],
+	//	['unknown', 10]
+	//];
+
+	//var data = new google.visualization.arrayToDataTable(jsonData);
+
+
+	var apiData;
+	
+	try {
+		const response = await axios.get('/api/reports/usersbytype');
+		apiData = response.data;
+		//console.log(response.data);
+	} catch (error) {
+		console.log(error);
+		return;
+	}
+
+	var data2 = new google.visualization.DataTable(apiData);
 
 	// Set chart options
 	var options = {
-		'title': 'User Types',
-		'width': 500,
-		'height': 500,
+		'width': 700,
+		'height': 700,
 		is3D: true
 	};
-
+	
 	// Instantiate and draw our chart, passing in some options.
 	var chart = new google.visualization.PieChart(document.getElementById('chart_user_type'));
-	chart.draw(data, options);
+	chart.draw(data2, options);
 }
