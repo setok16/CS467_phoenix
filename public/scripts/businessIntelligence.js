@@ -86,7 +86,7 @@ async function drawAwardsByUserChart() {
 	var apiData;
 
 	try {
-		const response = await axios.get('/api/reports/awardsbyuser');
+		const response = await axios.get('/api/reports/awardsbyuser/chartdata');
 		apiData = response.data;
 		//console.log(response.data);
 	} catch (error) {
@@ -156,8 +156,7 @@ async function drawAwardsTable() {
 	var data = new google.visualization.arrayToDataTable(apiData);
 
 	var formatter_short = new google.visualization.DateFormat({ formatType: 'short' });
-
-	formatter_short.format(data, 3);
+	formatter_short.format(data, 4);
 
 	var table = new google.visualization.Table(document.getElementById('chart_awards_table'));
 
