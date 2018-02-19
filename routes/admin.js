@@ -183,13 +183,14 @@ function renderAdminPage (req, res) {
 
 		var context = {};
 
+		
 		context.customScript = '<script src="public/scripts/emailAvailability.js"></script>';
 		context.customScript += '<script src="public/scripts/passwordComplexity.js"></script>';
 		context.customScript += '<script src="public/scripts/adminFunctions.js"></script>';
 		context.customScript += '<script src="public/scripts/prefillUpdateModal.js"></script>';
 		context.customScript += '<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>';
 		context.customScript += '<script src="public/scripts/businessIntelligence.js"></script>';
-
+		
 		
 		context.title = 'Admin Account';
 		//context.email = req.session.email;

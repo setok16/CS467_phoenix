@@ -1,27 +1,40 @@
 ﻿<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
 	<li class="nav-item">
-		<a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">
-		User Types</a>
+		<a class="nav-link active" id="pills-user-tab" data-toggle="pill" href="#pills-user" role="tab" aria-controls="pills-user" aria-selected="true">
+			User Types
+		</a>
 	</li>
 	<li class="nav-item">
-		<a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">
-		Award Types</a>
+		<a class="nav-link" id="pills-awards-tab" data-toggle="pill" href="#pills-awards" role="tab" aria-controls="pills-awards" aria-selected="false">
+			Award Types
+		</a>
 	</li>
 	<li class="nav-item">
-		<a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false">
+		<a class="nav-link" id="pills-user_awards-tab" data-toggle="pill" href="#pills-user_awards" role="tab" aria-controls="pills-user_awards" aria-selected="false">
 			Awards created by Users
+		</a>
+	</li>
+	<li class="nav-item">
+		<a class="nav-link" id="pills-calendar-tab" data-toggle="pill" href="#pills-calendar" role="tab" aria-controls="pills-calendar" aria-selected="true">
+			Awards Calendar
 		</a>
 	</li>
 </ul>
 <div class="tab-content" id="pills-tabContent">
-	<div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+	<div class="tab-pane fade show active" id="pills-user" role="tabpanel" aria-labelledby="pills-user-tab">
 		<div id="chart_user_type"></div>
+		<div id="table_user_type"></div>
 	</div>
-	<div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+	<div class="tab-pane fade" id="pills-awards" role="tabpanel" aria-labelledby="pills-awards-tab">
 		<div id="chart_award_type"></div>
+		<div id="chart_award_domain"></div>
+		<div id="chart_awards_table"></div>
 	</div>
-	<div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
+	<div class="tab-pane fade" id="pills-user_awards" role="tabpanel" aria-labelledby="pills-user_awards-tab">
 		<div id="chart_user_awards"></div>
+	</div>
+	<div class="tab-pane fade" id="pills-calendar" role="tabpanel" aria-labelledby="pills-calendar-tab">
+		<div id="chart_awards_calendar_table" class="in-line"></div>
 	</div>
 </div>
 
