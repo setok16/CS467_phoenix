@@ -6,14 +6,15 @@ var session = require('express-session');
 
 router.post('/', function(req, res, next) {
 	var pass = req.body.password;
-	mysql.pool.query('SELECT u_id, u_type, email, pwd_hashed, fname, lname, creation_datetime FROM User WHERE email = ?', [req.body.email], function(err, rows, fields) {
+	//console.log(req.body.email, " ", req.body.password);
+	mysql.pool.query('CALL selectUserByEmail(?)', [req.body.email], function(err, rows, fields) {
 		if (err) {
 			console.log(err);
 			next(err);
 			return;
 		}
 
-		var authPass = rows;
+		var authPass = rows[0];
 
 		if (authPass[0] !== undefined) {
 			bcrypt.compare(pass, authPass[0].pwd_hashed, function (err, result) {
@@ -24,15 +25,18 @@ router.post('/', function(req, res, next) {
 					req.session.fname = authPass[0].fname;
 					req.session.lname = authPass[0].lname;
 					req.session.creation_datetime = authPass[0].creation_datetime;
-					req.session.save();
-          mysql.pool.query('UPDATE User SET recovery_code=? WHERE u_id=?', [null, req.session.u_id], function(err, rows, fields) {
-            if (err) {
-              console.log(err);
-              next(err);
-              return;
-            }
-					  res.status(200).send('Login success');
-          });
+					req.session.save(function(error) {
+
+						mysql.pool.query('UPDATE User SET recovery_code=? WHERE u_id=?', [null, req.session.u_id], function(err, rows, fields) {
+							if (err) {
+							  console.log(err);
+							  next(err);
+							  return;
+							}
+							res.status(200).send('Login success');
+						});
+					});
+					
 				} else {
 					res.status(401).send('Incorrect password');
 				}

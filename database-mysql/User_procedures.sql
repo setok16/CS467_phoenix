@@ -108,6 +108,92 @@ BEGIN
 END$$
 
 
+
+DROP PROCEDURE IF EXISTS changeSignatureByID$$
+CREATE PROCEDURE changeSignatureByID (
+    IN input_id int,
+    IN input_signature MEDIUMBLOB
+    )
+BEGIN
+    UPDATE `User`
+    SET `signature` = input_signature
+    WHERE `u_id` = input_id;
+END$$
+
+
+
+/*
+Email is an UNIQUE field.
+Need to check if the new email is available BEFORE calling this procedure.
+*/
+DROP PROCEDURE IF EXISTS changeEmailByID$$
+CREATE PROCEDURE changeEmailByID (
+    IN input_id int,
+    IN input_email varchar(63)
+    )
+BEGIN
+    UPDATE `User`
+    SET `email` = input_email
+    WHERE `u_id` = input_id;
+END$$
+
+
+
+DROP PROCEDURE IF EXISTS changePwdByID$$
+CREATE PROCEDURE changePwdByID (
+    IN input_id int,
+    IN input_pwd_hashed varchar(63)
+    )
+BEGIN
+    UPDATE `User`
+    SET `pwd_hashed` = input_pwd_hashed
+    WHERE `u_id` = input_id;
+END$$
+
+
+
+DROP PROCEDURE IF EXISTS setRecoveryCodeByID$$
+CREATE PROCEDURE setRecoveryCodeByID (
+    IN input_id int,
+    IN input_recovery_code varchar(63) /* NULL is allowed */
+    )
+BEGIN
+    UPDATE `User`
+    SET `recovery_code` = input_recovery_code
+    WHERE `u_id` = input_id;
+END$$
+
+
+
+/* Trigger: prevents adding normal user with NULL fname or lname */
+DROP TRIGGER IF EXISTS normal_user_add_validate$$
+CREATE TRIGGER normal_user_add_validate before insert on User
+for each row
+BEGIN
+    IF (new.u_type = 'normal' AND
+    (new.fname IS NULL OR new.fname = '' OR new.lname IS NULL OR new.lname = '')
+    )
+    THEN
+        signal sqlstate '45000' set message_text = 'Normal User must have fname and lname';
+    END IF;
+END$$
+
+
+
+/* Trigger: prevents updating normal user to have NULL fname or lname */
+DROP TRIGGER IF EXISTS normal_user_update_validate$$
+CREATE TRIGGER normal_user_update_validate before update on User
+for each row
+BEGIN
+    IF (new.u_type = 'normal' AND
+    (new.fname IS NULL OR new.fname = '' OR new.lname IS NULL OR new.lname = '')
+    )
+    THEN
+        signal sqlstate '45000' set message_text = 'Normal User must have fname and lname';
+    END IF;
+END$$
+
+
 delimiter ;
 
 /* Useful MySQL Commands:
