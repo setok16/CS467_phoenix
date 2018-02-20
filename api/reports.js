@@ -111,19 +111,42 @@ router.get('/awardsbyuser/:resulttype', function (req, res, next) {
 	}
 });
 
-router.get('/awardsbytype/:resulttype', function (req, res, next) {
+router.get('/awardsbytype/:resulttype',
+	function(req, res, next) {
 
-	if (req.params.resulttype.toLowerCase() === 'chartdata') {
-		var data2dArray = [
-			[
-				{ label: 'Award', type: 'string' },
-				{ label: 'Total', type: 'number' }
-			],
-			['weekly', 85],
-			['monthly', 150],
-			['yearly', 11]
-		];
-		res.send(data2dArray);
+		if (req.params.resulttype.toLowerCase() === 'chartdata') {
+			//var data2dArray = [
+			//	[
+			//		{ label: 'Award', type: 'string' },
+			//		{ label: 'Total', type: 'number' }
+			//	],
+			//	['weekly', 85],
+			//	['monthly', 150],
+			//	['yearly', 11]
+			//];
+			//res.send(data2dArray);
+			var googleTabletData = [];
+
+			googleTabletData.push([
+				{ id: 'award', label: 'Award', type: 'string' },
+				{ it: 'total', label: 'Total', type: 'number' }]
+			);
+
+		pool.query(
+			"SELECT c_type award, COUNT(c_id) as total " +
+			"FROM Award " +
+			"GROUP BY c_type",
+			function (err, rows) {
+				if (err) {
+					console.log(err);
+				} else {
+					rows.forEach(function (element) {
+						googleTabletData.push([element.award, element.total]);
+					});
+					res.send(googleTabletData);
+				}
+			});
+
 	} else if (req.params.resulttype.toLowerCase() === 'tabledata') {
 
 		//var apiData = [
