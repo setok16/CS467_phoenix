@@ -11,6 +11,7 @@ var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 
 var usersApi = require('./api/users');
+var reportsApi = require('./api/reports');
 var index = require('./routes/index');
 var users = require('./routes/users');
 var users_error = require('./routes/users_error');
@@ -54,6 +55,7 @@ app.use('/scripts', express.static(__dirname + '/node_modules'));
 app.use('/public', express.static(__dirname + '/public'));
 
 app.use('/api/users', usersApi);
+app.use('/api/reports', reportsApi);
 app.use('/users', users);
 app.use('/users_error', users_error);
 app.use('/admin', admin);
