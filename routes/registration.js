@@ -15,6 +15,8 @@ router.get('/', function(req, res, next) {
 	var context = {};
 	context.title = 'Registration';
   context.hideNav = 'hidden';
+  context.customScript = '<script src="public/scripts/emailAvailability.js"></script>';
+  context.customScript += '<script src="public/scripts/passwordComplexity.js"></script>';
 
 	// Getting a list of user emails
 	mysql.pool.query("SELECT email from User", function(err, rows, fields) {
@@ -39,6 +41,10 @@ router.post('/', function(req, res, next) {
 	var imgFullPath = '/' + imgPath + imgName + '.png';
 	base64Img.imgSync(req.body.base64, imgPath, imgName);
 	*/
+  if (req.body.fname == '' || req.body.lname == '' || req.body.email == '' || req.body.password == '') {
+    res.status(409).send('Invalid input');
+    return;
+  }
 
 	// Password processing (async)
 	const saltRounds = 10;

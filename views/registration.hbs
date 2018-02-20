@@ -9,14 +9,14 @@
       <input type="text" class="form-control" name="lname" placeholder="Last Name" id="lname">
     </div>
     <div class="form-group">
-      <input type="email" class="form-control" name="email" placeholder="Email" id="email">
+      <input type="email" class="form-control" name="email" placeholder="Email" onblur="checkEmailAvailability(this.value, 'alert-box');" id="email">
     </div>
     <div class="form-row">
       <div class="form-group col-md-6">
-        <input type="password" class="form-control" name="password" placeholder="Password" id="password">
+        <input type="password" class="form-control" name="password" placeholder="Password" onchange="checkPasswordComplexity(this.value,document.getElementById('rpt-password').value,'alert-box')" id="password">
       </div>
       <div class="form-group col-md-6">
-        <input type="password" class="form-control" name="rpt-password" placeholder="Confirm Password" id="rpt-password">
+        <input type="password" class="form-control" name="rpt-password" placeholder="Confirm Password"  onchange="checkPasswordComplexity(document.getElementById('password').value,this.value,'alert-box')" id="rpt-password">
       </div>
     </div>
     <div class="form-group">
@@ -49,7 +49,7 @@
       <button id="clear">Clear</button> 
     </div>
     <!--<p>By creating an account with us, you agree to our <a href="#">Terms & Privacy</a>.</p>-->
-    <div id="alert-box" style="display:none; width:400px;"></div>
+    <div id="alert-box" class="alert alert-danger fade collapse" role="alert"></div>
     <button type="submit" class="btn btn-primary" onclick="return addUser()">Sign Up</button>
     <button type="button" class="btn btn-secondary" onclick="window.location='/';">Cancel</button>
   </form>
@@ -90,26 +90,8 @@
     var base64 = signaturePad.toDataURL();
     var alertBox = document.getElementById('alert-box');
 
-    // Loading exising user emails for validation
-    var userExists = false;
-    var emails = {{{emails}}};
-    for (var i = 0; i < emails.length; i++) {
-      //console.log(emails[i].email);
-      if (emails[i].email == email) {
-        userExists = true;
-      }
-    }
-
     // Form input validation
-    if (fname == '' || lname == '' || email == '' || password == '' || rptPassword == '') {
-      alertBox.className = "alert alert-danger"
-      alertBox.innerHTML = "All fields must be filled";
-      alertBox.style.display = "block";
-    } else if (userExists){ 
-      alertBox.className = "alert alert-danger"
-      alertBox.innerHTML = "This email is already taken";
-      alertBox.style.display = "block";
-    } else if (fname.length > 50 || lname.length > 50 || email > 50 || password > 50){ 
+    if (fname.length > 50 || lname.length > 50 || email > 50 || password > 50){ 
       alertBox.className = "alert alert-danger"
       alertBox.innerHTML = "Maximum of 50 characters per field";
       alertBox.style.display = "block";
@@ -117,28 +99,8 @@
       alertBox.className = "alert alert-danger"
       alertBox.innerHTML = "Please enter your signature";
       alertBox.style.display = "block";
-    } else if (password != rptPassword) { 
-      alertBox.className = "alert alert-danger"
-      alertBox.innerHTML = "Passwords must be matching";
-      alertBox.style.display = "block";
-    } else if (password.length < 8) {
-      alertBox.className = "alert alert-danger"
-      alertBox.innerHTML = "Password must contain at least 8 characters";
-      alertBox.style.display = "block";
-    } else if (!password.match(/[0-9]/i)){
-      alertBox.className = "alert alert-danger"
-      alertBox.innerHTML = "Password must contain a number";
-      alertBox.style.display = "block";
-    } else if (!password.match(/[a-z]/i)){
-      alertBox.className = "alert alert-danger"
-      alertBox.innerHTML = "Password must contain a lowercase letter";
-      alertBox.style.display = "block";
-    } else if (!password.match(/[A-Z]/i)){
-      alertBox.className = "alert alert-danger"
-      alertBox.innerHTML = "Password must contain an uppercase letter";
-      alertBox.style.display = "block";
     } else {
-      var formData = {fname, lname, email, password, base64}; // We're just sending password as plaintext. Must be changed later maybe
+      var formData = {fname, lname, email, password, base64};
 
       var req = new XMLHttpRequest();
       req.open('POST', '/registration', true);
@@ -155,6 +117,10 @@
           setTimeout(function() {
             window.location = '/';
           }, 3000);
+        } else if (req.status == 409) {
+          alertBox.className = "alert alert-danger"
+          alertBox.innerHTML = "Please input all fields";
+          alertBox.style.display = "block";
         } else {
           console.log('Something seriously went wrong'); 
         }
