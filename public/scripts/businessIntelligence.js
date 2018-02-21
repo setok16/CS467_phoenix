@@ -1,6 +1,6 @@
 ﻿// Load the Visualization API and the corechart package.
 //google.charts.load('current', { packages: ['calendar'] });
-google.charts.load('current', { packages: ['corechart', 'table', 'bar'] });
+google.charts.load('current', { packages: ['corechart', 'table', 'bar', 'charteditor'] });
 
 // Set a callback to run when the Google Visualization API is loaded.
 google.charts.setOnLoadCallback(drawChart);
@@ -16,36 +16,14 @@ function drawChart() {
 
 	drawUserTypeChart();
 	drawUsersTable();
+	drawAwardsTable();
 	drawAwardTypeChart();
 	drawAwardsDomainChart();
 	drawAwardsByUserChart();
 	drawAwardsCalendarTable();
-	drawAwardsTable();
 
 }
 
-function drawAwardsDomainChart()
-{
-	var data = google.visualization.arrayToDataTable([
-		['Domain', 'Weekly', 'Monthly'],
-		['gmail', 15, 3],
-		['ymail', 3, 15],
-		['aol', 1, 12],
-		['unknown', 25, 55],
-		['oregonstate', 17, 17]]);
-
-	var options = {
-		chart: {
-			title: 'Award By Domain',
-			subtitle: 'Awards by recipient email domain'
-		},
-		bars: 'horizontal' // Required for Material Bar Charts.
-	};
-
-	var chart = new google.charts.Bar(document.getElementById('chart_award_domain'));
-
-	chart.draw(data, google.charts.Bar.convertOptions(options));
-}
 
 function drawAwardsCalendarTable() {
 		var apiData = [
@@ -112,12 +90,87 @@ async function drawAwardsByUserChart() {
 	chart.draw(data, options);
 };
 
+
+async function drawAwardsDomainChart() {
+
+	var data = [
+		['Domain', 'Weekly', 'Monthly'],
+		['gmail', 15, 3],
+		['ymail', 3, 15],
+		['aol', 1, 12],
+		['unknown', 25, 55],
+		['oregonstate', 17, 17]
+	];
+
+	var apiData;
+	try {
+		const response = await axios.get('/api/reports/awards/domain');
+		apiData = response.data;
+	} catch (error) {
+		console.log(error);
+		return;
+	}
+
+	console.log("APIDATA:" + apiData);
+
+	var data = google.visualization.arrayToDataTable(apiData);
+
+	function countWordMatch(values, word) {
+		var countWords = 0;
+		values.forEach(function(element) {
+			if (element.toLowerCase() === word.toLowerCase()) {
+				countWords += 1;
+			}
+		});
+		return countWords;
+	}
+
+	function countMonthMatch(values) {
+		return countWordMatch(values, 'month');
+	}
+
+	function countWeekMatch(values) {
+		return countWordMatch(values, 'week');
+	}
+
+	var result = google.visualization.data.group(
+		data,
+		[0],
+		[{ 'column': 1, 'label': 'Month', 'pattern': 'month', 'aggregation': countMonthMatch, 'type': 'number' },
+			{ 'column': 1, 'label': 'Week', 'pattern': 'week', 'aggregation': countWeekMatch, 'type': 'number' }]
+	);
+// google.visualization.data.count
+	console.log("RESULT:" + result);
+
+	var options = {
+		//chart: {
+		//	title: 'Award By Domain'
+		//},
+		//'width': '500',
+		//'height': '500',
+		//'chartArea': { 'width': '50%', 'height': '50%' },
+		hAxis: {
+			title: 'Total Awards',
+			minValue: 0
+		},
+		vAxis: {
+			title: 'Domain'
+		},
+		bars: 'horizontal', // Required for Material Bar Charts.
+		isStacked: true
+	};
+
+	var chart = new google.charts.Bar(document.getElementById('chart_award_domain'));
+
+	chart.draw(result, google.charts.Bar.convertOptions(options));
+}
+
 async function drawAwardTypeChart() {
 
 
 	var apiData;
 	try {
-		const response = await axios.get('/api/reports/awardsbytype/chartdata');
+		const response = await axios.get('/api/reports/awards/type');
 		apiData = response.data;
 	} catch (error) {
 		console.log(error);
@@ -145,7 +198,7 @@ async function drawAwardsTable() {
 	var apiData;
 
 	try {
-		const response = await axios.get('/api/reports/awardsbytype/tabledata');
+		const response = await axios.get('/api/reports/awards/table');
 		apiData = response.data;
 		//console.log(response.data);
 	} catch (error) {
