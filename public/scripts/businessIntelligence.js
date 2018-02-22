@@ -93,15 +93,6 @@ async function drawAwardsByUserChart() {
 
 async function drawAwardsDomainChart() {
 
-	var data = [
-		['Domain', 'Weekly', 'Monthly'],
-		['gmail', 15, 3],
-		['ymail', 3, 15],
-		['aol', 1, 12],
-		['unknown', 25, 55],
-		['oregonstate', 17, 17]
-	];
-
 	var apiData;
 	try {
 		const response = await axios.get('/api/reports/awards/domain');
@@ -110,8 +101,6 @@ async function drawAwardsDomainChart() {
 		console.log(error);
 		return;
 	}
-
-	console.log("APIDATA:" + apiData);
 
 	var data = google.visualization.arrayToDataTable(apiData);
 
@@ -136,33 +125,22 @@ async function drawAwardsDomainChart() {
 	var result = google.visualization.data.group(
 		data,
 		[0],
-		[{ 'column': 1, 'label': 'Month', 'pattern': 'month', 'aggregation': countMonthMatch, 'type': 'number' },
-			{ 'column': 1, 'label': 'Week', 'pattern': 'week', 'aggregation': countWeekMatch, 'type': 'number' }]
+		[
+			{ 'column': 1, 'label': 'Month', 'pattern': 'month', 'aggregation': countMonthMatch, 'type': 'number' },
+			{ 'column': 1, 'label': 'Week', 'pattern': 'week', 'aggregation': countWeekMatch, 'type': 'number' }
+		]
 	);
 // google.visualization.data.count
 	console.log("RESULT:" + result);
 
 	var options = {
-		//chart: {
-		//	title: 'Award By Domain'
-		//},
-		//'width': '500',
-		//'height': '500',
-		//'chartArea': { 'width': '50%', 'height': '50%' },
-		hAxis: {
-			title: 'Total Awards',
-			minValue: 0
-		},
-		vAxis: {
-			title: 'Domain'
-		},
-		bars: 'horizontal', // Required for Material Bar Charts.
-		isStacked: true
+		width: 1000,
+		height: 500,
+	    isStacked: true
 	};
 
-	var chart = new google.charts.Bar(document.getElementById('chart_award_domain'));
-
-	chart.draw(result, google.charts.Bar.convertOptions(options));
+	var chart = new google.visualization.ColumnChart(document.getElementById("chart_award_domain"));
+	chart.draw(result, options);
 }
 
 async function drawAwardTypeChart() {
