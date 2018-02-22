@@ -14,8 +14,9 @@ function drawChart() {
 	//http://localhost:3000/api/reports/usertypes/
 	// Create the data table.
 
-	drawUserTypeChart();
-	drawUsersTable();
+	//drawUserTypeChart();
+	//drawUsersTable();
+	drawUserVisuals();
 	//drawAwardsTable();
 	//drawAwardTypeChart();
 	//drawAwardsDomainChart();
@@ -32,7 +33,7 @@ function drawAwardsCalendarTable() {
 			{ label: 'Recipient', type: 'string' },
 			{ label: 'Award Type', type: 'string' },
 			{ label: 'Issuer', type: 'string' },
-			{ label: 'Granted', type: 'date' }
+			{ label: 'Date Granted', type: 'date' }
 		],
 		['Fred', 'weekly', 'Julia', 'Date(2018, 2, 27)'],
 		['Jim', 'weekly', 'Tom', 'Date(2018, 2, 27)'],
@@ -107,7 +108,7 @@ async function drawAwardsDomainChart() {
 
 	function countWordMatch(values, word) {
 		var countWords = 0;
-		values.forEach(function(element) {
+		values.forEach(function (element) {
 			if (element.toLowerCase() === word.toLowerCase()) {
 				countWords += 1;
 			}
@@ -131,19 +132,18 @@ async function drawAwardsDomainChart() {
 			{ 'column': 1, 'label': 'Week', 'pattern': 'week', 'aggregation': countWeekMatch, 'type': 'number' }
 		]
 	);
-// google.visualization.data.count
+	// google.visualization.data.count
 	console.log("RESULT:" + result);
 
 	var options = {
 		width: 1000,
 		height: 500,
-	    isStacked: true
+		isStacked: true
 	};
 
 	var chart = new google.visualization.ColumnChart(document.getElementById("chart_award_domain"));
 	chart.draw(result, options);
 }
-
 async function drawAwardTypeChart() {
 
 
@@ -171,6 +171,28 @@ async function drawAwardTypeChart() {
 	chart.draw(data, options);
 
 }
+async function drawAwardsTable() {
+
+	var apiData;
+
+	try {
+		const response = await axios.get('/api/reports/awards/table');
+		apiData = response.data;
+		//console.log(response.data);
+	} catch (error) {
+		console.log(error);
+		return;
+	}
+
+	var data = new google.visualization.arrayToDataTable(apiData);
+
+	var formatter_short = new google.visualization.DateFormat({ formatType: 'short' });
+	formatter_short.format(data, 4);
+
+	var table = new google.visualization.Table(document.getElementById('chart_awards_table'));
+
+	table.draw(data, { showRowNumber: false, width: '100%', height: '100%' });
+}
 
 async function drawAwardVisuals() {
 	var apiData;
@@ -189,8 +211,7 @@ async function drawAwardVisuals() {
 
 	var formatter_short = new google.visualization.DateFormat({ formatType: 'short' });
 	formatter_short.format(data, 4);
-
-
+	
 	//create a dashboard
 	var dashboard = new google.visualization.Dashboard(
 		document.getElementById('awards_dashboard'));
@@ -200,7 +221,7 @@ async function drawAwardVisuals() {
 		'controlType': 'DateRangeFilter',
 		'containerId': 'filter_awards_by_date',
 		'options': {
-			'filterColumnLabel': 'Granted',
+			'filterColumnLabel': 'Date Granted',
 			//formatType: 'short'
 		},
 		//'ui': { 'label': 'Award Date' },
@@ -256,13 +277,11 @@ async function drawAwardVisuals() {
 
 }
 
-
-async function drawAwardsTable() {
-
+async function drawUserVisuals() {
 	var apiData;
 
 	try {
-		const response = await axios.get('/api/reports/awards/table');
+		const response = await axios.get('/api/reports/usersbytype/tabledata');
 		apiData = response.data;
 		//console.log(response.data);
 	} catch (error) {
@@ -272,14 +291,51 @@ async function drawAwardsTable() {
 
 	var data = new google.visualization.arrayToDataTable(apiData);
 
-	var formatter_short = new google.visualization.DateFormat({ formatType: 'short' });
-	formatter_short.format(data, 4);
+	
+	var userTypePicker = new google.visualization.ControlWrapper({
+		'controlType': 'CategoryFilter',
+		'containerId': 'filter_uses_by_type',
+		'options': {
+			'filterColumnLabel': 'User Type',
+		}
+	});
 
-	var table = new google.visualization.Table(document.getElementById('chart_awards_table'));
+	var tableWrapper = new google.visualization.ChartWrapper({
+		chartType: 'Table',
+		options: { showRowNumber: false, width: '100%', height: '100%' },
+		containerId: 'table_user_type'
+	});
 
-	table.draw(data, { showRowNumber: false, width: '100%', height: '100%' });
+	var options = {
+		'width': '700',
+		'height': '700',
+		'chartArea': { 'width': '100%', 'height': '100%' }
+	};
+
+
+	google.visualization.events.addListener(tableWrapper, 'ready', function () {
+		var chart = new google.visualization.PieChart(document.getElementById("chart_user_domain"));
+		var aggregatedData = google.visualization.data.group(
+			tableWrapper.getDataTable(),
+			[4],
+			[
+				{ 'column': 0, 'label': 'Month', 'pattern': 'month', 'aggregation': google.visualization.data.count, 'type': 'number' }
+			]
+		);
+		chart.draw(aggregatedData, options);
+	});
+
+
+	//put everything together is a dashboard
+	var dashboard = new google.visualization.Dashboard(
+		document.getElementById('users_dashboard'));
+
+	dashboard.bind(userTypePicker, tableWrapper);
+	dashboard.draw(data);
+
+
+	
 }
-
 
 async function drawUsersTable() {
 

@@ -146,7 +146,7 @@ router.get('/awards/:resulttype',
 			{ id: 'receiver_email', label: 'Recipient Email', type: 'string' },
 			{ id: 'c_type', label: 'Award Type', type: 'string' },
 			{ id: 'issuer', label: 'Issuer', type: 'string' },
-			{ id: 'granted_datetime', label: 'Granted', type: 'date' },
+			{ id: 'granted_datetime', label: 'Date Granted', type: 'date' },
 			{ id: "domain", label: "User Domain", type: "string" }
 		]);
 
