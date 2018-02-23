@@ -407,3 +407,64 @@ function countMonthMatch(values) {
 function countWeekMatch(values) {
 	return countWordMatch(values, 'week');
 }
+
+async function displaySearchAndDisplayResults(formId, searchResultElementId) {
+
+	//var theAction = theForm.action;
+	//console.log(theAction);
+	//function getData() {
+	//	var formData = new FormData(form);
+
+	//	for (var pair of formData.entries()) {
+	//		alert(pair[0] + ': ' + pair[1]);
+	//	}
+	//}
+
+	var form = document.getElementById(formId);
+	var formData = new FormData(form);
+
+	var queryString = "?";
+
+	for (var pair of formData.entries()) {
+		if (pair[1] !== "")
+		queryString += "&" + pair[0] + "=" + pair[1];
+	}
+
+
+	var apiData;
+
+	try {
+		const response = await axios.get('/api/awards'+queryString);
+		apiData = response.data;
+		//console.log(response.data);
+	} catch (error) {
+		console.log(error);
+		return;
+	}
+
+	var resultElement = document.getElementById(searchResultElementId);
+	var warningElement = resultElement.getElementsByTagName('DIV')[0];
+	var resultTable = document.getElementById(searchResultElementId).getElementsByTagName('TABLE')[0];
+	if (apiData.length < 1) {
+		warningElement.style.visibility = "visible";		
+		resultTable.style.visibility = "collapse";
+		return;
+	}
+	warningElement.style.visibility = "collapse";		
+	resultTable.style.visibility = "visible";
+
+	var newTableBody = document.createElement('tbody');
+
+	apiData.forEach(function(element) {
+		var row = newTableBody.insertRow(0);
+		row.innerHTML = '<td scope="col">' + element.fname + ' ' + element.lname + '</td>' +
+			'<td scope="col">' + element.email + '</td>' +
+			'<td scope="col">' + element.award_type + '</td>' +
+			'<td scope="col">' + element.issuer_email + '</td>' +
+			'<td scope="col">' + element.granted_date + '</td>';
+	});
+
+	var oldTableBody = resultTable.getElementsByTagName('TBODY')[0];
+
+	oldTableBody.parentNode.replaceChild(newTableBody, oldTableBody);
+}
