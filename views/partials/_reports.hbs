@@ -50,16 +50,23 @@
 		<div id="chart_awards_calendar_table" class="in-line"></div>
 	</div>-->
 	<div  class="tab-pane fade" id="pills-search" role="tabpanel" aria-labelledby="pills-search-tab">
-		Search For Awards
 		<form class="form-inline" id="searchForm">
-			<div class="input-group mb-2 mr-sm-2">
-				<label class="sr-only">first name</label>
-				<input type="text" name="fname" placeholder="first name" />
-				<input type="text" name="lname" placeholder="last name" />
-				<input type="text" name="email" placeholder="recipient email" />
-				<button type="button" onclick="displaySearchAndDisplayResults('searchForm','searchResults')">Search</button>
-			</div>
-		</form>
+			<div class="form-row align-items-center">
+				<div class="col-auto">
+					<label class="sr-only">first name</label>
+					<input class="form-control mb-2" type="text" name="fname" placeholder="recipient first name" />
+				</div>
+				<div class="col-auto">
+					<input class="form-control mb-2" type="text" name="lname" placeholder="recipient last name" />
+				</div>
+				<div class="col-auto">
+					<input class="form-control mb-2" type="text" name="email" placeholder="recipient email" />
+				</div>
+				<div class="col-auto">
+					<button class="btn btn-primary mb-2" type="button" onclick="displaySearchAndDisplayResults('searchForm','searchResults')">Search</button>
+					</div>
+				</div>
+</form>
 
 		<div id="searchResults">
 			<div style="visibility: collapse;" id="no_results_message">Sorry your search produced no results</div>
