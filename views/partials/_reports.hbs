@@ -49,13 +49,16 @@
 	<div class="tab-pane fade" id="pills-calendar" role="tabpanel" aria-labelledby="pills-calendar-tab">
 		<div id="chart_awards_calendar_table" class="in-line"></div>
 	</div>-->
-	<div class="tab-pane fade" id="pills-search" role="tabpanel" aria-labelledby="pills-search-tab">
+	<div  class="tab-pane fade" id="pills-search" role="tabpanel" aria-labelledby="pills-search-tab">
 		Search For Awards
-		<form id="searchForm">
-			<input type="text" name="fname" label="first name" />
-			<input type="text" name="lname" label="last name" />
-			<input type="text" name="email" label="recipient email" />
-			<button type="button" onclick="displaySearchAndDisplayResults('searchForm','searchResults')">Search</button>
+		<form class="form-inline" id="searchForm">
+			<div class="input-group mb-2 mr-sm-2">
+				<label class="sr-only">first name</label>
+				<input type="text" name="fname" placeholder="first name" />
+				<input type="text" name="lname" placeholder="last name" />
+				<input type="text" name="email" placeholder="recipient email" />
+				<button type="button" onclick="displaySearchAndDisplayResults('searchForm','searchResults')">Search</button>
+			</div>
 		</form>
 
 		<div id="searchResults">

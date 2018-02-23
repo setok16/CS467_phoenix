@@ -21,8 +21,8 @@ function drawChart() {
 	//drawAwardTypeChart();
 	//drawAwardsDomainChart();
 	drawAwardVisuals();
-	drawAwardsByUserChart();
-	drawAwardsCalendarTable();
+	//drawAwardsByUserChart();
+	//drawAwardsCalendarTable();
 
 }
 
@@ -408,17 +408,16 @@ function countWeekMatch(values) {
 	return countWordMatch(values, 'week');
 }
 
+function isEmptyOrSpaces(str) {
+	return str === null || str.match(/^ *$/) !== null;
+}
+
 async function displaySearchAndDisplayResults(formId, searchResultElementId) {
 
-	//var theAction = theForm.action;
-	//console.log(theAction);
-	//function getData() {
-	//	var formData = new FormData(form);
+	var resultElement = document.getElementById(searchResultElementId);
+	var warningElement = resultElement.getElementsByTagName('DIV')[0];
+	var resultTable = document.getElementById(searchResultElementId).getElementsByTagName('TABLE')[0];
 
-	//	for (var pair of formData.entries()) {
-	//		alert(pair[0] + ': ' + pair[1]);
-	//	}
-	//}
 
 	var form = document.getElementById(formId);
 	var formData = new FormData(form);
@@ -426,10 +425,14 @@ async function displaySearchAndDisplayResults(formId, searchResultElementId) {
 	var queryString = "?";
 
 	for (var pair of formData.entries()) {
-		if (pair[1] !== "")
+		if (!isEmptyOrSpaces(pair[1]))
 		queryString += "&" + pair[0] + "=" + pair[1];
 	}
-
+	if (queryString === "?") {
+		warningElement.style.visibility = "visible";
+		resultTable.style.visibility = "collapse";
+		return;
+	}
 
 	var apiData;
 
@@ -442,10 +445,7 @@ async function displaySearchAndDisplayResults(formId, searchResultElementId) {
 		return;
 	}
 
-	var resultElement = document.getElementById(searchResultElementId);
-	var warningElement = resultElement.getElementsByTagName('DIV')[0];
-	var resultTable = document.getElementById(searchResultElementId).getElementsByTagName('TABLE')[0];
-	if (apiData.length < 1) {
+		if (apiData.length < 1) {
 		warningElement.style.visibility = "visible";		
 		resultTable.style.visibility = "collapse";
 		return;
