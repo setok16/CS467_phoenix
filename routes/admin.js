@@ -5,7 +5,6 @@ var pool = mysql.pool;
 const bcrypt = require('bcrypt');
 var adminEmail = 'admin@oregonstate.edu';
 
-
 function updateUser(req, res, next) {
 	pool.query("UPDATE User SET `fname` = ?, `lname` =  ?, `email` = ? WHERE  `u_id` = ? AND `email` <> ?",
 		[req.body.fname, req.body.lname, req.body.email, req.body.uid, adminEmail],
@@ -22,12 +21,7 @@ function updateUser(req, res, next) {
 router.put('/update', validateSession, updateUser, redirectToAdmin);
 
 function validateSession(req, res, next) {
-	//if (req.SESSION_SECRET === process.env.SESSION_SECRET) {
-	//	console.log("session verified");
-	//	next();
-	//}
-	//console.log("session is unverifiable");
-	//res.redirect('/');
+
 	return next();
 }
 
@@ -129,20 +123,36 @@ function createUser(req, res, next) {
 router.post('/create/user', validateSession, checkUserType, validateCreateRequest, saltPassword ,createUser, redirectToAdmin);
 
 /* GET users listing. */
-router.get('/', getNormalUsers, getAdminUsers, renderAdminPage);
+//router.get('/', getNormalUsers, getAdminUsers, renderAdminPage);
 
-function getNormalUsers(req, res, next) {
-	pool.query("SELECT u_id, email, fname, lname, DATE_FORMAT(creation_datetime, \"%M %d %Y\") as creation_datetime, signature from User where u_type like 'normal'",
-		function (err, rows, fields) {
+router.get('/',renderAdminPage);
+
+
+//function getNormalUsers(req, res, next) {
+	//pool.query("SELECT u_id, email, fname, lname, DATE_FORMAT(creation_datetime, \"%M %d %Y\") as creation_datetime, signature from User where u_type like 'normal'",
+	//	function (err, rows, fields) {
+	//		if (err) {
+	//			console.log(err);
+	//			next(err, null);
+	//		} else {
+	//			req.userData = rows;
+	//			next(req);
+	//		}
+	//	});
+//};
+
+async function getNormalUsers(callback) {
+	pool.query("CALL selectUserByUserType(?)",
+		['normal'],
+		function(err, rows, fields) {
 			if (err) {
 				console.log(err);
-				next(err, null);
-			} else {
-				req.userData = rows;
-				next();
+				//return [];
 			}
+			callback();
+			return rows[0];
 		});
-};
+}
 
 //function addSignatureImagePath(req, res, next) {
 
@@ -164,47 +174,127 @@ function getNormalUsers(req, res, next) {
 //	//});		
 //};
 
-function getAdminUsers(req, res, next) {
-	pool.query("SELECT u_id, email, fname, lname, DATE_FORMAT(creation_datetime, \"%M %d %Y\") as creation_datetime from User where u_type like 'admin'",
+//function getAdminUsers(req, res, next) {
+	//pool.query("SELECT u_id, email, fname, lname, DATE_FORMAT(creation_datetime, \"%M %d %Y\") as creation_datetime from User where u_type like 'admin'",
+	//	function (err, rows, fields) {
+	//		if (err) {
+	//			console.log(err);
+	//			next(err, null);
+	//		} else {
+	//			req.adminUsers = rows;
+	//			next();
+	//		}
+	//	});
+//};
+
+async function getAdminUsers(callback) {
+	pool.query("CALL selectUserByUserType(?)", ['admin'],
 		function (err, rows, fields) {
 			if (err) {
 				console.log(err);
-				next(err, null);
-			} else {
-				req.adminUsers = rows;
-				next();
+				return [];
 			}
+			callback();
+			return rows[0];
 		});
-};
+}
 
-function renderAdminPage (req, res) {
+async function renderAdminPage (req, res) {
 	//res.send('respond with a resource');
-	if (req.session.u_type === 'admin') {
+		if (req.session.u_type === 'admin') {
 
-		var context = {};
+			var context = {};
+			
+			context.customScript = '<script src="public/scripts/emailAvailability.js"></script>';
+			context.customScript += '<script src="public/scripts/passwordComplexity.js"></script>';
+			context.customScript += '<script src="public/scripts/adminFunctions.js"></script>';
+			context.customScript += '<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>';
+			context.customScript += '<script src="public/scripts/businessIntelligence.js"></script>';
 
-		
-		context.customScript = '<script src="public/scripts/emailAvailability.js"></script>';
-		context.customScript += '<script src="public/scripts/passwordComplexity.js"></script>';
-		context.customScript += '<script src="public/scripts/adminFunctions.js"></script>';
-		context.customScript += '<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>';
-		context.customScript += '<script src="public/scripts/businessIntelligence.js"></script>';
-		
-		context.title = 'Admin Account';
-		//context.email = req.session.email;
-		context.session = { email: req.session.email };
-		context.adminData = req.adminUsers;
-		context.userData = req.userData;
-		//context.userData = req.normalUsers;
-		//context.adminData = req.adminUsers;
-		context.countUsers = req.userData.length;
-		context.countAdmin = req.adminUsers.length;
-		
-		res.render('admin', context);
+			context.title = 'Admin Account';
+			//context.email = req.session.email;
+			context.session = { email: req.session.email };
+			//context.adminData = req.adminUsers;
+			//try {
+			//	const response = await axios.get('http://' + req.headers.host + '/api/users?usertype=admin',
+			//		{
+			//			jar: cookieJar,
+			//			withCredentials: true,
+			//		},
+			//		);
+			//	//console.log("response:" + response);
+			//	context.adminData = response.data;
+			//} catch (error) {
+			//	console.log("error occured");
+			//	console.log(error);
+			//	res.status(403).location('../logout').end();
+			//	return;
+			//}
 
-	} else { // Going back to login page if user is not logged in
-		res.redirect('/');
-	}
+			//var normalUsers = [];
+			//var adminUsers = [];
+
+			//try {
+			//	normalUsers = getNormalUsers();
+			//	adminUsers = getAdminUsers();
+			//} catch(err) {
+			//	console.log(err);
+			//}
+
+			//context.userData = await normalUsers;
+			//context.adminData = await adminUsers;
+			//context.countUsers = await normalUsers.length;
+			//context.countAdmin = await adminUsers.length;
+			
+
+			//try {
+			//	const response = await axios.get('http://' + req.headers.host + '/api/users?usertype=normal',
+			//		{ withCredentials: true });
+			//	//console.log("response:" + response);
+			//	context.userData = response.data;
+			//} catch (err) {
+			//	console.log("error occured");
+			//	console.log(err);
+			//	//res.redirect(403, '../logout');
+			//	res.status(403).location('../logout').end();
+			//	return;
+			//}
+			//context.userData = req.userData;
+			//context.userData = req.normalUsers;
+			//context.adminData = req.adminUsers;
+
+			pool.query("CALL selectUserByUserType(?)",
+				['normal'],
+				function (err, rows, fields) {
+					if (err) {
+						console.log(err);
+						context.userData = [];
+						context.countUsers = 0;
+					} else
+					{
+						context.userData = rows[0];
+						context.countUsers = rows.count;
+					}
+					pool.query("CALL selectUserByUserType(?)", ['admin'],
+						function (err, rows, fields) {
+							if (err) {
+								console.log(err);
+								context.adminData = rows[0];
+								context.countAdmin = rows.count;
+							} else {
+								context.adminData = rows[0];
+								context.countAdmin = rows.count;
+							}
+							res.render('admin', context);
+						});
+				});
+
+			//res.render('admin', context);
+
+		} else { // Going back to login page if user is not logged in
+			res.redirect('/');
+		}
+	
 }
 
 module.exports = router;

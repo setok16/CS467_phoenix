@@ -3,10 +3,37 @@ var router = express.Router();
 var mysql = require('../dbcon.js');
 var pool = mysql.pool;
 const bcrypt = require('bcrypt');
-var adminEmail = 'admin@oregonstate.edu';
+
+function validateAdminUser(req, res, next) {
+	if (!req.session || req.session.u_type !== 'admin' || !req.session.u_id) {
+		res.status(403).send();
+		return;
+	}
+	pool.query("CALL selectUserByID(?)",
+		[req.session.u_id],
+		function(err, rows, fields) {
+			if (err) {
+				console.log('DB ERROR: ' + err);
+				res.status(403).send();
+			} else if (rows[0].length < 1) {
+				console.log("no users found for u_id");
+				res.status(403).send();
+				return;
+			} else if (rows[0][0].u_type.toLowerCase() !== 'admin') {
+				console.log("u_type is not admin");
+				res.status(403).send();
+			} else {
+				next();
+			}
+			return;
+		});
+};
+
+router.all('/*', validateAdminUser);
 
 router.delete('/:u_id',
 	function (req, res, next) {	
+		//lookup user by id first.  do not delete if 1) doesn't exist, 2) is special adming or basic user
 		pool.query("CALL deleteUserByID(?)",
 			[req.params.u_id],
 			function (err, result) {
@@ -20,15 +47,14 @@ router.delete('/:u_id',
 			});
 	});
 
-router.get('/email/available/:email',
+router.get('/email/available/:email', 
 	function (req, res, next) {
 		pool.query("SELECT false available FROM User where email = ? LIMIT 1", [req.params.email],
 			function (err, rows, fields) {
 				if (err) {
 					console.log(err);
-					//next(err, null);
 				} else {
-					var available = true;
+					let available = true;
 					if (rows.length > 0)
 						available = false;
 					res.json({ "available": available });
@@ -42,7 +68,6 @@ router.get('/:u_id',
 			function (err, rows, fields) {
 				if (err) {
 					console.log(err);
-					//next(err, null);
 				} else {
 					res.send(rows);
 				}
@@ -50,7 +75,9 @@ router.get('/:u_id',
 	});
 
 router.get('/',
-	function(req, res, next) {
+	function (req, res, next) {
+		console.log(req.cookies);
+
 		if (req.query.email) {
 			pool.query("CALL selectUserByEmail(?)", [req.query.email],
 				function (err, rows, fields) {
@@ -69,18 +96,18 @@ router.get('/',
 						console.log(err);
 						//next(err, null);
 					} else {
-						res.send(rows);
+						res.send(rows[0]);
 					}
 				});
 		}
-		else if (req.query.usertype == 'normal' || req.query.usertype == 'basic') {
-			pool.query("CALL selectUserByUserType(?)", ['basic'],
+		else if (req.query.usertype === 'normal' || req.query.usertype === 'basic') {
+			pool.query("CALL selectUserByUserType(?)", ['normal'],
 				function (err, rows, fields) {
 					if (err) {
 						console.log(err);
 						//next(err, null);
 					} else {
-						res.send(JSON.stringify(rows));
+						res.send(rows[0]);
 					}
 				});
 		}
@@ -102,7 +129,6 @@ router.put('/:u_id',
 			function (err, rows, fields) {
 				if (err) {
 					console.log(err);
-					//next(err, null);
 				} else {
 					res.send(JSON.stringify(rows));
 				}
@@ -112,7 +138,6 @@ router.put('/:u_id',
 router.post('/',
 	function (req, res, next) {
 
-		//console.log("BODY:" + req.body.password + req.body.usertype + req.body.email);
 		if (!isPasswordComplex(req.body.password)) {
 			res.status(400).send();
 			return;
@@ -125,15 +150,11 @@ router.post('/',
 			res.send("PASSWORDHASH ERROR: " + err);
 			return;
 		}
-
-		//console.log("passwordHash:" + passwordHash);
 		
 		var userType = req.body.usertype.toLowerCase();
-		//console.log("usertype:" + userType);
-
+		
 		if (userType === 'admin') {
 			pool.query("CALL addAdminUser(?,?)",
-				//[req.body.fname, req.body.lname,]
 				[req.body.email, passwordHash],
 				function (err, rows, fields) {
 					if (err) {

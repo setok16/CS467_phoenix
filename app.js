@@ -43,11 +43,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 //app.use(session({secret:process.env.SESSION_SECRET,resave:false,saveUninitialized:true}));
 app.use(session({
-  secret: process.env.SESSION_SECRET,
-  resave: false,
-  saveUninitialized: false,
-  store: new MongoStore({ url: process.env.MONGO_STORE_URL })
-}))
+	secret: process.env.SESSION_SECRET,
+	resave: false,
+	saveUninitialized: false,
+	store: new MongoStore({ url: process.env.MONGO_STORE_URL })
+}));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Using to include packages directly from node_modules into views
