@@ -111,35 +111,33 @@ router.get('/awardsbyuser/:resulttype', function (req, res, next) {
 	}
 });
 
-router.get('/awardsbytype/:resulttype', function (req, res, next) {
+router.get('/awards/:resulttype',
+	function(req, res, next) {
 
-	if (req.params.resulttype.toLowerCase() === 'chartdata') {
-		var data2dArray = [
-			[
-				{ label: 'Award', type: 'string' },
-				{ label: 'Total', type: 'number' }
-			],
-			['weekly', 85],
-			['monthly', 150],
-			['yearly', 11]
-		];
-		res.send(data2dArray);
-	} else if (req.params.resulttype.toLowerCase() === 'tabledata') {
+		if (req.params.resulttype.toLowerCase() === 'type') {
+			var googleTabletData = [];
 
-		//var apiData = [
-		//	[
-		//		{ label: 'Recipient', type: 'string' },
-		//		{ label: 'Award Type', type: 'string' },
-		//		{ label: 'Issuer', type: 'string' },
-		//		{ label: 'Granted', type: 'date' }
-		//	],
-		//	['Mike', 'weekly', 'Julia', 'Date(2018, 2, 27)'],
-		//	['Jim', 'weekly', 'Tom', 'Date(2018, 2, 27)'],
-		//	['Alice', 'monthly', 'Teresa', 'Date(2018, 2, 27)'],
-		//	['Bob', 'monthly', 'Sophia', 'Date(2018, 2, 27)']
-		//];
+			googleTabletData.push([
+				{ id: 'award', label: 'Award', type: 'string' },
+				{ it: 'total', label: 'Total', type: 'number' }]
+			);
 
-		//res.send(apiData);
+		pool.query(
+			"SELECT c_type award, COUNT(c_id) as total " +
+			"FROM Award " +
+			"GROUP BY c_type",
+			function (err, rows) {
+				if (err) {
+					console.log(err);
+				} else {
+					rows.forEach(function (element) {
+						googleTabletData.push([element.award, element.total]);
+					});
+					res.send(googleTabletData);
+				}
+			});
+
+	} else if (req.params.resulttype.toLowerCase() === 'table') {
 
 		var googleTabletData = [];
 
@@ -148,14 +146,14 @@ router.get('/awardsbytype/:resulttype', function (req, res, next) {
 			{ id: 'receiver_email', label: 'Recipient Email', type: 'string' },
 			{ id: 'c_type', label: 'Award Type', type: 'string' },
 			{ id: 'issuer', label: 'Issuer', type: 'string' },
-			{ id: 'granted_datetime', label: 'Granted', type: 'datetime' },
+			{ id: 'granted_datetime', label: 'Date Granted', type: 'date' },
 			{ id: "domain", label: "User Domain", type: "string" }
 		]);
 
 		pool.query(
 			"SELECT receiver_email, receiver_lname, receiver_fname, c_type, YEAR(granted_datetime) as granted_year, MONTH(granted_datetime) as granted_month, DAY(granted_datetime) as granted_day , u.fname, u.lname " +
 			"FROM Award a " +
-			"INNER JOIN User u on a.user_id = u.u_id " +
+			"LEFT JOIN User u on a.user_id = u.u_id " +
 			"ORDER BY a.receiver_lname;",
 			function (err, rows) {
 				if (err) {
@@ -169,6 +167,34 @@ router.get('/awardsbytype/:resulttype', function (req, res, next) {
 					res.send(googleTabletData);
 				}
 			});
+		} else if (req.params.resulttype.toLowerCase() === 'domain') {
+
+			var googleTabletData = [];
+			googleTabletData.push([
+				{ id: "domain", label: "User Domain", type: "string" },
+				{ id: 'c_type', label: 'Award Type', type: 'string' },
+				{ id: 'granted_datetime', label: 'Granted', type: 'date' }
+			]);
+
+			pool.query(
+				"SELECT receiver_email, " +
+				"c_type, " +
+				"YEAR(granted_datetime) as granted_year, MONTH(granted_datetime) as granted_month, DAY(granted_datetime) as granted_day  " +
+				"FROM Award a ",
+				function (err, rows) {
+					if (err) {
+						res.send(err);
+					} else {
+						rows.forEach(function (element) {
+							googleTabletData.push([
+								GetEmailParts(element.receiver_email).domain,
+								element.c_type,
+								'Date(' + element.granted_year + ',' + element.granted_month + ',' + element.granted_day + ')'
+							]);
+						});
+						res.send(googleTabletData);
+					}
+				});
 	} else
 	{
 		res.send([]);
@@ -182,7 +208,7 @@ function GetEmailParts(strEmail) {
 	// incase our email matching fails.
 	var objParts = {
 		user: null,
-		domain: null,
+		domain: 'unknown',
 		ext: null
 	};
 

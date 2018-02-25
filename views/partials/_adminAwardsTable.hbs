@@ -1,0 +1,24 @@
+﻿<table class="table table-striped">
+	<thead>
+		<tr>
+			<th scope="col">Name</th>
+			<th scope="col">Email</th>
+			<th scope="col">Award Type</th>
+			<th scope="col">Issuer Email</th>
+			<th scope="col">Granted Date</th>
+		</tr>
+	</thead>
+	<tbody>
+		{{#each data}}
+		<tr>
+			<td scope="col">{{fname}} {{lname}}</td>
+			<td scope="col">{{email}}</td>
+			<td scope="col">{{award_type}}</td>
+			<td scope="col">{{issuer_email}}</td>
+			<td scope="col">{{granted_date}}</td>
+			</td>
+		</tr>
+		{{/each}}
+	</tbody>
+</table>
+
