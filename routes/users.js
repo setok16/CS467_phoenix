@@ -27,22 +27,9 @@ var validateNormalUser = function (req, res, next) {
 	
 	if (req.session.u_type == 'normal') { // If user has session and session variable shows a normal user
 		
-		/*
-		if (req.session.justLoggedIn) {	// User is just logged in, skip checking db
-			console.log("skip checking db");
-			req.session.justLoggedIn = false;
-			req.session.save(function(err) {
-				next();
-			});
-		}
-		else
-		*/
-		{	
-			// Check if session exists
+			// Check if session variable exists
 			if (!req.session.u_id) {
-			
-				return res.redirect(303, '/logout');
-
+				return res.redirect(401, '/logout');
 			}
 
 			// Compare user data with those in db
@@ -128,14 +115,12 @@ var validateNormalUser = function (req, res, next) {
 						req.session.lname = result[0][0]['lname'];
 					}
 					signature_local = result[0][0]['signature'];
-					req.session.justLoggedIn = false;
 					req.session.save(function(err) {
 						next();
 					});
 				}
 				
 			});
-		}
 		
 	} else if (req.session.u_type == 'admin') {
 		res.redirect('/admin'); // If user has session but is an admin user, direct to /admin
@@ -418,8 +403,9 @@ router.get('/', validateNormalUser, function(req, res) {
 		},
 		showProfileTab: 1,
 		//customHeader: '<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>',
-		customScript: '<script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>\r\n' +
-			'<script src="/public/scripts/normalUser/userProfileFunctions.js"></script>',
+		customScript: '<script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>\n' +
+			'<script src="/public/scripts/normalUser/userProfileFunctions.js"></script>\n' +
+			'<script src="/public/scripts/normalUser/createAwardFunction.js"></script>\n',
 	};
 
 	if (req.query.tab == 'awards') { // use /users?tab=awards in the URL to first display the awards tab
