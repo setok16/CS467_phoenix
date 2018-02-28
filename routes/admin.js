@@ -25,25 +25,25 @@ function validateSession(req, res, next) {
 	return next();
 }
 
-function deleteUser(req, res, next) {
-	pool.query("DELETE FROM User WHERE u_id = ? AND email <> ?",
-		[req.params.id, adminEmail],
-		function (err, result) {
-			if (err) {
-				console.log('SERVER ERROR: ' + err);
-				next(err);
-				return;
-			} else {
-				next();
-			}
-		});
-}
+//function deleteUser(req, res, next) {
+//	pool.query("DELETE FROM User WHERE u_id = ? AND email <> ?",
+//		[req.params.id, adminEmail],
+//		function (err, result) {
+//			if (err) {
+//				console.log('SERVER ERROR: ' + err);
+//				next(err);
+//				return;
+//			} else {
+//				next();
+//			}
+//		});
+//}
 
 function redirectToAdmin(req, res, next) {
 	res.redirect('/admin');
 }
 
-router.delete('/delete/:id', validateSession, deleteUser, redirectToAdmin);
+//router.delete('/delete/:id', validateSession, deleteUser, redirectToAdmin);
 
 
 
@@ -122,82 +122,7 @@ function createUser(req, res, next) {
 
 router.post('/create/user', validateSession, checkUserType, validateCreateRequest, saltPassword ,createUser, redirectToAdmin);
 
-/* GET users listing. */
-//router.get('/', getNormalUsers, getAdminUsers, renderAdminPage);
-
 router.get('/',renderAdminPage);
-
-
-//function getNormalUsers(req, res, next) {
-	//pool.query("SELECT u_id, email, fname, lname, DATE_FORMAT(creation_datetime, \"%M %d %Y\") as creation_datetime, signature from User where u_type like 'normal'",
-	//	function (err, rows, fields) {
-	//		if (err) {
-	//			console.log(err);
-	//			next(err, null);
-	//		} else {
-	//			req.userData = rows;
-	//			next(req);
-	//		}
-	//	});
-//};
-
-async function getNormalUsers(callback) {
-	pool.query("CALL selectUserByUserType(?)",
-		['normal'],
-		function(err, rows, fields) {
-			if (err) {
-				console.log(err);
-				//return [];
-			}
-			callback();
-			return rows[0];
-		});
-}
-
-//function addSignatureImagePath(req, res, next) {
-
-//	for (var i = 0, len = req.normalUsers.length; i < len; i++) {
-//		//someFn(arr[i]);
-//		var imgPath = 'public/signatures/';
-//		var imgName = req.normalUsers[i].email + '_signature';
-//		var imgFullPath = '/' + imgPath + imgName + '.png';
-//		base64Img.imgSync(req.body.base64, imgPath, imgName);
-
-//	}
-
-//	//req.normalUsers.forEach( function(item)
-//	//{
-//	//	var imgPath = 'public/signatures/';
-//	//	var imgName = req.body.email + '_signature';
-//	//	var imgFullPath = '/' + imgPath + imgName + '.png';
-//	//	base64Img.imgSync(req.body.base64, imgPath, imgName);
-//	//});		
-//};
-
-//function getAdminUsers(req, res, next) {
-	//pool.query("SELECT u_id, email, fname, lname, DATE_FORMAT(creation_datetime, \"%M %d %Y\") as creation_datetime from User where u_type like 'admin'",
-	//	function (err, rows, fields) {
-	//		if (err) {
-	//			console.log(err);
-	//			next(err, null);
-	//		} else {
-	//			req.adminUsers = rows;
-	//			next();
-	//		}
-	//	});
-//};
-
-async function getAdminUsers(callback) {
-	pool.query("CALL selectUserByUserType(?)", ['admin'],
-		function (err, rows, fields) {
-			if (err) {
-				console.log(err);
-				return [];
-			}
-			callback();
-			return rows[0];
-		});
-}
 
 async function renderAdminPage (req, res) {
 	//res.send('respond with a resource');
@@ -292,7 +217,7 @@ async function renderAdminPage (req, res) {
 			//res.render('admin', context);
 
 		} else { // Going back to login page if user is not logged in
-			res.redirect('/');
+			res.redirect('http://' + req.headers.host + '/');
 		}
 	
 }

@@ -10,7 +10,7 @@ var dotenv = require('dotenv').config();
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 
-var usersApi = require('./api/users');
+
 var reportsApi = require('./api/reports');
 var awardsApi = require('./api/awards');
 var index = require('./routes/index');
@@ -55,9 +55,10 @@ app.use('/scripts', express.static(__dirname + '/node_modules'));
 // Using as path to public
 app.use('/public', express.static(__dirname + '/public'));
 
-app.use('/api/users', usersApi);
+app.use('/api/users', require('./api/users').router);
 app.use('/api/reports', reportsApi);
 app.use('/api/awards', awardsApi);
+//app.use('/api', require('./routes/api'));
 app.use('/users', users);
 app.use('/users_error', users_error);
 app.use('/admin', admin);

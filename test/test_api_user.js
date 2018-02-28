@@ -1,18 +1,28 @@
 require('dotenv').config();
+var express = require('express');
 var app = require('../app.js');
-var users = require('../api/users.js');
+//var users = require('../api/users');
+
 var should = require('chai').should();
 var chai = require('chai');
 var chaiHttp = require('chai-http');
-var sinon = require('sinon');
-app.use(require('body-parser').json());
+//var sinon = require('sinon');
 chai.use(chaiHttp);
 
-describe('api/users', function () {
-	describe('GET',
-		function() {
+var passwordComplexity = require('../api/users').isPasswordComplex;
+var users;
+var auth;
+
+describe('api/users', function (done) {
+	beforeEach(function(done) {
+		done();
+	});
+	afterEach(function(done) {
+		done();
+	});
+	describe('GET', function () {
 			it('should return a 400 (bad request) if an unknown query parameters is passed',
-				function(done) {
+				function (done) {
 					chai.request(app)
 						.get('/api/users')
 						.query({ uknown: 'value' })
@@ -33,7 +43,7 @@ describe('api/users', function () {
 						});
 				});
 			it('should return 1 user when getting the admin user by email address',
-				function(done) {
+				function (done) {
 					chai.request(app)
 						.get('/api/users?email=admin@oregonstate.edu')
 						.send()
@@ -59,7 +69,15 @@ describe('api/users', function () {
 				});
 		});
 	describe('POST',
-		function() {
+		function () {
+			beforeEach(() => {
+
+				//router = express.Router();
+				//users = require('../api/users.js');
+				//app = require('../app.js');
+				//app.use(require('body-parser').json());
+
+			});
 			it('should return status 400 (bad request) if password is not complex enough',
 				function(done) {
 					chai.request(app)
@@ -106,12 +124,31 @@ describe('api/users', function () {
 });
 
 
-//describe('password Complexity check',
-//	function() {
-//		it('should return false for password less than 8 characters',
-//			function(done) {
-//				var isComplex = users.isPasswordComplex('12345678');
-//				isComplex.should.be.false;
-//			});
-//	});
+describe('password Complexity check',
+	function () {
+		beforeEach((done) => {
+			done();
+		});
+		afterEach((done) => {
+			done();
+		});
+		it('should return false for password less than 8 characters',
+			function (done) {
+				var isComplex = passwordComplexity('Ab34567');
+				isComplex.should.be.false;
+				done();
+			});
+		it('should return false for passwords without numbers',
+			function (done) {
+				var isComplex = passwordComplexity('Abcdefgh');
+				isComplex.should.be.false;
+				done();
+			});
+		//it('should return false for passwords without lowercase letters',
+		//	function (done) {
+		//		var isComplex = passwordComplexity('ABCDEFG8');
+		//		isComplex.should.be.false;
+		//		done();
+		//	});
+	});
 
