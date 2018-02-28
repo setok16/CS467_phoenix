@@ -4,6 +4,7 @@ var mysql = require('../dbcon.js');
 var nodemailer = require('nodemailer');
 var dotenv = require('dotenv').config();
 var randomstring = require('randomstring');
+var sendEmail = require('../utils-module/utils.js').sendEmail;
 
 /* GET password recovery page */
 router.get('/', function(req, res, next) {
@@ -39,42 +40,23 @@ router.put('/', function(req, res, next) {
         }
 
         /* START email */
-        nodemailer.createTestAccount((err, account) => {
-          // Source: https://nodemailer.com/about/
-          let transporter = nodemailer.createTransport({
-            service: 'gmail',
-            secure: false,
-            port: 25,
-            auth: {
-              user: process.env.EMAIL_ADDRESS,
-              pass: process.env.EMAIL_PASSWORD
-            },
-            tls: {
-              rejectUnauthorized: false
-            }
-          });
 
-          let mailOptions = {
-            from: '"Team Phoenix" <' + process.env.EMAIL_ADDRESS + '>',
-            to: email,
-            subject: 'Employee Recognition System Password Recovery',
-            html: 
-            'Dear Customer,<br><br>' +
-            'To reset your password, please click <a href="' + fullURL + '">here</a>' +
-            '.<br>' + 
-            'Your recovery code is: ' + recoveryCode + '<br><br>' +
-            'If you did not request for a password reset, please ignore this email.'
-          };
+        let subject = 'Employee Recognition System Password Recovery';
+        let html = 
+        'Dear Customer,<br><br>' +
+        'To reset your password, please click <a href="' + fullURL + '">here</a>' +
+        '.<br>' + 
+        'Your recovery code is: ' + recoveryCode + '<br><br>' +
+        'If you did not request for a password reset, please ignore this email.';
 
-          transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-              return console.log(error);
-            }
-            console.log('Message sent: %s', info.messageId);
-            console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-          })
+        let sendEmailPromise = sendEmail(email, subject, html);
+
+        sendEmailPromise.then(function() {
           res.status(200).send('Email sent to ' + email);
+        }).catch(function(error) {
+          res.status(500).send(error.message);
         });
+
         /* END email */
 
       });
