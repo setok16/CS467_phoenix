@@ -25,6 +25,7 @@
     "moment-timezone": "^0.5.14",
     "morgan": "~1.9.0",
     "mysql": "^2.15.0",
+    "node-latex": "^2.4.4",
     "nodemailer": "^4.4.2",
     "password-validator": "^4.0.0",
     "randomstring": "^1.1.5",
