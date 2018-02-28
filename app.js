@@ -15,6 +15,7 @@ var reportsApi = require('./api/reports');
 var awardsApi = require('./api/awards');
 var index = require('./routes/index');
 var users = require('./routes/users');
+var user_create_award = require('./routes/user_create_award');
 var users_error = require('./routes/users_error');
 var admin = require('./routes/admin');
 var registration = require('./routes/registration');
@@ -28,6 +29,7 @@ var app = express();
 
 // view engine setup
 hbs.registerPartials(__dirname + '/views/partials');
+hbs.registerPartials(__dirname + '/views/partials/userAwards');
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
@@ -58,8 +60,9 @@ app.use('/public', express.static(__dirname + '/public'));
 app.use('/api/users', usersApi);
 app.use('/api/reports', reportsApi);
 app.use('/api/awards', awardsApi);
-app.use('/users', users);
+app.use('/user_create_award', user_create_award);
 app.use('/users_error', users_error);
+app.use('/users', users);
 app.use('/admin', admin);
 app.use('/registration', registration);
 app.use('/login', login);
