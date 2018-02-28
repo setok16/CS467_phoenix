@@ -1,10 +1,19 @@
-function hard_reload() {
-    //window.location.href = '/users';
-    window.location.reload(true);
+function user_profile_reload() {
+
+    let searchParams = new URLSearchParams(window.location.search);
+
+    if ( (!searchParams.has('tab')) || searchParams.get('tab') == 'profile') {
+        window.location.reload(true);
+    }
+    else {
+        window.location.href = '/users?tab=profile';
+    }
+
 }
 
 window.addEventListener('load', function (window_load_event) {
     $("main[role='main']").attr('class', 'container-fluid px-4 py-5');
+    $(".modal").appendTo("body");
 
     // Edit Name Listener
     var editNameForm = document.getElementById("editNameForm");
@@ -44,7 +53,7 @@ window.addEventListener('load', function (window_load_event) {
 
             if(response.ok && response.status == 200) {
                 console.log("response 200 ok");
-                hard_reload();
+                user_profile_reload();
             }
             else {
                 console.error('Error: ', response.status + ' ' + response.statusText);
@@ -94,7 +103,7 @@ window.addEventListener('load', function (window_load_event) {
 
             if(response.ok && response.status == 200) {
                 console.log("response 200 ok");
-                hard_reload();
+                user_profile_reload();
             }
             else if (response.status == 409) {
                 console.error("Error: Email address not available");
@@ -341,7 +350,7 @@ window.addEventListener('load', function (window_load_event) {
 
             if(response.ok && response.status == 200) {
                 console.log("response 200 ok");
-                hard_reload();
+                user_profile_reload();
             }
             
             else {
