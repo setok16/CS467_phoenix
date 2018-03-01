@@ -19,7 +19,13 @@ var createAwardForm = document.getElementById("createAwardForm");
 createAwardForm.addEventListener("submit", function (event) {
 
     event.preventDefault();
-    document.getElementById("createAwardWarning").style.display = "none";
+    document.getElementById("createAwardSubmitBtn").disabled = true;
+    document.getElementById("createAwardCancelBtn").disabled = true;
+
+    $("#createAwardWarning").attr('class', "alert alert-info");
+    $("#createAwardWarning").html('Submitting the new award to server. Please wait...');
+    $("#createAwardWarning").fadeIn(300);
+
     console.log('createAwardForm submitted');
 
     
@@ -78,6 +84,8 @@ createAwardForm.addEventListener("submit", function (event) {
             $("#createAwardWarning").html('Award creation failed: Invalid entry.<br>' +
                 'Please check your inputs and try again.');
             $("#createAwardWarning").fadeIn(300);
+            document.getElementById("createAwardSubmitBtn").disabled = false;
+            document.getElementById("createAwardCancelBtn").disabled = false;
         }
         else if (response.status == 500) {
             console.error('Error: ', response.status + ' ' + response.statusText);
@@ -92,6 +100,8 @@ createAwardForm.addEventListener("submit", function (event) {
                     $("#createAwardWarning").html('Award creation failed: Server processing error.');
                     $("#createAwardWarning").fadeIn(300);
                 }
+                document.getElementById("createAwardSubmitBtn").disabled = false;
+                document.getElementById("createAwardCancelBtn").disabled = false;
             });
         }
         else if (response.status == 401) {
@@ -103,6 +113,8 @@ createAwardForm.addEventListener("submit", function (event) {
             $("#createAwardWarning").attr('class', "alert alert-danger");
             $("#createAwardWarning").html('Award creation failed. You may try again.');
             $("#createAwardWarning").fadeIn(300);
+            document.getElementById("createAwardSubmitBtn").disabled = false;
+            document.getElementById("createAwardCancelBtn").disabled = false;
         }
     } )
     .catch((error) => {
@@ -114,6 +126,8 @@ createAwardForm.addEventListener("submit", function (event) {
 });
 
 $('#createAwardModal').on('show.bs.modal', function (e) {
+    document.getElementById("createAwardSubmitBtn").disabled = false;
+    document.getElementById("createAwardCancelBtn").disabled = false;
     document.getElementById("createAwardWarning").innerHTML = '';
     document.getElementById("createAwardWarning").style.display = "none";
 })
