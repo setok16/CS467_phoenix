@@ -50,7 +50,17 @@ createAwardForm.addEventListener("submit", function (event) {
             console.log("response 200 ok");
             //console.log(response);
 
+            $("#createAwardWarning").attr('class', "alert alert-success");
+            $("#createAwardWarning").html('Award created and email sent successfully!<br>' +
+                'Redirecting to Award Management tab in 5 seconds...');
+            $("#createAwardWarning").fadeIn(300);
+
+            setTimeout(function () {
+                user_award_reload();
+            }, 5000);
+
             // Temporary behavior: Get pdf filename and open a new window to display
+            /*
             response.json().then( (data) => {
                 //console.log(data);
                 pdf_openname = '/public/pdf_certificates/' + data.pdf_filename;
@@ -60,16 +70,29 @@ createAwardForm.addEventListener("submit", function (event) {
                     user_award_reload();
                 }
             });
+            */
         }
         else if (response.status == 400) {
             console.error('Error: ', response.status + ' ' + response.statusText);
-            $("#createAwardWarning").html('Failed Request: Invalid entry.');
+            $("#createAwardWarning").attr('class', "alert alert-danger");
+            $("#createAwardWarning").html('Award creation failed: Invalid entry.<br>' +
+                'Please check your inputs and try again.');
             $("#createAwardWarning").fadeIn(300);
         }
         else if (response.status == 500) {
             console.error('Error: ', response.status + ' ' + response.statusText);
-            $("#createAwardWarning").html('Failed Request: Database error.');
-            $("#createAwardWarning").fadeIn(300);
+            response.text().then( (textErrMsg) => {
+                $("#createAwardWarning").attr('class', "alert alert-danger");
+
+                if (textErrMsg.includes("Email sending failed")) {
+                    $("#createAwardWarning").html('Award creation failed: Unable to send email.');
+                    $("#createAwardWarning").fadeIn(300);
+                }
+                else {
+                    $("#createAwardWarning").html('Award creation failed: Server processing error.');
+                    $("#createAwardWarning").fadeIn(300);
+                }
+            });
         }
         else if (response.status == 401) {
             console.error('Error: ', response.status + ' ' + response.statusText);
@@ -77,7 +100,8 @@ createAwardForm.addEventListener("submit", function (event) {
         }
         else {
             console.error('Error: ', response.status + ' ' + response.statusText);
-            $("#createAwardWarning").html('Failed Request. You may try again.');
+            $("#createAwardWarning").attr('class', "alert alert-danger");
+            $("#createAwardWarning").html('Award creation failed. You may try again.');
             $("#createAwardWarning").fadeIn(300);
         }
     } )
