@@ -5,7 +5,11 @@ var pool = mysql.pool;
 var moment = require('moment-timezone');
 const latex = require('node-latex');
 const fs = require('fs');
+const fse = require('fs-extra')
 const path = require('path');
+var lescape = require('escape-latex');
+var sendEmail = require('../utils-module/utils.js').sendEmail;
+var manageAwards = require('../utils-module/manage_awards.js')
 
 const { body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
@@ -97,7 +101,7 @@ router.post('/',
             return;
         }
         else {
-			// Data from form is valid. Submit to database
+			// Data from form is valid. Submit to Award table in database
 			pool.query("CALL addAwardThenSelectID(?,?,?,?,?,?)", [
                 req.body.award_type,
                 req.session.u_id,
@@ -106,11 +110,11 @@ router.post('/',
                 req.body.award_email,
                 req.body.award_datetime
             ],
-				function(err, result, fields) {
-					if (err) {
-						console.log(err);
+				function(mysql_err, result, fields) {
+					if (mysql_err) {
+						console.log(mysql_err);
 						//res.setHeader('Content-Type', 'text/event-stream');
-						res.status(500).send("Add award failed - database error");
+						res.status(500).send("Award creation failed. " + mysql_err);
             			return;
 					}
 					else {
@@ -125,39 +129,51 @@ router.post('/',
 						let award_date = award_datetime.substr(0, award_datetime.indexOf(' '));
 						let user_full_name = req.session.fname + ' ' + req.session.lname;
 
+						let receiver_full_name_lescaped = lescape(receiver_full_name);
+						let user_full_name_lescaped = lescape(user_full_name);
+
 						let signature_filename = "sig_for_award_" + created_c_id + ".png";
 						let signature_pathname = path.join(__dirname, '..', 'certs', signature_filename);
 
 						// Write to the sig_for_award_#.png file
-						fs.writeFile(signature_pathname, signature_local_for_awards, 'base64', (err) => {
-							if (err) {
-								console.log(err);
+						fs.writeFile(signature_pathname, signature_local_for_awards, 'base64', (writeSigFileError) => {
+							if (writeSigFileError) {
+								console.log(writeSigFileError);
 								if(fs.existsSync(signature_pathname)) {
 									fs.unlinkSync(signature_pathname);
 								}
-								//res.setHeader('Content-Type', 'text/event-stream');
-								res.status(500).send("Signature image creation failed");
-								return;
+								manageAwards.deleteAward(created_c_id)
+									.then(function() {
+										res.status(500).send("Writing signature image failed. " + writeSigFileError);
+									}).catch(function(err) {
+										res.status(500).send("Writing signature image failed. " + writeSigFileError
+										+ "\nAward deletetion failed. " + err);
+									});
 							}
 							else {
 								// Read the template tex file - cert_template.tex
 								fs.readFile(
 									path.join(__dirname, '..', 'certs', 'template', 'cert_template.tex'),
-									'utf8', (err, cert_template_tex) => {
-										if (err) {
-											console.log(err);
+										'utf8', (readTexFileError, cert_template_tex) => {
+										if (readTexFileError) {
+											console.log(readTexFileError);
 											fs.unlinkSync(signature_pathname);
-											//res.setHeader('Content-Type', 'text/event-stream');
-											res.status(500).send("TeX template file cannot be read");
+											manageAwards.deleteAward(created_c_id)
+												.then(function() {
+													res.status(500).send("TeX template file cannot be read. " + readTexFileError);
+												}).catch(function(err) {
+													res.status(500).send("TeX template file cannot be read. " + readTexFileError
+													+ "\nAward deletetion failed. " + err);
+												});
 											return;
 										}
 										var cert_tex = cert_template_tex
 											.replace('[Week or Month]', award_type)
-											.replace('[Full Name of the Receiver]', receiver_full_name)
+											.replace('[Full Name of the Receiver]', receiver_full_name_lescaped)
 											.replace('[signature_filename]',
 												signature_pathname.replace(/\\/g, "/"))
 											.replace('[Award Grant Date]', award_date)
-											.replace('[Full Name of the User]', user_full_name)
+											.replace('[Full Name of the User]', user_full_name_lescaped)
 										;
 
 										//For debugging only
@@ -172,31 +188,75 @@ router.post('/',
 
 										const certificate_pdf = latex(cert_tex);
 										certificate_pdf.pipe(certificate_pdf_output);
-										certificate_pdf.on('error', (err) => {
-											console.error(err);
+
+										certificate_pdf.on('error', (latexError) => {
+											console.error(latexError);
 											fs.unlinkSync(signature_pathname);
 
 											if(fs.existsSync(certificate_pdf_pathname)) {
 												fs.unlinkSync(certificate_pdf_pathname);
 											}
-											res.status(500).send('Failed to generate the PDF certificate');
-											return;
+
+											manageAwards.deleteAward(created_c_id)
+												.then(function() {
+													res.status(500).send("Failed to generate the PDF certificate. " + latexError);
+												}).catch(function(err) {
+													res.status(500).send("Failed to generate the PDF certificate. " + latexError
+													+ "\nAward deletetion failed. " + err);
+												});
 										});
+
 										certificate_pdf.on('finish', () => {
-											console.log('PDF generated!');
+											console.log('PDF generated.');
 
 											// Temporary behavior: Move pdf to /public/pdf_certificates
-											fs.renameSync(certificate_pdf_pathname, path.join(__dirname, '..',
-												'public', 'pdf_certificates', certificate_pdf_filename));
+											//fs.renameSync(certificate_pdf_pathname, path.join(__dirname, '..',
+											//	'public', 'pdf_certificates', certificate_pdf_filename));
 
-											// remove files in /certs
-											//fs.unlinkSync(certificate_pdf_pathname);
-											fs.unlinkSync(signature_pathname);
+											// Send email to receiver
+											let email_subject = 'Employee Recognition System - Award Certificate';
+											let email_html =
+												"<p>Dear " + receiver_full_name + ",</p>" +
+												'<p style="margin-top:1.5em;">Congratulations on receiving the <strong>STAR OF THE ' + award_type.toUpperCase() +
+												"</strong> award! As you know, this is an award provided to the employee " +
+												"who I believe contributed the most during the " + award_type + ".</p>" +
+												'<p>Attached please find the certificate that is specifically made for you. ' +
+												"Also please let me know if you have questions or need additional information.</p>"+
+												'<p style="margin-bottom:1.5em;">Thank you so much for your contribution, and once again, warm congratulations.</p>' +
+												'<p>Best regards,<br>' + user_full_name + "</p>";
+											let email_attachments = [{
+												filename: "Employee_Recognition_Certificate.pdf",
+												path: certificate_pdf_pathname
+											}];
+
+											let sendEmailPromise = sendEmail(receiver_email, email_subject, email_html, email_attachments);
+
+											sendEmailPromise.then(function() {
+												console.log('sendEmail(): Email sent to receiver.');
+												// remove files in /certs
+												//fs.unlinkSync(certificate_pdf_pathname);
+												fs.unlinkSync(signature_pathname);
 											
-											// Temporary behavior: Send JSON containing the public pdf filename
-											res.setHeader('Content-Type', 'application/json');
-											res.status(200).send(JSON.stringify({ "pdf_filename": certificate_pdf_filename }));
-											//res.status(200).send('Award created successfully!');
+												res.setHeader('Content-Type', 'application/json');
+												res.status(200).send(JSON.stringify({ "pdf_filename": certificate_pdf_filename }));
+											}).catch(function(sendEmailError) {
+												console.log('sendEmail(): ' + sendEmailError);
+
+												Promise.all([
+													fse.remove(certificate_pdf_pathname),
+													fse.remove(signature_pathname),
+													manageAwards.deleteAward(created_c_id)
+												]).then(function() {
+													console.log("Email sending failed. Files & Award deleted.");
+													res.status(500).send("Email sending failed. " + sendEmailError);
+												}).catch(function(err) {
+													console.log("Email sending failed. File(s) or Award deletion failed. " + err);
+													res.status(500).send("Email sending failed. " + sendEmailError
+														+ "\nAward deletetion failed. " + err);
+												});
+											});
+											
+											
 										});
 									}
 								);
