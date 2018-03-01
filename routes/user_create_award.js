@@ -219,7 +219,7 @@ router.post('/',
 												"<p>Dear " + receiver_full_name + ",</p>" +
 												'<p style="margin-top:1.5em;">Congratulations on receiving the <strong>STAR OF THE ' + award_type.toUpperCase() +
 												"</strong> award! As you know, this is an award provided to the employee " +
-												"who I believe contributed the most during the " + award_type + ".</p>" +
+												"who have contributed the most during the " + award_type + ".</p>" +
 												'<p>Attached please find the certificate that is specifically made for you. ' +
 												"Also please let me know if you have questions or need additional information.</p>"+
 												'<p style="margin-bottom:1.5em;">Thank you so much for your contribution, and once again, warm congratulations.</p>' +
