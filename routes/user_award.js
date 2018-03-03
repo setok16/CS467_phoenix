@@ -9,62 +9,11 @@ const fse = require('fs-extra')
 const path = require('path');
 var lescape = require('escape-latex');
 var sendEmail = require('../utils-module/utils.js').sendEmail;
-var manageAwards = require('../utils-module/manage_awards.js')
+var manageAwards = require('../utils-module/user_manage_awards_promises.js');
+var validateNormalUser = require('../utils-module/validateNormalUser.js');
 
 const { body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
-
-let signature_local_for_awards = null;
-
-// Function: validateNormalUserForAwards
-var validateNormalUserForAwards = function (req, res, next) {
-	//console.log("Exectuing validateNormalUserForAwards");
-	
-	if (req.session.u_type == 'normal') { // If user has session and session variable shows a normal user
-
-		// Check if session variable u_id exists
-		if (!req.session.u_id) {
-			return res.status(401).send('u_id does not exist');
-		}
-        else {
-			// Compare user data with those in db
-			pool.query("CALL selectUserByID(?)", [req.session.u_id], function(err, result, fields) {
-	
-				if (err) {	// Database connection error
-					console.log(err);
-					return res.status(500).send('Database Connection Error');
-				}
-				else if (result[0].length != 1) {	// No user with u_id = req.session.u_id in db
-					return res.status(401).send('Invalid u_id');
-				}
-				else if (result[0][0]['creation_datetime'] != req.session.creation_datetime) {
-                    // creation timestamp doesn't match
-					return res.status(401).send('Invalid user - creation timestamp does not match');
-				}
-				else {	// User exists. Compare session variables with db data
-					if (result[0][0]['email'] != req.session.email) {
-						req.session.email = result[0][0]['email'];
-					}
-					if (result[0][0]['fname'] != req.session.fname) {
-						req.session.fname = result[0][0]['fname'];
-					}
-					if (result[0][0]['lname'] != req.session.lname) {
-						req.session.lname = result[0][0]['lname'];
-					}
-					signature_local_for_awards = (result[0][0]['signature']).toString().replace('data:image/png;base64,', '');
-					req.session.save(function(err) {
-						next();
-					});
-				}
-				
-			});
-        }
-	} else if (req.session.u_type == 'admin') {
-		return res.status(401).send('admin user - should not visit here');
-	} else {
-        return res.status(401).send('no user info');
-    }
-};
 
 
 // Router: POST '/'
@@ -83,7 +32,7 @@ router.post('/',
     sanitizeBody('award_email').trim(),
 	
 	// validate user
-	validateNormalUserForAwards,
+	validateNormalUser,
 
 	// Process request after validation and sanitization
 	function(req, res) {
@@ -134,6 +83,8 @@ router.post('/',
 
 						let signature_filename = "sig_for_award_" + created_c_id + ".png";
 						let signature_pathname = path.join(__dirname, '..', 'certs', signature_filename);
+
+						let signature_local_for_awards = res.locals.signature_local.toString().replace('data:image/png;base64,', '');
 
 						// Write to the sig_for_award_#.png file
 						fs.writeFile(signature_pathname, signature_local_for_awards, 'base64', (writeSigFileError) => {
@@ -271,6 +222,73 @@ router.post('/',
 	}
 );
 
+// Router: DELETE '/'
+router.delete('/',
 
+	// check input field
+	body('c_id').isInt({min: 0}).withMessage('Award id must be a non-negative integer.'),
+
+	// validate user
+	validateNormalUser,
+
+	// Process request after validation
+	function(req, res) {
+		const errorFormatter = ({ location, msg, param, value, nestedErrors }) => {
+			return `${location}[${param}]: ${msg}`;
+		};
+		var validattion_errors = validationResult(req).formatWith(errorFormatter);
+
+        if (!validattion_errors.isEmpty()) {
+			// There are errors
+			console.log(validattion_errors.array().toString());
+			//res.setHeader('Content-Type', 'text/event-stream');
+			res.status(400).send(validattion_errors.array().toString());
+            return;
+        }
+        else {
+			
+			// check if the award was created by the user
+			pool.query("SELECT `user_id` FROM `Award` WHERE `c_id` = ?", [req.body.c_id],
+				function(select_mysql_err, select_result, select_fields) {
+					if (select_mysql_err) {
+						console.log(select_mysql_err);
+						//res.setHeader('Content-Type', 'text/event-stream');
+						res.status(500).send("Award `user_id` field checking failed. " + select_mysql_err);
+					}
+					else if (select_result.length != 1) {	// Award does not exist
+						console.log('Award does not exist');
+						return res.status(404).send('Invalid c_id - Award does not exist');
+					}
+					else if (select_result[0]['user_id'] != req.session.u_id) {	// Award not created by user
+						console.log('Award not created by user');
+							return res.status(403).send('Unauthorized deletion - Award not created by the user');
+					}
+
+					else {	// Execute the deletion
+						pool.query("CALL deleteAwardByAwardID(?)", [req.body.c_id],
+							function(delete_mysql_err, delete_result, delete_fields) {
+								if (delete_mysql_err) {
+									console.log(delete_mysql_err);
+									res.status(500).send("Award deletion failed. " + delete_mysql_err);
+								}
+								else {	// delete the PDF certificate
+									let certificate_pdf_filename = "cert_" + req.body.c_id + ".pdf";
+									let certificate_pdf_pathname = path.join(__dirname, '..', 'certs', certificate_pdf_filename);
+
+									if(fs.existsSync(certificate_pdf_pathname)) {
+										fs.unlinkSync(certificate_pdf_pathname);
+									}
+
+									// send status 200 back
+									res.status(200).send("Award deleted successfully");
+								}
+							}
+						);
+					}
+				}
+			);
+		}
+	}
+);
 
 module.exports = router;
