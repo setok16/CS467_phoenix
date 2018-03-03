@@ -44,4 +44,4 @@ npm-debug.log
 .env
 
 # PDF certificates
-.pdf
+*.pdf
