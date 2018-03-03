@@ -1,0 +1,43 @@
+<table class="table table-striped" data-toggle="table" data-sort-name="award_id" data-pagination="true" data-search="true">
+    <thead>
+        <tr>
+            <th scope="col" class="align-middle" data-field="award_id" data-sortable="true">
+                Award<br>ID</th>
+            <th scope="col" class="align-middle" data-field="award_type" data-sortable="true">
+                Award<br>Type</th>
+            <th scope="col" class="align-middle" data-field="award_receiver_name" data-sortable="true">
+                Full Name<br>of Receiver</th>
+            <th scope="col" class="align-middle" data-field="award_receiver_email" data-sortable="true">
+                Email Address<br>of Receiver</th>
+            <th scope="col" class="align-middle" data-field="award_grant_datetime" data-sortable="true">
+                Grant Date<br>and Time</th>
+            <th scope="col" class="align-middle">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each session.userAwardsRow}}
+        <tr id="userAwardsRow_{{c_id}}">
+            <td>{{c_id}}</td>
+            {{#equals c_type 'week'}}
+            <td>Star of<br>the Week</td>
+            {{/equals}}
+            {{#equals c_type 'month'}}
+            <td>Star of<br>the Month</td>
+            {{/equals}}
+            <td>{{receiver_fname}} {{receiver_lname}}</td>
+            <td>{{receiver_email}}</td>
+            <td>{{remove_00_seconds granted_datetime}}</td>
+            <td>
+                <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#deleteUserAwardModal"
+                    data-cid="{{c_id}}"
+                    data-ctype="{{c_type}}"
+                    data-rcvrname="{{receiver_fname}} {{receiver_lname}}"
+                    data-rcvremail="{{receiver_email}}"
+                    data-awardgrantdatetime="{{remove_00_seconds granted_datetime}}">
+                    DELETE
+                </button>
+            </td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>

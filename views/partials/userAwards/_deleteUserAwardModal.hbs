@@ -1,0 +1,52 @@
+<div class="modal fade" id="deleteUserAwardModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+
+            <!-- Dialog Box Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Delete an award</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <!-- Dialog Box Body -->
+            <div class="modal-body">
+
+                <div class="alert alert-danger" id="deleteUserAwardWarning" role="alert" style="display: none;">
+                </div>
+
+                <div>
+                    <p class="h5">Are you sure you want to delete the following award?</p>
+                </div>
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="align-middle" data-field="award_id" data-sortable="true">
+                                Award<br>ID</th>
+                            <th scope="col" class="align-middle" data-field="award_type" data-sortable="true">
+                                Award<br>Type</th>
+                            <th scope="col" class="align-middle" data-field="award_receiver_name" data-sortable="true">
+                                Full Name<br>of Receiver</th>
+                            <th scope="col" class="align-middle" data-field="award_receiver_email" data-sortable="true">
+                                Email Address<br>of Receiver</th>
+                            <th scope="col" class="align-middle" data-field="award_grant_datetime" data-sortable="true">
+                                Grant Date<br>and Time</th>
+                        </tr>
+                    </thead>
+                    <tbody id="deleteUserAwardModalTableBody">
+                    </tbody>
+                </table>
+
+
+            </div>
+            
+            <!-- Dialog Box Footer - Buttons -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="submit" id="deleteUserAwardBtn" class="btn btn-danger">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
