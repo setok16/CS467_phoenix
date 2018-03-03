@@ -23,7 +23,7 @@ createAwardForm.addEventListener("submit", function (event) {
     document.getElementById("createAwardCancelBtn").disabled = true;
 
     $("#createAwardWarning").attr('class', "alert alert-info");
-    $("#createAwardWarning").html('Submitting the new award to server. Please wait...');
+    $("#createAwardWarning").html('Submitting the award data to server. Please wait...');
     $("#createAwardWarning").fadeIn(300);
 
     console.log('createAwardForm submitted');
@@ -38,7 +38,7 @@ createAwardForm.addEventListener("submit", function (event) {
         document.getElementById("award_time").value;
     //console.log(editNameJson);
 
-    fetch('/user_create_award', {
+    fetch('/user_award', {
         method: 'POST',
         credentials: 'same-origin',
         redirect: 'error',
@@ -57,8 +57,8 @@ createAwardForm.addEventListener("submit", function (event) {
             //console.log(response);
 
             $("#createAwardWarning").attr('class', "alert alert-success");
-            $("#createAwardWarning").html('Award created and email sent successfully!<br>' +
-                'Redirecting to Award Management tab in 5 seconds...');
+            $("#createAwardWarning").html('<strong>Award created and email sent successfully!</strong><br>' +
+                'Redirecting to Awards Management tab in 5 seconds...');
             $("#createAwardWarning").fadeIn(300);
 
             setTimeout(function () {
@@ -81,7 +81,7 @@ createAwardForm.addEventListener("submit", function (event) {
         else if (response.status == 400) {
             console.error('Error: ', response.status + ' ' + response.statusText);
             $("#createAwardWarning").attr('class', "alert alert-danger");
-            $("#createAwardWarning").html('Award creation failed: Invalid entry.<br>' +
+            $("#createAwardWarning").html('<strong>Award creation failed: Invalid entry.</strong><br>' +
                 'Please check your inputs and try again.');
             $("#createAwardWarning").fadeIn(300);
             document.getElementById("createAwardSubmitBtn").disabled = false;
@@ -93,18 +93,20 @@ createAwardForm.addEventListener("submit", function (event) {
                 $("#createAwardWarning").attr('class', "alert alert-danger");
 
                 if (textErrMsg.includes("Email sending failed")) {
-                    $("#createAwardWarning").html('Award creation failed: Unable to send email.');
+                    $("#createAwardWarning").html('<strong>Award creation failed: Unable to send email.</strong><br>' +
+                        'You may try again.');
                     $("#createAwardWarning").fadeIn(300);
                 }
                 else {
-                    $("#createAwardWarning").html('Award creation failed: Server processing error.');
+                    $("#createAwardWarning").html('<strong>Award creation failed: Server processing error.</strong><br>' +
+                        'You may try again.');
                     $("#createAwardWarning").fadeIn(300);
                 }
                 document.getElementById("createAwardSubmitBtn").disabled = false;
                 document.getElementById("createAwardCancelBtn").disabled = false;
             });
         }
-        else if (response.status == 401) {
+        else if (response.status == 403) {
             console.error('Error: ', response.status + ' ' + response.statusText);
             window.location.href = '/users_error';
         }
@@ -130,4 +132,16 @@ $('#createAwardModal').on('show.bs.modal', function (e) {
     document.getElementById("createAwardCancelBtn").disabled = false;
     document.getElementById("createAwardWarning").innerHTML = '';
     document.getElementById("createAwardWarning").style.display = "none";
-})
+
+    today = new Date();
+    today_date_string_in_pacific = today.toLocaleString("en-US", {timeZone: "America/Los_Angeles", year:"numeric"}) +
+        "-" + today.toLocaleString("en-US", {timeZone: "America/Los_Angeles",month:"2-digit"}) +
+        "-" + today.toLocaleString("en-US", {timeZone: "America/Los_Angeles",day:"2-digit"});
+    current_time_string_in_pacific =
+        today.toLocaleString("en-US", {timeZone: "America/Los_Angeles", hour:"2-digit", hour12:false}) +
+        ":" + today.toLocaleString("en-US", {timeZone: "America/Los_Angeles", minute:"2-digit"});
+    
+    document.getElementById("award_date").value = today_date_string_in_pacific;
+    document.getElementById("award_time").value = current_time_string_in_pacific;
+
+});
