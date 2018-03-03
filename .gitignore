@@ -42,3 +42,6 @@ npm-debug.log
 
 # Holds environmental variables from npm dotenv package
 .env
+
+# PDF certificates
+.pdf
