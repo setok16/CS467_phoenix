@@ -7,28 +7,28 @@
 
 <ul class="nav nav-tabs" id="myTab" role="tablist">
 	<li class="nav-item">
-		<a class="nav-link active" id="basic-tab" data-toggle="tab" href="#basic" role="tab" aria-controls="home" aria-selected="true"><h4><i class="fa fa-user-circle-o"></i> Manage Basic Users</h4></a>
+		<a class="nav-link {{showNormalTab}}" id="normal-tab" data-toggle="tab" href="#normal" role="tab" aria-controls="home" aria-selected="true"><h4><i class="fa fa-user-circle-o"></i> Manage Normal Users</h4></a>
 	</li>
 	<li class="nav-item">
-		<a class="nav-link" id="admin-tab" data-toggle="tab" href="#admin" role="tab" aria-controls="profile" aria-selected="false"><h4><i class="fa fa-lock"></i> Manage Admin Users</h4></a>
+		<a class="nav-link {{showAdminTab}}" id="admin-tab" data-toggle="tab" href="#admin" role="tab" aria-controls="profile" aria-selected="false"><h4><i class="fa fa-lock"></i> Manage Admin Users</h4></a>
 	</li>
 	<li class="nav-item">
-		<a class="nav-link" id="report-tab" data-toggle="tab" href="#report" role="tab" aria-controls="contact" aria-selected="false"><h4><i class="fa fa-area-chart"></i> Usage Reports</h4></a>
+		<a class="nav-link {{showReportTab}}" id="report-tab" data-toggle="tab" href="#report" role="tab" aria-controls="contact" aria-selected="false"><h4><i class="fa fa-area-chart"></i> Usage Reports</h4></a>
 	</li>
 </ul>
 <div class="tab-content" id="myTabContent">
-	<!-- BASIC USER TAB-->
-	<div class="tab-pane show active" id="basic" role="tabpanel" aria-labelledby="basic-tab">
+	<!-- NORMAL USER TAB-->
+	<div class="tab-pane fade {{showNormalTab}}" id="normal" role="tabpanel" aria-labelledby="normal-tab">
 		<div class="container">
 			<div class="d-flex">
 				<div class="p-2">
-					<h5>Total Basic Users: {{countUsers}}</h5>
+					<h5>Total Normal Users: {{countUsers}}</h5>
 				</div>
 				<div class="col-sm p-2">
 					<button type="button" class="btn btn-info btn-lg float-right" data-toggle="modal"
 							data-target="#addNormalUserModal"
 							data-user-type="normal">
-						Add Basic User
+						Add Normal User
 					</button>
 				</div>
 				{{> _addNormalUserModal}}
@@ -39,7 +39,7 @@
 		</div>
 	</div>
 	<!--ADMIN USER TAB-->
-	<div class="tab-pane fade" id="admin" role="tabpanel" aria-labelledby="admin-tab">
+	<div class="tab-pane fade {{showAdminTab}} " id="admin" role="tabpanel" aria-labelledby="admin-tab">
 		<div class="container">
 			<div class="d-flex">
 				<div class="p-2">
@@ -60,7 +60,7 @@
 		</div>
 	</div>
 	<!--REPORT TAB-->
-	<div class="tab-pane fade" id="report" role="tabpanel" aria-labelledby="report-tab">
+	<div class="tab-pane fade {{showReportTab}}" id="report" role="tabpanel" aria-labelledby="report-tab">
 		{{> _reports}}
 	</div>
 </div>

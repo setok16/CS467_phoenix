@@ -18,7 +18,7 @@ async function deleteUser(u_id, elementId) {
 	}
 }
 
-async function addUser(fname, lname, email, pwd, confPwd, warnElementId, userType, modalId) {
+async function addUser(fname, lname, email, pwd, confPwd, warnElementId, userType) {
 	var normal = 'normal';
 	var admin = 'admin';
 
@@ -55,10 +55,11 @@ async function addUser(fname, lname, email, pwd, confPwd, warnElementId, userTyp
 		alertArray.push.apply(alertArray, pwdComplex.errors);
 	}
 
+	var response;
 	if (alertArray.length === 0) {
 		try {
 			if (userType === normal) {
-				const response = await axios.post('api/users/normal',
+				response = await axios.post('api/users/normal',
 					{
 						fname: fname,
 						lname: lname,
@@ -68,7 +69,7 @@ async function addUser(fname, lname, email, pwd, confPwd, warnElementId, userTyp
 			}
 
 			if (userType === admin) {
-				const response = await axios.post('api/users/admin',
+				response = await axios.post('api/users/admin',
 					{
 						email: email,
 						password: pwd
@@ -88,6 +89,15 @@ async function addUser(fname, lname, email, pwd, confPwd, warnElementId, userTyp
 					if (!warnElement.classList.contains("show")) {
 						warnElement.classList.add("show");
 					}
+					if (userType === normal) {
+						window.location = window.location.href.split("?")[0];
+					}
+
+					if (userType === admin) {
+						window.location = window.location.href.split("?")[0] + "?tab=admin";
+						//window.location.href += "?tab=admin";
+						//window.location.reload();
+					}
 				} 
 			} else {
 				if (warnElement) {
@@ -102,7 +112,6 @@ async function addUser(fname, lname, email, pwd, confPwd, warnElementId, userTyp
 						warnElement.classList.add("show");
 					}
 				}
-				console.log(response.body);
 			}
 		} catch (error) {
 			console.log(error);
@@ -123,7 +132,7 @@ async function addUser(fname, lname, email, pwd, confPwd, warnElementId, userTyp
 		if (!warnElement.classList.contains("show")) {
 				warnElement.classList.add("show");
 			}
-	}
+		}
 }
 
 
@@ -150,23 +159,6 @@ $('#updateModal').on('show.bs.modal', function (event) {
 
 function isEmptyOrWhiteSpaces(str) {
 	return str === null || str.match(/^ *$/) !== null;
-}
-
-function resetAddAdminUserModal(modalId, warnElementId) {
-	var modal = document.getElementById(modalId);
-
-	//if (modal.classList.contains('show')) {
-	//	modal.classList.remove('show');
-	//}
-
-	var form = modal.getElementsByTagName('form');
-	form.reset();
-
-	var warnElement = document.getElementById(warnElementId);
-	if (warnElement.classList.contains("show")) {
-		warnElement.classList.remove("show");
-	}
-
 }
 
 $('#addAdminUserModal').on('hidden.bs.modal',
@@ -223,3 +215,14 @@ $('#addNormalUserModal').on('hidden.bs.modal',
 		}
 
 	});
+
+//// Javascript to enable link to tab
+//var url = document.location.toString();
+//if (url.match('#')) {
+//	$('.nav-tabs a[href="#' + url.split('#')[1] + '"]').tab('show');
+//}
+
+//// Change hash for page-reload
+//$('.nav-tabs a').on('shown.bs.tab', function (e) {
+//	window.location.hash = e.target.hash;
+//})
