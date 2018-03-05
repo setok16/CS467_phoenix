@@ -2,10 +2,10 @@
   "name": "cs467-phoenix",
   "version": "0.0.0",
   "private": true,
-  "scripts": {
-    "start": "node ./bin/www",
-    "test": "mocha --exit"
-  },
+	"scripts": {
+		"start": "node ./bin/www",
+		"test": "mocha --exit"
+	},
   "dependencies": {
     "axios": "^0.17.1",
     "base64-img": "^1.0.3",

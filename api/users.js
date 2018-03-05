@@ -1,36 +1,11 @@
 var express = require('express');
 var mysql = require('../dbcon.js');
+var auth = require('../routes/adminAuth');
 var pool = mysql.pool;
 const bcrypt = require('bcrypt');
 var router = express.Router();
 
-function adminUser(req, res, next) {
-	if (process.env.ENVIRONMENT === 'test') {
-		return next();
-	}
-	if (!req.session || req.session.u_type !== 'admin' || !req.session.u_id) {
-		return res.status(403).send();
-	}
-	pool.query("CALL selectUserByID(?)",
-		[req.session.u_id],
-		function(err, rows, fields) {
-			if (err) {
-				console.log('DB ERROR: ' + err);
-				res.status(403).send();
-			} else if (rows[0].length < 1) {
-				console.log("no users found for u_id");
-				res.status(403).send();
-				return;
-			} else if (rows[0][0].u_type.toLowerCase() !== 'admin') {
-				console.log("u_type is not admin");
-				res.status(403).send();
-			} else {
-				next();
-			}
-		});
-}
-
-router.all('/*', adminUser);
+router.all('/*', auth.adminUser);
 
 router.delete('/:u_id',
 	function(req, res, next) {
@@ -133,46 +108,60 @@ router.put('/:u_id',
 			});
 	});
 
-router.post('/',
-	function(req, res, next) {
-
+router.post('/admin',
+	 async function(req, res, next) {
+		console.log("saving admin user");
 		if (!isPasswordComplex(req.body.password)) {
-			res.status(400).send();
-			return;
+			return res.status(400).send("The password was not complex enough");
+		};
+		console.log("saving admin user");
+		var passwordHash;
+		try {
+			passwordHash = await saltPassword(req.body.password);
+		} catch (err) {
+			return res.status(400).send("Unable to create a user.  Please try again.");
+		}
+
+		pool.query("CALL addAdminUser(?,?)",
+			[req.body.email, passwordHash],
+			function(err, rows, fields) {
+				if (err) {
+					console.log(err);
+					return res.status(400).send("Unable to create a user.  Please try again.");
+				} else {
+					return res.send(rows);
+				}
+			});
+		//return res.status(403).send();
+	});
+
+router.post('/normal',
+	async function (req, res, next) {
+		console.log("trying to add a user");
+		if (!isPasswordComplex(req.body.password)) {
+			return res.status(400).send("The password was not complex enough");
 		};
 
 		var passwordHash;
 		try {
-			passwordHash = saltPassword(req.body.password);
+			passwordHash = await saltPassword(req.body.password);
 		} catch (err) {
-			res.send("PASSWORDHASH ERROR: " + err);
-			return;
+			console.log(err);
+			return res.status(400).send("Unable to create a user.  Please try again.");;
 		}
+		//console.log("PASSWORD HASH: "+ passwordHash);
+		pool.query("CALL addNormalUser(?,?,?,?,?)",
+			[req.body.email, passwordHash, req.body.fname, req.body.lname, null],
+			function(err, rows, fields) {
+				if (err) {
+					console.log(err);
+					return res.status(400).send("Unable to create a user.  Please try again.");
+				} else {
+					return res.send(rows);
+				}
+			});
 
-		var userType = req.body.usertype.toLowerCase();
-
-		if (userType === 'admin') {
-			pool.query("CALL addAdminUser(?,?)",
-				[req.body.email, passwordHash],
-				function(err, rows, fields) {
-					if (err) {
-						console.log(err);
-						res.error(error).send();
-						//next(err, null);
-						return;
-					} else {
-						res.send(rows);
-						return;
-					}
-				});
-
-		} else if (userType === 'normal' || userType === 'basic') {
-			res.send(req.body);
-			res.send("creating usertype whenenver you implement this");
-			return;
-		};
-
-		res.status(403).send();
+		//return res.status(403).send();
 	});
 
 async function saltPassword(password) {
@@ -186,6 +175,27 @@ async function saltPassword(password) {
 	}
 }
 
+//async function saltPassword(password) {
+//	const saltRounds = 10;
+//	bcrypt.genSalt(saltRounds,
+//		function (err, salt) {
+//			if (err) {
+//				console.log('SERVER ERROR: ' + err);
+//			}
+//			bcrypt.hash(password,
+//				salt,
+//				function (err, hash) {
+//					if (err) {
+//						console.log('SERVER ERROR: ' + err);
+//					} else {
+//						return hash;
+//					}
+//				});
+
+//		});
+//}
+
+
 function isPasswordComplex(password) {
 	var isComplex = true;
 	if (password.length < 8 || !password.match(/[0-9]/i) || !password.match(/[A-Z]/i) || !password.match(/[a-z]/i)) {
@@ -194,5 +204,5 @@ function isPasswordComplex(password) {
 	return isComplex;
 }
 
-module.exports = { router: router, isPasswordComplex: isPasswordComplex, adminUser: adminUser}
+module.exports = { router: router, isPasswordComplex: isPasswordComplex}
 	

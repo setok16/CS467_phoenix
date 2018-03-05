@@ -1,7 +1,11 @@
-﻿var express = require('express');
-var router = express.Router();
-var mysql = require('../dbcon.js');
+﻿var mysql = require('../dbcon.js');
+var auth = require('../routes/adminAuth');
 var pool = mysql.pool;
+var express = require('express');
+var router = express.Router();
+
+
+router.all('/*', auth.adminUser);
 
 function validateAdminUser(req, res, next) {
 	if (!req.session || req.session.u_type !== 'admin' || !req.session.u_id) {

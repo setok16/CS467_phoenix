@@ -11,6 +11,7 @@ var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 
 
+//var adminAuth = require('./routes/adminAuth');
 var reportsApi = require('./api/reports');
 var awardsApi = require('./api/awards');
 var index = require('./routes/index');
@@ -55,6 +56,7 @@ app.use('/scripts', express.static(__dirname + '/node_modules'));
 // Using as path to public
 app.use('/public', express.static(__dirname + '/public'));
 
+//app.use('/adminAuth', adminAuth);
 app.use('/api/users', require('./api/users').router);
 app.use('/api/reports', reportsApi);
 app.use('/api/awards', awardsApi);

@@ -18,8 +18,112 @@ async function deleteUser(u_id, elementId) {
 	}
 }
 
-async function updateUser(usertype, ) {
-	
+async function addUser(fname, lname, email, pwd, confPwd, warnElementId, userType, modalId) {
+	var normal = 'normal';
+	var admin = 'admin';
+
+	if (userType !== normal && userType !== admin) {
+		console.log("unknown usertype");
+		return;
+	}
+
+	var warnElement;
+	if (warnElementId) {
+		warnElement = document.getElementById(warnElementId);
+	}
+
+	var alertArray = [];
+
+	if (userType === normal) {
+		fname = fname.trim();
+		lname = lname.trim();
+		if (isEmptyOrWhiteSpaces(fname)) {
+			alertArray.push("First name cannot be empty");
+		}
+		if (isEmptyOrWhiteSpaces(lname)) {
+			alertArray.push("Last name cannot be empty");
+		};
+	}
+	if (isEmptyOrWhiteSpaces(email)) {
+		alertArray.push("Email cannot be empty");
+	} else
+	if (!(await checkEmailAvailability(email))) {
+		alertArray.push("Email is not available");
+	}
+	var pwdComplex = await checkPasswordComplexity(pwd, confPwd);
+	if (!pwdComplex.success && pwdComplex.errors.length > 0 ) {
+		alertArray.push.apply(alertArray, pwdComplex.errors);
+	}
+
+	if (alertArray.length === 0) {
+		try {
+			if (userType === normal) {
+				const response = await axios.post('api/users/normal',
+					{
+						fname: fname,
+						lname: lname,
+						email: email,
+						password: pwd
+					});
+			}
+
+			if (userType === admin) {
+				const response = await axios.post('api/users/admin',
+					{
+						email: email,
+						password: pwd
+					});
+			}
+
+			if (response.status === 200) {
+				//var warningElement = document.getElementById(warnElementId);
+				if (warnElement) {
+					warnElement.innerHTML = "The new user is created";
+					if (warnElement.classList.contains("alert-danger")) {
+						warnElement.classList.remove("alert-danger");
+					}
+					if (!warnElement.classList.contains("aalert-success")) {
+						warnElement.classList.add("alert-success");
+					}
+					if (!warnElement.classList.contains("show")) {
+						warnElement.classList.add("show");
+					}
+				} 
+			} else {
+				if (warnElement) {
+					warnElement.innerHTML = "There was a problem creating your user.  Please try again.";
+					if (warnElement.classList.contains("alert-success")) {
+						warnElement.classList.remove("alert-success");
+					}
+					if (!warnElement.classList.contains("alert-danger")) {
+						warnElement.classList.add("alert-danger");
+					}
+					if (!warnElement.classList.contains("show")) {
+						warnElement.classList.add("show");
+					}
+				}
+				console.log(response.body);
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	} else 
+		if (warnElement) {
+		warnElement.innerHTML = "";
+		alertArray.forEach(function (item) {
+				warnElement.innerHTML += "<p>" + item + "</p>";
+			}
+		);
+		if (warnElement.classList.contains("alert-success")) {
+				warnElement.classList.remove("alert-success");
+			}
+		if (!warnElement.classList.contains("alert-danger")) {
+				warnElement.classList.add("alert-danger");
+			}
+		if (!warnElement.classList.contains("show")) {
+				warnElement.classList.add("show");
+			}
+	}
 }
 
 
@@ -43,3 +147,79 @@ $('#updateModal').on('show.bs.modal', function (event) {
 	modal.find('.modal-body input[name=uid]').val(uid);
 	document.getElementById('editEmail').dataset.originalEmail = email;
 });
+
+function isEmptyOrWhiteSpaces(str) {
+	return str === null || str.match(/^ *$/) !== null;
+}
+
+function resetAddAdminUserModal(modalId, warnElementId) {
+	var modal = document.getElementById(modalId);
+
+	//if (modal.classList.contains('show')) {
+	//	modal.classList.remove('show');
+	//}
+
+	var form = modal.getElementsByTagName('form');
+	form.reset();
+
+	var warnElement = document.getElementById(warnElementId);
+	if (warnElement.classList.contains("show")) {
+		warnElement.classList.remove("show");
+	}
+
+}
+
+$('#addAdminUserModal').on('hidden.bs.modal',
+	function(e) {
+		var modal = document.getElementById('addAdminUserModal');
+
+		if (modal.classList.contains('show')) {
+			modal.classList.remove('show');
+		}
+
+		var form = modal.getElementsByTagName('form')[0];
+		form.reset();
+
+		var warnElement = document.getElementById('addAddAdminWarning');
+		if (warnElement.classList.contains("show")) {
+			warnElement.classList.remove("show");
+		}
+
+		var warnElement = document.getElementById('aEmailAvailabilityAlert');
+		if (warnElement.classList.contains("show")) {
+			warnElement.classList.remove("show");
+		}
+
+		var warnElement = document.getElementById('aPasswordComplexityAlert');
+		if (warnElement.classList.contains("show")) {
+			warnElement.classList.remove("show");
+		}
+	});
+
+$('#addNormalUserModal').on('hidden.bs.modal',
+	function(e) {
+		var modal = document.getElementById('addNormalUserModal');
+
+		if (modal.classList.contains('show')) {
+			modal.classList.remove('show');
+		}
+
+		var form = modal.getElementsByTagName('form')[0];
+		form.reset();
+
+		var warnElement = document.getElementById('addNormalUserWarning');
+		if (warnElement.classList.contains("show")) {
+			warnElement.classList.remove("show");
+		}
+
+		var warnElement = document.getElementById('nEmailAvailabilityAlert');
+		if (warnElement.classList.contains("show")) {
+			warnElement.classList.remove("show");
+		}
+
+		var warnElement = document.getElementById('nPasswordComplexityAlert');
+		if (warnElement.classList.contains("show")) {
+			warnElement.classList.remove("show");
+		}
+
+	});

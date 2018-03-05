@@ -1,8 +1,11 @@
 async function checkPasswordComplexity(password, confPassword, warningElementId) {
 
-	var warningElement = document.getElementById(warningElementId);
-	warningElement.innerHTML = "";
-	warningElement.classList.remove("show");
+	var warningElement = null;
+	if (warningElementId) {
+		warningElement = document.getElementById(warningElementId);
+		warningElement.innerHTML = "";
+		warningElement.classList.remove("show");
+	}
 
 	var alertArray = [];
 	if (password !== confPassword) {
@@ -23,14 +26,17 @@ async function checkPasswordComplexity(password, confPassword, warningElementId)
 
 	if (alertArray.length > 0) {
 
-		alertArray.forEach(function(item) {
-			warningElement.innerHTML += "<p>" + item + "</p>";
-			}
-		);
-
-		warningElement.classList.add("show");
-		return;
+		if (warningElement) {
+			alertArray.forEach(function(item) {
+					warningElement.innerHTML += "<p>" + item + "</p>";
+				}
+			);
+			warningElement.classList.add("show");
+		}
+		return {success: false, errors: alertArray}
 	}
+	return { success: true, errors: [] }
+
 };
 
 

@@ -25,26 +25,10 @@ function validateSession(req, res, next) {
 	return next();
 }
 
-//function deleteUser(req, res, next) {
-//	pool.query("DELETE FROM User WHERE u_id = ? AND email <> ?",
-//		[req.params.id, adminEmail],
-//		function (err, result) {
-//			if (err) {
-//				console.log('SERVER ERROR: ' + err);
-//				next(err);
-//				return;
-//			} else {
-//				next();
-//			}
-//		});
-//}
 
 function redirectToAdmin(req, res, next) {
 	res.redirect('/admin');
 }
-
-//router.delete('/delete/:id', validateSession, deleteUser, redirectToAdmin);
-
 
 
 function checkUserType(req, res, next) {
@@ -198,19 +182,19 @@ async function renderAdminPage (req, res) {
 					} else
 					{
 						context.userData = rows[0];
-						context.countUsers = rows.count;
+						context.countUsers = rows.length;
 					}
 					pool.query("CALL selectUserByUserType(?)", ['admin'],
 						function (err, rows, fields) {
 							if (err) {
 								console.log(err);
 								context.adminData = rows[0];
-								context.countAdmin = rows.count;
+								context.countAdmin = 0;
 							} else {
 								context.adminData = rows[0];
-								context.countAdmin = rows.count;
+								context.countAdmin = rows[0].length;
 							}
-							res.render('admin', context);
+							return res.render('admin', context);
 						});
 				});
 

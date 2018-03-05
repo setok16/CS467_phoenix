@@ -1,5 +1,9 @@
 async function checkEmailAvailability(email, warningElementId, originalEmail) {
-	var emailAlert = document.getElementById(warningElementId);
+
+	var emailAlert;
+	if (warningElementId) {
+		emailAlert = document.getElementById(warningElementId);
+	}
 	if (originalEmail === email) {
 		emailAlert.innerHTML = "";
 		emailAlert.classList.remove("show");
@@ -10,16 +14,20 @@ async function checkEmailAvailability(email, warningElementId, originalEmail) {
 		try {
 			const response = await axios.get('/api/users/email/available/' + email);
 			isAvailable = response.data.available;
-			console.log(isAvailable);
 		} catch (error) {
 			console.log(error);
 		}
 		if (!isAvailable) {
-			emailAlert.innerHTML = "warning " + email + " is not available";
-			emailAlert.classList.add("show");
-			return;
+			if (warningElementId) {
+				emailAlert.innerHTML = "warning " + email + " is not available";
+				emailAlert.classList.add("show");
+			}
+			return false;
 		}
 	}
-	emailAlert.innerHTML = "";
-	emailAlert.classList.remove("show");
+	if (warningElementId) {
+		emailAlert.innerHTML = "";
+		emailAlert.classList.remove("show");
+	}
+	return true;
 }

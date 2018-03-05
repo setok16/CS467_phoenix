@@ -1,23 +1,17 @@
 require('dotenv').config();
 var express = require('express');
 var app = require('../app.js');
-//var users = require('../api/users');
-
 var should = require('chai').should();
 var chai = require('chai');
 var chaiHttp = require('chai-http');
 //var sinon = require('sinon');
 chai.use(chaiHttp);
 
-var passwordComplexity = require('../api/users').isPasswordComplex;
-var users;
-var auth;
-
 describe('api/users', function (done) {
-	beforeEach(function(done) {
+	beforeEach(function (done) {
 		done();
 	});
-	afterEach(function(done) {
+	afterEach(function (done) {
 		done();
 	});
 	describe('GET', function () {
@@ -123,10 +117,13 @@ describe('api/users', function (done) {
 	);
 });
 
+var passwordComplexity = require('../api/users').isPasswordComplex;
 
 describe('password Complexity check',
 	function () {
 		beforeEach((done) => {
+			express = require('express');
+			app = require('../app.js');
 			done();
 		});
 		afterEach((done) => {
