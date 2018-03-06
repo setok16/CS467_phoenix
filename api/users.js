@@ -93,20 +93,35 @@ router.get('/',
 		}
 	});
 
-router.put('/:u_id',
+router.put('/admin/:u_id',
 	function(req, res, next) {
-		var message = "updating user with u_id " + req.param.u_id;
-		res.send(message);
-		pool.query("CALL changeUserNameById(?,?,?)",
-			[req.body.fname, req.body.lname, req.body.uid],
+		pool.query("CALL changeEmailByID(?,?)",
+			[req.params.u_id, req.body.email],
 			function(err, rows, fields) {
 				if (err) {
 					console.log(err);
 				} else {
-					res.send(JSON.stringify(rows));
+					console.log(JSON.stringify(rows));
+					return res.status(200).send(); //(res.send(rows[0]));
 				}
 			});
 	});
+
+router.put('/normal/:u_id',
+	function (req, res, next) {
+		console.log("updating an admin user " + req.params.u_id);
+		pool.query("UPDATE User SET `fname` = ?, `lname` =  ?, `email` = ? WHERE  `u_id` = ?",
+			[req.body.fname, req.body.lname, req.body.email, req.params.u_id],
+			function (err, result) {
+				if (err) {
+					console.log('SERVER ERROR: ' + err);
+					next(err);
+				} else {
+					return res.status(200).send();
+				}
+			});
+	}
+);
 
 router.post('/admin',
 	 async function(req, res, next) {
@@ -174,27 +189,6 @@ async function saltPassword(password) {
 		console.log("bcrypt errors: " + e);
 	}
 }
-
-//async function saltPassword(password) {
-//	const saltRounds = 10;
-//	bcrypt.genSalt(saltRounds,
-//		function (err, salt) {
-//			if (err) {
-//				console.log('SERVER ERROR: ' + err);
-//			}
-//			bcrypt.hash(password,
-//				salt,
-//				function (err, hash) {
-//					if (err) {
-//						console.log('SERVER ERROR: ' + err);
-//					} else {
-//						return hash;
-//					}
-//				});
-
-//		});
-//}
-
 
 function isPasswordComplex(password) {
 	var isComplex = true;

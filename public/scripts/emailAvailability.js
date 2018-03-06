@@ -5,9 +5,11 @@ async function checkEmailAvailability(email, warningElementId, originalEmail) {
 		emailAlert = document.getElementById(warningElementId);
 	}
 	if (originalEmail === email) {
-		emailAlert.innerHTML = "";
-		emailAlert.classList.remove("show");
-		return;
+		if (emailAlert) {
+			emailAlert.innerHTML = "";
+			emailAlert.classList.remove("show");
+		}
+		return true;
 	}
 	if (email) {
 		var isAvailable;
@@ -18,14 +20,14 @@ async function checkEmailAvailability(email, warningElementId, originalEmail) {
 			console.log(error);
 		}
 		if (!isAvailable) {
-			if (warningElementId) {
+			if (emailAlert) {
 				emailAlert.innerHTML = "warning " + email + " is not available";
 				emailAlert.classList.add("show");
 			}
 			return false;
 		}
 	}
-	if (warningElementId) {
+	if (emailAlert) {
 		emailAlert.innerHTML = "";
 		emailAlert.classList.remove("show");
 	}

@@ -35,6 +35,7 @@
 			</div>
 			<table class="table table-striped">
 				{{> _userTable data=userData normalUser="true" }}
+				{{> _updateNormalUserModal}}
 			</table>
 		</div>
 	</div>
@@ -56,6 +57,7 @@
 			{{> _addAdminUserModal}}
 			<table class="table table-striped">
 				{{> _userTable data=adminData }}
+				{{> _updateAdminUserModal}}
 			</table>
 		</div>
 	</div>
@@ -64,4 +66,3 @@
 		{{> _reports}}
 	</div>
 </div>
-{{> _updateUserModal}}
