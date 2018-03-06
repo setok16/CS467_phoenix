@@ -75,12 +75,11 @@ describe('api/users', function (done) {
 			it('should return status 400 (bad request) if password is not complex enough',
 				function(done) {
 					chai.request(app)
-						.post('/api/users/')
+						.post('/api/users/admin')
 						.set('content-type', 'application/json')
 						.send(JSON.stringify({
 							"email": "any@eamil",
-							"password": "password",
-							"usertype": "admin"
+							"password": "password"
 						}))
 						//.field('email', 'any@any')
 						//.field('password', 'password')
@@ -96,12 +95,11 @@ describe('api/users', function (done) {
 			it('should return status 200 (ok) with a valid password',
 				function (done) {
 					chai.request(app)
-						.post('/api/users/')
+						.post('/api/users/admin')
 						.set('content-type', 'application/json')
 						.send(JSON.stringify({
 							"email": "any@eamil",
-							"password": "Password2",
-							"usertype": "basic"
+							"password": "Password2"
 						}))
 						//.send({email: "any@eamil",password: "Password1",usertype: "basic"})
 						//.field('email', 'any@any')
