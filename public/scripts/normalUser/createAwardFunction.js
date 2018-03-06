@@ -138,8 +138,7 @@ $('#createAwardModal').on('show.bs.modal', function (e) {
         "-" + today.toLocaleString("en-US", {timeZone: "America/Los_Angeles",month:"2-digit"}) +
         "-" + today.toLocaleString("en-US", {timeZone: "America/Los_Angeles",day:"2-digit"});
     current_time_string_in_pacific =
-        today.toLocaleString("en-US", {timeZone: "America/Los_Angeles", hour:"2-digit", hour12:false}) +
-        ":" + today.toLocaleString("en-US", {timeZone: "America/Los_Angeles", minute:"2-digit"});
+        today.toLocaleString("en-US", {timeZone: "America/Los_Angeles", hour:"2-digit", minute:"2-digit", hour12:false});
     
     document.getElementById("award_date").value = today_date_string_in_pacific;
     document.getElementById("award_time").value = current_time_string_in_pacific;
