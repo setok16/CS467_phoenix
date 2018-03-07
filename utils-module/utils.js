@@ -1,7 +1,10 @@
 var nodemailer = require('nodemailer');
 var dotenv = require('dotenv').config();
+var mysql = require('../dbcon.js');
+var pool = mysql.pool;
 
 module.exports = {
+
   sendEmail: function(emailAddress, subject, body, attachments = 0) {
     return new Promise((resolve, reject) => {
       
@@ -42,5 +45,35 @@ module.exports = {
         });
       });
     });
+  },
+
+  passwordIsValid: function(pass1, pass2) {
+
+    if (pass1 !== pass2 || 
+        !pass1.length > 8 ||
+        !pass1.match(/[0-9]/i) ||
+        !pass1.match(/[a-z]/i) ||
+        !pass1.match(/[A-Z]/i)) {
+      return false;
+    } else {
+      return true;
+    }
+  },
+  
+  emailIsAvailable: function(email) {
+    return new Promise((resolve, reject) => {
+      pool.query("SELECT false available FROM User where email = ? LIMIT 1", [email],
+        function (err, rows, fields) {
+          if (err) {
+            reject(err);
+          } else {
+            var available = true;
+            if (rows.length > 0)
+              available = false;
+            resolve(available);
+          }
+        });
+    });
   }
+
 };
