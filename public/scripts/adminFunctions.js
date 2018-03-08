@@ -356,6 +356,13 @@ $('#addNormalUserModal').on('hidden.bs.modal',
 
 	});
 
+$(document).ready(function () {
+	$('adminTable').dataTable();
+	$('normalTable').dataTable();
+});
+
+
+
 //// Javascript to enable link to tab
 //var url = document.location.toString();
 //if (url.match('#')) {

@@ -33,10 +33,10 @@
 				</div>
 				{{> _addNormalUserModal}}
 			</div>
-			<table class="table table-striped">
-				{{> _userTable data=userData normalUser="true" }}
-				{{> _updateNormalUserModal}}
+			<table id="normalTable" class="table table-striped display">
+				{{> _normalUserTable data=userData }}
 			</table>
+			{{> _updateNormalUserModal}}
 		</div>
 	</div>
 	<!--ADMIN USER TAB-->
@@ -53,12 +53,14 @@
 						Add Admin User
 					</button>
 				</div>
+				{{> _addAdminUserModal}}
 			</div>
-			{{> _addAdminUserModal}}
-			<table class="table table-striped">
-				{{> _userTable data=adminData }}
+			<div class="table-responsive">
+				<table id="adminTable" class="table table-striped display">
+					{{> _adminUserTable data=adminData }}
+				</table>
 				{{> _updateAdminUserModal}}
-			</table>
+			</div>
 		</div>
 	</div>
 	<!--REPORT TAB-->

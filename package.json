@@ -2,10 +2,10 @@
   "name": "cs467-phoenix",
   "version": "0.0.0",
   "private": true,
-	"scripts": {
-		"start": "node ./bin/www",
-		"test": "mocha --exit"
-	},
+  "scripts": {
+    "start": "node ./bin/www",
+    "test": "mocha --exit"
+  },
   "dependencies": {
     "axios": "^0.17.1",
     "base64-img": "^1.0.3",
@@ -13,6 +13,10 @@
     "body-parser": "~1.18.2",
     "connect-mongo": "^2.0.1",
     "cookie-parser": "~1.4.3",
+    "datatables.net": "^1.10.16",
+    "datatables.net-bs": "^1.10.16",
+    "datatables.net-buttons": "^1.5.1",
+    "datatables.net-buttons-bs": "^1.5.1",
     "debug": "~2.6.9",
     "dotenv": "^4.0.0",
     "express": "~4.15.5",

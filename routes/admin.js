@@ -114,12 +114,35 @@ async function renderAdminPage (req, res) {
 
 			var context = {};
 
-			context.customScript = '<script src="public/scripts/emailAvailability.js"></script>';
+			context.customHeader =
+				'<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.16/datatables.min.css"/>';
+
+			context.customScript =
+				'<script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.16/datatables.min.js"></script>';
+			context.customScript += '<script src="public/scripts/emailAvailability.js"></script>';
 			context.customScript += '<script src="public/scripts/passwordComplexity.js"></script>';
 			context.customScript += '<script src="public/scripts/adminFunctions.js"></script>';
 			context.customScript += '<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>';
-			context.customScript += '<script src="public/scripts/businessIntelligence.js"></script>';
-
+			context.customScript += '<script> $(document).ready(function () { $("#normalTable").DataTable({ ' +
+				'"lengthMenu": [ 5, 10, 25, 50, 75, 100 ], ' +
+				'"pageLength": 5});}); ' +
+				'</script >';
+			context.customScript += '<script> $(document).ready(function () { $("#adminTable").DataTable({ ' +
+				'"lengthMenu": [ 5, 10, 25, 50, 75, 100 ], ' +
+				'"pageLength": 5, ' +
+				'"bAutoWidth": false, \"' +
+				'aoColumns" : [ ' +
+				'{ sWidth: \'5%\' },' +
+				'{ sWidth: \'35%\' },' +
+				'{ sWidth: \'35%\' },' +
+				'{ sWidth: \'25%\' }]});}); ' +
+				'</script >';
+			context.customScript += "<script> $(document).ready(function () { $('#normalTable').DataTable(); }); </script >";
+			//context.customScript += "<script> $(document).ready(function ()" +
+			//	" { $('table.display').DataTable(); });" +
+			//	""
+			//	" </script >";
+			
 			context.title = 'Admin Account';
 			context.session = { email: req.session.email };
 

@@ -7,32 +7,32 @@ var router = express.Router();
 
 router.all('/*', auth.adminUser);
 
-function validateAdminUser(req, res, next) {
-	if (!req.session || req.session.u_type !== 'admin' || !req.session.u_id) {
-		res.status(403).send();
-		return;
-	}
-	pool.query("CALL selectUserByID(?)",
-		[req.session.u_id],
-		function (err, rows, fields) {
-			if (err) {
-				console.log('DB ERROR: ' + err);
-				res.status(403).send();
-			} else if (rows[0].length < 1) {
-				console.log("no users found for u_id");
-				res.status(403).send();
-				return;
-			} else if (rows[0][0].u_type.toLowerCase() !== 'admin') {
-				console.log("u_type is not admin");
-				res.status(403).send();
-			} else {
-				next();
-			}
-			return;
-		});
-};
+//function validateAdminUser(req, res, next) {
+//	if (!req.session || req.session.u_type !== 'admin' || !req.session.u_id) {
+//		res.status(403).send();
+//		return;
+//	}
+//	pool.query("CALL selectUserByID(?)",
+//		[req.session.u_id],
+//		function (err, rows, fields) {
+//			if (err) {
+//				console.log('DB ERROR: ' + err);
+//				res.status(403).send();
+//			} else if (rows[0].length < 1) {
+//				console.log("no users found for u_id");
+//				res.status(403).send();
+//				return;
+//			} else if (rows[0][0].u_type.toLowerCase() !== 'admin') {
+//				console.log("u_type is not admin");
+//				res.status(403).send();
+//			} else {
+//				next();
+//			}
+//			return;
+//		});
+//};
 
-router.all('/*', validateAdminUser);
+//router.all('/*', validateAdminUser);
 
 router.get('/usersbytype/:resulttype',
 	function(req, res, next) {

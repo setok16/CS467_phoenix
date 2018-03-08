@@ -1,0 +1,36 @@
+<thead>
+	<tr>
+		<th scope="col">Id</th>
+		<th scope="col">Email</th>
+		<th scope="col">Registration Date</th>
+		<th scope="col">Action</th>
+	</tr>
+</thead>
+<tfoot>
+	<tr>
+		<th scope="col">Id</th>
+		<th scope="col">Email</th>
+		<th scope="col">Registration Date</th>
+		<th scope="col">Action</th>
+	</tr>
+</tfoot>
+<tbody>
+	{{#each data}}
+	<tr id="userRow_{{u_id}}">
+		<td scope="col">{{u_id}}</td>
+		<td scope="col">{{email}}</td>
+		<td scope="col">{{creation_datetime}}</td>
+		<td scope="col">
+			<button type="button" class="btn btn-outline-warning m-sm-1" data-toggle="modal"
+					data-target="#updateAdminModal"
+					data-email="{{email}}"
+					data-uid="{{u_id}}">
+				Edit
+			</button>
+			<button type="button" class="btn btn-outline-danger m-sm-1" onclick="deleteUser({{u_id}},'userRow_{{u_id}}')">Delete</button>
+		</td>
+	</tr>
+	{{/each}}
+</tbody>
+
+
