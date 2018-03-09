@@ -1,4 +1,5 @@
-﻿// Load the Visualization API and the corechart package.
+﻿
+// Load the Visualization API and the corechart package.
 //google.charts.load('current', { packages: ['calendar'] });
 google.charts.load('current', { packages: ['corechart', 'table', 'bar', 'charteditor', 'controls'] });
 
@@ -10,17 +11,25 @@ google.charts.setOnLoadCallback(drawChart);
 // instantiates the pie chart, passes in the data and
 // draws it.
 
+
 function drawChart() {
+
+	$('#pills-user').on('shown.on.tab', drawUserVisuals());
+	$('#pills-awards').on('shown.on.tab', drawAwardVisuals());
+
+	//drawUserVisuals();
+	//drawAwardVisuals();
+
 	//http://localhost:3000/api/reports/usertypes/
 	// Create the data table.
 
 	//drawUserTypeChart();
 	//drawUsersTable();
-	drawUserVisuals();
+	
 	//drawAwardsTable();
 	//drawAwardTypeChart();
 	//drawAwardsDomainChart();
-	drawAwardVisuals();
+	
 	//drawAwardsByUserChart();
 	//drawAwardsCalendarTable();
 
