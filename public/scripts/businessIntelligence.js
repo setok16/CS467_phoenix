@@ -11,7 +11,6 @@ google.charts.setOnLoadCallback(drawChart);
 // instantiates the pie chart, passes in the data and
 // draws it.
 
-
 function drawChart() {
 
 	$('#pills-user').on('shown.on.tab', drawUserVisuals());
@@ -214,8 +213,7 @@ async function drawAwardVisuals() {
 		console.log(error);
 		return;
 	}
-
-
+	
 	var data = new google.visualization.arrayToDataTable(apiData);
 
 	var formatter_short = new google.visualization.DateFormat({ formatType: 'short' });
@@ -231,11 +229,23 @@ async function drawAwardVisuals() {
 		'containerId': 'filter_awards_by_date',
 		'options': {
 			'filterColumnLabel': 'Date Granted',
-			//formatType: 'short'
-		},
+			//'formatType': 'short'
+			'ui': {
+				format: {pattern: "MM/dd/yyyy"}
+			},
+			'state': {
+				//'lowThumbAtMinimum': true,
+				'highThumbAtMaximum': true,
+				'lowValue': new Date(1970, 01, 01),
+				'highValue': new Date(2070, 1, 1)
+			} 
+	},
 		//'ui': { 'label': 'Award Date' },
-		//'state': { lowThumbAtMinimum: true, highThumbAtMaximum: true} //
-		//state: { 'lowValue': '1970-01-01', 'highValue': '2070-1-1' }
+		//'state': { 'lowThumbAtMinimum': true, 'highThumbAtMaximum': true} //
+		//'state': {
+		//	'lowValue': new Date(1970, 01, 01),
+		//	'highValue': new Date(2070, 1, 1)
+		//}
 		//setting state and control title are not working
 	});
 
@@ -245,7 +255,7 @@ async function drawAwardVisuals() {
 		'containerId': 'filter_awards_by_type',
 		'options': {
 			'filterColumnLabel': 'Award Type',
-			//formatType: 'short'
+			'ormatTyp': 'short'
 		},
 		//'ui': { 'label': 'Award Date' },
 		//'state': { lowThumbAtMinimum: true, highThumbAtMaximum: true} //

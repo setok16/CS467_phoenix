@@ -296,7 +296,6 @@ $('#updateAdminModal').on('show.bs.modal', function (event) {
 
 });
 
-
 function isEmptyOrWhiteSpaces(str) {
 	return str === null || str.match(/^ *$/) !== null;
 }
@@ -356,20 +355,36 @@ $('#addNormalUserModal').on('hidden.bs.modal',
 
 	});
 
-$(document).ready(function () {
-	$('adminTable').dataTable();
-	$('normalTable').dataTable();
+$(document).ready(function() {
+	$("#normalTable").DataTable({
+		"lengthMenu": [5, 10, 25, 50, 75, 100],
+		"pageLength": 5,
+		"bAutoWidth": false,
+		"aoColumns": [
+			{ sWidth: '5%' },
+			{ sWidth: '20%' },
+			{ sWidth: '20%' },
+			{ sWidth: '20%' },
+			{ sWidth: '15%' },
+			{ sWidth: '10%' }
+		],
+		"columnDefs": [
+			{ "orderable": false, "targets": [4, 5] },
+			{ "searchable": false, "targets": [4,5] }
+		]
+	});
 });
 
+$(document).ready(function() {
+	$("#adminTable").DataTable({
+		"lengthMenu": [5, 10, 25, 50, 75, 100],
+		"pageLength": 5,
+		"bAutoWidth": false,
+		"aoColumns": [{ sWidth: '5%' }, { sWidth: '35%' }, { sWidth: '35%' }, { sWidth: '25%' }],
+		"columnDefs": [
+			{ "orderable": false, "targets": 3 },
+			{ "searchable": false, "targets": 3 }
+		]
+	});
+});
 
-
-//// Javascript to enable link to tab
-//var url = document.location.toString();
-//if (url.match('#')) {
-//	$('.nav-tabs a[href="#' + url.split('#')[1] + '"]').tab('show');
-//}
-
-//// Change hash for page-reload
-//$('.nav-tabs a').on('shown.bs.tab', function (e) {
-//	window.location.hash = e.target.hash;
-//})
