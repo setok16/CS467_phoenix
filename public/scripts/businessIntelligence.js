@@ -261,7 +261,13 @@ async function drawAwardVisuals() {
 		'containerId': 'filter_awards_by_type',
 		'options': {
 			'filterColumnLabel': 'Award Type',
-			'ormatTyp': 'short'
+			'ormatTyp': 'short',
+			'ui': {
+				'label': 'Award Type',
+				'allowTyping': false,
+				'allowMultiple': false,
+				'selectedValuesLayout': 'belowStacked'
+			}
 		},
 		//'ui': { 'label': 'Award Date' },
 		//'state': { lowThumbAtMinimum: true, highThumbAtMaximum: true} //
@@ -322,6 +328,12 @@ async function drawUserVisuals() {
 		'containerId': 'filter_uses_by_type',
 		'options': {
 			'filterColumnLabel': 'User Type',
+			'ui': {
+				'label': 'User Type',
+				'allowTyping': false,
+				'allowMultiple': false,
+				'selectedValuesLayout': 'belowStacked'
+			}
 		}
 	});
 
