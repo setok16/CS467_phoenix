@@ -13,7 +13,7 @@
 		<a class="nav-link {{showAdminTab}}" id="admin-tab" data-toggle="tab" href="#admin" role="tab" aria-controls="profile" aria-selected="false"><h4><i class="fa fa-lock"></i> Manage Admin Users</h4></a>
 	</li>
 	<li class="nav-item">
-		<a class="nav-link {{showReportTab}}" id="report-tab" data-toggle="tab" href="#report" role="tab" aria-controls="contact" aria-selected="false"><h4><i class="fa fa-area-chart"></i> Usage Reports</h4></a>
+		<a class="nav-link {{showReportTab}}" id="report-tab" data-toggle="tab" href="#report" role="tab" aria-controls="contact" aria-selected="false" onclick="google.charts.setOnLoadCallback(drawUserVisuals)"><h4><i class="fa fa-area-chart"></i> Usage Reports</h4></a>
 	</li>
 </ul>
 <div class="tab-content" id="myTabContent">

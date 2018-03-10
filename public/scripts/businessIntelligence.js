@@ -4,12 +4,18 @@
 google.charts.load('current', { packages: ['corechart', 'table', 'bar', 'charteditor', 'controls'] });
 
 // Set a callback to run when the Google Visualization API is loaded.
-google.charts.setOnLoadCallback(drawChart);
+//google.charts.setOnLoadCallback(drawChart);
 //google.charts.setOnLoadCallback(drawAwardCalendarChart);
 
 // Callback that creates and populates a data table,
 // instantiates the pie chart, passes in the data and
-// draws it.
+//// draws it.
+
+//$('#pills-user').on('shown.on.tab', google.charts.setOnLoadCallback(drawUserVisuals));
+//$('#pills-awards').on('shown.on.tab', google.charts.setOnLoadCallback(drawAwardVisuals));
+
+//$('#pills-user-tab').click(google.charts.setOnLoadCallback(drawUserVisuals));
+//$('#pills-awards-tab').click(google.charts.setOnLoadCallback(drawAwardVisuals));
 
 function drawChart() {
 
