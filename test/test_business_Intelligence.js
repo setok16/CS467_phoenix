@@ -1,35 +1,63 @@
+process.env.ENVIRONMENT = 'test';
 require('dotenv').config();
-var sinon = require('sinon');
-var express = require('express');
-//var app = require('../app.js');
 var should = require('chai').should();
 var chai = require('chai');
 var chaiHttp = require('chai-http');
-//var sinon = require('sinon');
+var express = require('express');
+var getEmailParts = require('../api/reports').getEmailParts;
 
-var dbstub;
+describe('parsing for domain', (done) => {
+	it('should return domain on valid email address format',
+		(done) => {
+			var domain = 'test';
+			var email = 'myemail@' + domain + '.com';
+			var parsedDomain = getEmailParts(email).domain;
+			parsedDomain.should.be.equal(domain);
+			done();
+		});
+	it('should return domain on valid email address format with subdomain',
+		(done) => {
+			var domain = 'test.test';
+			var email = 'myemail@' + domain + '.com';
+			var parsedDomain = getEmailParts(email).domain;
+			parsedDomain.should.be.equal(domain);
+			done();
+		});
+	it('should return unkown on partial email address format',
+		(done) => {
+			var domain = 'test';
+			var email = 'myemail@' + domain;
+			var parsedDomain = getEmailParts(email).domain;
+			parsedDomain.should.be.equal('unknown');
+			done();
+		});
+	it('should return unkown on string with no address',
+		(done) => {
+			var email = 'myemail';
+			var parsedDomain = getEmailParts(email).domain;
+			parsedDomain.should.be.equal('unknown');
+			done();
+		});
+	it('should return unknown on empty email address',
+		(done) => {
+			var email = '';
+			var parsedDomain = getEmailParts(email).domain;
+			parsedDomain.should.be.equal('unknown');
+			done();
+		});
+	it('should return unknown on invalid address',
+		(done) => {
+			var email = '@@@@';
+			var parsedDomain = getEmailParts(email).domain;
+			parsedDomain.should.be.equal('unknown');
+			done();
+		});
+});
 
 describe('api/awards', function(done) {
 	beforeEach(() => {
-
-		//var rows =
-		//[
-		//	{
-		//		fname: 'you',
-		//		lname: 'deserve',
-		//		email: 'it@yahoo.com',
-		//		award_type: 'month',
-		//		issuer_email: 'Users@oregonstate.edu',
-		//		granted_date: '2018-01-17 08:00:00'
-		//	}
-		//];
-
-		//dbstub = sinon.stub(require('../dbcon.js').pool,"query");
-		//dbstub.returns(rows);
-
 	});
 	afterEach(() => {
-		// dbstub.restore();
 	});
 	describe('GET',
 		() => {
@@ -52,3 +80,6 @@ describe('api/awards', function(done) {
 		});
 
 });
+
+
+

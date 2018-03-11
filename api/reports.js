@@ -168,4 +168,4 @@ function GetEmailParts(strEmail) {
 	return (objParts);
 }
 
-module.exports = router;
+module.exports = { router: router, getEmailParts: GetEmailParts }

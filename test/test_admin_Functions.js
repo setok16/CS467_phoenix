@@ -1,6 +1,6 @@
+process.env.ENVIRONMENT = 'test';
 require('dotenv').config();
 var passwordComplexity = require('../public/scripts/passwordComplexity.js');
-
 
 describe('public password Complexity check',
 	function () {
@@ -15,7 +15,6 @@ describe('public password Complexity check',
 			async function () {
 				var password = 'Abcdefgh';
 				var isComplex = await passwordComplexity.checkPasswordComplexity(password, password);
-				console.log("*****************iscomplex:" + isComplex);
 				isComplex.success.should.be.false;
 			});
 		it('should return false for passwords without lowercase letters',
