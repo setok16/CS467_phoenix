@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "test": "mocha --exit"
+    "test": "mocha --exit --timeout=10000"
   },
   "dependencies": {
     "axios": "^0.17.1",
@@ -35,7 +35,8 @@
     "proxyquire": "^2.0.0",
     "randomstring": "^1.1.5",
     "serve-favicon": "~2.4.5",
-    "signature_pad": "^2.3.2"
+    "signature_pad": "^2.3.2",
+    "sillyname": "^0.1.0"
   },
   "devDependencies": {
     "chai": "^4.1.2",
