@@ -1,5 +1,4 @@
-﻿//var express = require('express');
-var mysql = require('../dbcon.js');
+﻿var mysql = require('../dbcon.js');
 var pool = mysql.pool;
 
 function adminUser(req, res, next) {

@@ -61,8 +61,6 @@ router.get('/',
 		
 		sql += ";";
 
-		//res.send(searchList, sql, searchValues);
-		
 		pool.query(sql,
 			searchValues,
 			function (err, rows, fields) {

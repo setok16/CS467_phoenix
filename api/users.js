@@ -8,8 +8,27 @@ var router = express.Router();
 router.all('/*', auth.adminUser);
 
 router.delete('/:u_id',
-	function(req, res, next) {
-		//lookup user by id first.  do not delete if 1) doesn't exist, 2) is special adming or basic user
+	function (req, res, next) {
+		////if we need to prevent admin user from being deleted
+		//pool.query("CALL selectUserByID(?)",
+		//	[req.params.u_id],
+		//	function (err, rows, fields) {
+		//		if (err) {
+		//			console.log(err);
+		//		} else {
+		//			if (rows[0].length === 0) {
+		//				res.statusCode = 200;
+		//				res.send();
+		//			} else {
+		//				if (rows[0].email = 'admin@oregonstate.edu') {
+		//					res.statusCode = 200;
+		//					res.send();
+		//				} else {
+		//					//run code here to delete th suer
+		//				}
+		//			}
+		//		}
+		//	});
 		pool.query("CALL deleteUserByID(?)",
 			[req.params.u_id],
 			function(err, result) {
@@ -70,7 +89,6 @@ router.get('/',
 				function(err, rows, fields) {
 					if (err) {
 						console.log(err);
-						//next(err, null);
 					} else {
 						res.send(rows[0]);
 					}
@@ -81,7 +99,6 @@ router.get('/',
 				function(err, rows, fields) {
 					if (err) {
 						console.log(err);
-						//next(err, null);
 					} else {
 						res.send(rows[0]);
 					}
@@ -102,7 +119,7 @@ router.put('/admin/:u_id',
 					console.log(err);
 				} else {
 					console.log(JSON.stringify(rows));
-					return res.status(200).send(); //(res.send(rows[0]));
+					return res.status(200).send(); 
 				}
 			});
 	});
@@ -147,7 +164,6 @@ router.post('/admin',
 					return res.send(rows);
 				}
 			});
-		//return res.status(403).send();
 	});
 
 router.post('/normal',
@@ -164,7 +180,6 @@ router.post('/normal',
 			console.log(err);
 			return res.status(400).send("Unable to create a user.  Please try again.");;
 		}
-		//console.log("PASSWORD HASH: "+ passwordHash);
 		pool.query("CALL addNormalUser(?,?,?,?,?)",
 			[req.body.email, passwordHash, req.body.fname, req.body.lname, null],
 			function(err, rows, fields) {
@@ -176,7 +191,6 @@ router.post('/normal',
 				}
 			});
 
-		//return res.status(403).send();
 	});
 
 async function saltPassword(password) {
