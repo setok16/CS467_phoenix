@@ -1,6 +1,6 @@
 async function checkPasswordComplexity(password, confPassword, warningElementId) {
-
-	var warningElement = null;
+	
+	var warningElement = undefined;
 	if (warningElementId) {
 		warningElement = document.getElementById(warningElementId);
 		warningElement.innerHTML = "";
@@ -17,10 +17,10 @@ async function checkPasswordComplexity(password, confPassword, warningElementId)
 	if (!password.match(/[0-9]/i)) {
 		alertArray.push("Password must contain a number");
 	}
-	if (!password.match(/[a-z]/i)) {
+	if (password.toUpperCase() === password) {
 		alertArray.push("Password must contain a lowercase letter");
 	}
-	if (!password.match(/[A-Z]/i)) {
+	if (password.toLowerCase() === password) {
 		alertArray.push("Password must contain an uppercase letter");
 	}
 
@@ -36,7 +36,11 @@ async function checkPasswordComplexity(password, confPassword, warningElementId)
 		return {success: false, errors: alertArray}
 	}
 	return { success: true, errors: [] }
-
 };
 
+async function xcheckPasswordComplexity(password, confPassword, warningElementId) {
+	return { success: false, errors: [] }
+}
 
+
+module.exports.checkPasswordComplexity = checkPasswordComplexity;

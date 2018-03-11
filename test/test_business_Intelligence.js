@@ -12,20 +12,20 @@ var dbstub;
 describe('api/awards', function(done) {
 	beforeEach(() => {
 
-		var rows =
-		[
-			{
-				fname: 'you',
-				lname: 'deserve',
-				email: 'it@yahoo.com',
-				award_type: 'month',
-				issuer_email: 'Users@oregonstate.edu',
-				granted_date: '2018-01-17 08:00:00'
-			}
-		];
+		//var rows =
+		//[
+		//	{
+		//		fname: 'you',
+		//		lname: 'deserve',
+		//		email: 'it@yahoo.com',
+		//		award_type: 'month',
+		//		issuer_email: 'Users@oregonstate.edu',
+		//		granted_date: '2018-01-17 08:00:00'
+		//	}
+		//];
 
-		dbstub = sinon.stub(require('../dbcon.js').pool,"query");
-		dbstub.returns(rows);
+		//dbstub = sinon.stub(require('../dbcon.js').pool,"query");
+		//dbstub.returns(rows);
 
 	});
 	afterEach(() => {

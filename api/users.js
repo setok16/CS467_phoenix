@@ -192,7 +192,12 @@ async function saltPassword(password) {
 
 function isPasswordComplex(password) {
 	var isComplex = true;
-	if (password.length < 8 || !password.match(/[0-9]/i) || !password.match(/[A-Z]/i) || !password.match(/[a-z]/i)) {
+	if (password.length < 8
+		|| !password.match(/[0-9]/i)
+		|| (password.toUpperCase() === password) 
+		|| (password.toLowerCase() === password) 
+	)
+	{
 		isComplex = false;
 	}
 	return isComplex;

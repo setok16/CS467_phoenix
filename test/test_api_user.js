@@ -1,22 +1,34 @@
 require('dotenv').config();
 var express = require('express');
-var app = require('../app.js');
+//var app = require('../app.js');
 var should = require('chai').should();
 var chai = require('chai');
 var chaiHttp = require('chai-http');
-//var sinon = require('sinon');
 chai.use(chaiHttp);
+var sinon = require('sinon');
+
+var app;
+var auth; 
+
 
 describe('api/users', function (done) {
 	beforeEach(function (done) {
+		//auth = require('../routes/adminAuth');
+		//sinon.stub(auth, 'adminUser').callsFake(function fakefn() { console.log("called mock"); next(); });
 		done();
 	});
 	afterEach(function (done) {
+		//auth.adminUser.restore();
 		done();
 	});
 	describe('GET', function () {
+		before(function(done) {
+			app = require('../app.js');
+			done();
+		});
 			it('should return a 400 (bad request) if an unknown query parameters is passed',
 				function (done) {
+					//auth.adminUser();
 					chai.request(app)
 						.get('/api/users')
 						.query({ uknown: 'value' })
@@ -139,11 +151,17 @@ describe('password Complexity check',
 				isComplex.should.be.false;
 				done();
 			});
-		//it('should return false for passwords without lowercase letters',
-		//	function (done) {
-		//		var isComplex = passwordComplexity('ABCDEFG8');
-		//		isComplex.should.be.false;
-		//		done();
-		//	});
+		it('should return false for passwords without lowercase letters',
+			function (done) {
+				var isComplex = passwordComplexity('ABCDEFG8');
+				isComplex.should.be.false;
+				done();
+			});
+		it('should return false for passwords without uppercase letters',
+			function (done) {
+				var isComplex = passwordComplexity('abcedfg8');
+				isComplex.should.be.false;
+				done();
+			});
 	});
 
