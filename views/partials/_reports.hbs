@@ -35,11 +35,16 @@
 		</div>
 	</div>
 	<div class="tab-pane fade" id="pills-awards" role="tabpanel" aria-labelledby="pills-awards-tab">
-		<h3>Award count by domain</h3><div>Narrow the awards date granted or select an award type to see a subset of awards</div>
+		<h3>Award count by recipient domain</h3><div>Narrow the date the award was granted or select an award type to see a subset of awards</div>
 		<div id="awards_dashboard">
 			<div id="filter_awards_by_date"></div>
 			<div id="filter_awards_by_type"></div>
-			<div id="chart_award_domain"></div>
+			<h2>Awards by the recipient domain</h2>
+			<div id="chart_award_recipient_domain"></div>
+			<h2>Awards by the issuer domain</h2>
+			<div id="chart_award_issuer_domain"></div>
+			<h2>Awards from issuer domain (left) to recipient domain (right) </h2>
+			<div id="chart_award_user_domain" style="padding:20px" ></div>
 			<div id="chart_awards_table"></div>
 		</div>
 	</div>
@@ -49,7 +54,7 @@
 	<div class="tab-pane fade" id="pills-calendar" role="tabpanel" aria-labelledby="pills-calendar-tab">
 		<div id="chart_awards_calendar_table" class="in-line"></div>
 	</div>-->
-	<div  class="tab-pane fade" id="pills-search" role="tabpanel" aria-labelledby="pills-search-tab">
+	<div class="tab-pane fade" id="pills-search" role="tabpanel" aria-labelledby="pills-search-tab">
 		<form class="form-inline" id="searchForm">
 			<div class="form-row align-items-center">
 				<div class="col-auto">
@@ -64,9 +69,9 @@
 				</div>
 				<div class="col-auto">
 					<button class="btn btn-primary mb-2" type="button" onclick="displaySearchAndDisplayResults('searchForm','searchResults')">Search</button>
-					</div>
 				</div>
-</form>
+			</div>
+		</form>
 
 		<div id="searchResults">
 			<div style="visibility: collapse;" id="no_results_message">Sorry your search produced no results</div>
@@ -81,7 +86,6 @@
 					</tr>
 				</thead>
 				<tbody>
-				</tbody>
 			</table>
 		</div>
 	</div>
