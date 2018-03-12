@@ -1,0 +1,43 @@
+<div class="modal fade" id="updateNormalModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dna" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="updateNormalModalLabel">Edit User</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<form name="editForm" method="POST" action="/admin/update?_method=PUT">
+				<div class="modal-body">
+					<div class="form-group">
+						<label for="nEditFirstName">First Name</label>
+						<input id="nEditFirstName" type="text" class="form-control" name="fname" placeholder="First Name">
+					</div>
+					<div class="form-group">
+						<label for="nEditLastName">Last Name</label>
+						<input id="nEditLastName" type="text" class="form-control" name="lname" placeholder="Last Name">
+					</div>
+					<div class="form-group">
+						<label for="nEditEmail">Email</label>
+						<input id="nEditEmail" type="email" class="form-control" name="email" placeholder="Email"
+							   onchange="checkEmailAvailability(this.value, 'nEmailUpdateAvailabilityAlert', this.dataset.originalEmail)">
+					</div>
+					<div id="nEmailUpdateAvailabilityAlert" class="alert alert-danger fade collapse" role="alert"></div>
+					<div class="form-group" hidden>
+						<label for="nuid">Id</label>
+						<input id="nuid" type="number" class="form-control" name="uid">
+					</div>
+					<div class="form-group">
+						<div id="updateNormalWarning" class="alert alert-danger fade collapse" role="alert">
+							This is a danger alert—check it out!
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-primary" data-target="#updateNormalModal" onclick="updateUser(nEditFirstName.value,nEditLastName.value, nEditEmail.value, nEditEmail.dataset.originalEmail, nuid.value,'updateNormalWarning','normal')">Save</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
