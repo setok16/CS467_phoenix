@@ -1,7 +1,11 @@
 ﻿var express = require('express');
-var router = express.Router();
 var mysql = require('../dbcon.js');
+var auth = require('../routes/adminAuth');
 var pool = mysql.pool;
+var router = express.Router();
+
+
+router.all('/*', auth.adminUser);
 
 router.post('/',
 	function (req, res, next) {
@@ -57,8 +61,6 @@ router.get('/',
 		
 		sql += ";";
 
-		//res.send(searchList, sql, searchValues);
-		
 		pool.query(sql,
 			searchValues,
 			function (err, rows, fields) {

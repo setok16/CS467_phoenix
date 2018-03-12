@@ -1,0 +1,69 @@
+				
+<!-- Modal -->
+<div class="modal fade" id="addNormalUserModal" tabindex="-1" role="dialog" aria-labelledby="addNormalUserModal" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-dna" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Add User</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<form>
+					<div class="form-group">
+						<label for="nFirstName">First Name</label>
+						<input type="text" class="form-control" name="fname" id="nFirstName" placeholder="First Name">
+					</div>
+					<div class="form-group">
+						<label for="nLastName">Last Name</label>
+						<input type="text" class="form-control" name="lname" id="nLastName" placeholder="Last Name">
+					</div>
+					<div class="form-group">
+						<label for="nInputEmail">Email</label>
+						<input type="email" class="form-control" name="email" id="nInputEmail" placeholder="Email" onblur="checkEmailAvailability(this.value,'nEmailAvailabilityAlert')">
+					</div>
+					<div id="nEmailAvailabilityAlert" class="alert alert-danger fade collapse" role="alert"></div>
+					<div class="form-row">
+						<div class="form-group col-md-6">
+							<label for="nInputPassword">Password</label>
+							<input type="password" class="form-control" name="password" id="nInputPassword" placeholder="Password"
+								   onchange="checkPasswordComplexity(this.value,document.getElementById('nConfirmPassword').value,'nPasswordComplexityAlert')">
+						</div>
+						<div class="form-group col-md-6">
+							<label for="confirmPassword">Confirm Password</label>
+							<input id="nConfirmPassword" type="password" class="form-control" name="confirmed_password" placeholder="Confirm Password"
+								   onchange="checkPasswordComplexity(document.getElementById('nInputPassword').value,this.value,'nPasswordComplexityAlert')" )>
+						</div>
+					</div>
+					<div id="nPasswordComplexityAlert" class="alert alert-danger fade collapse" role="alert"></div>
+				</form>
+				<div id="accordion">
+					<div class="card">
+						<div class="card-header" id="nPasswordRequiermentHeading">
+							<button type="button" class="btn btn-link collapsed" data-toggle="collapse" data-target="#passwordRequierment" aria-expanded="true" aria-controls="passwordRequierment">
+								Password Requirements
+							</button>
+						</div>
+						<div id="passwordRequierment" class="collapse" aria-labelledby="passwordRequiermentHeading" data-parent="#accordion">
+							<div class="card-body">
+								<ul>
+									<li>At least 8 characters</li>
+									<li>Lowercase Alphabet</li>
+									<li>Uppercase Alphabet</li>
+									<li>Number</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="addNormalUserWarning" class="alert fade collapse" role="alert">
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary" onclick="addUser(nFirstName.value, nLastName.value, nInputEmail.value, nInputPassword.value, nConfirmPassword.value, 'addNormalUserWarning', 'normal')">Create User</button>
+			</div>
+		</div>
+	</div>
+</div>

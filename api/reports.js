@@ -1,9 +1,13 @@
-﻿var express = require('express');
-var router = express.Router();
-var mysql = require('../dbcon.js');
+﻿var mysql = require('../dbcon.js');
+var auth = require('../routes/adminAuth');
 var pool = mysql.pool;
+var express = require('express');
+var router = express.Router();
 
-router.get('/usersbytype/:resulttype',
+
+router.all('/*', auth.adminUser);
+
+router.get('/users/:resulttype',
 	function(req, res, next) {
 
 		if (req.params.resulttype.toLowerCase() === 'chartdata') {
@@ -26,7 +30,7 @@ router.get('/usersbytype/:resulttype',
 						res.send(googleChartData);
 					}
 				});
-		} else if (req.params.resulttype.toLowerCase() === 'tabledata') {
+		} else if (req.params.resulttype.toLowerCase() === 'table') {
 			//create array and set headers
 			var googleTabletData = [];
 
@@ -55,89 +59,9 @@ router.get('/usersbytype/:resulttype',
 		}
 	});
 
-router.get('/awardsbyuser/:resulttype', function (req, res, next) {
-
-	if (req.params.resulttype.toLowerCase() === 'chartdata') {
-		var data2dArray = [
-			['George Washington', 17, 55],
-			['Harry Potter', 27, 22],
-			['Uma Thurman', 28, 19],
-			['Clyde Drexler', 15, 7],
-			['Barak Obama', 11, 11]
-		];
-		res.send(data2dArray);
-
-		////create array and set headers
-		//var googleChartData = [];
-
-		//googleChartData.push([
-		//	{ id: "u_type", label: "User Type", type: "string" },
-		//	{ id: "total", label: "Total", type: "number" }
-		//]);
-
-		//pool.query("SELECT u_type, count(u_id) as Total from User Group by u_type",
-		//	function (err, rows) {
-		//		if (err) {
-		//			console.log(err);
-		//		} else {
-		//			rows.forEach(function (element) {
-		//				googleChartData.push([element.u_type, element.Total]);
-		//			});
-		//			res.send(googleChartData);
-		//		}
-		//	});
-
-	} else if (req.params.resulttype.toLowerCase() === 'tabledata') {
-
-		var apiData = [
-			[
-				{ label: 'Recipient', type: 'string' },
-				{ label: 'Award Type', type: 'string' },
-				{ label: 'Issuer', type: 'string' },
-				{ label: 'Granted', type: 'date' }
-			],
-			['Mike', 'weekly', 'Julia', 'Date(2018, 2, 27)'],
-			['Jim', 'weekly', 'Tom', 'Date(2018, 2, 27)'],
-			['Alice', 'monthly', 'Teresa', 'Date(2018, 2, 27)'],
-			['Bob', 'monthly', 'Sophia', 'Date(2018, 2, 27)']
-		];
-
-		res.send(apiData);
-
-
-	} else
-	{
-		res.send([]);
-	}
-});
-
 router.get('/awards/:resulttype',
 	function(req, res, next) {
-
-		if (req.params.resulttype.toLowerCase() === 'type') {
-			var googleTabletData = [];
-
-			googleTabletData.push([
-				{ id: 'award', label: 'Award', type: 'string' },
-				{ it: 'total', label: 'Total', type: 'number' }]
-			);
-
-		pool.query(
-			"SELECT c_type award, COUNT(c_id) as total " +
-			"FROM Award " +
-			"GROUP BY c_type",
-			function (err, rows) {
-				if (err) {
-					console.log(err);
-				} else {
-					rows.forEach(function (element) {
-						googleTabletData.push([element.award, element.total]);
-					});
-					res.send(googleTabletData);
-				}
-			});
-
-	} else if (req.params.resulttype.toLowerCase() === 'table') {
+		if (req.params.resulttype.toLowerCase() === 'table') {
 
 		var googleTabletData = [];
 
@@ -146,12 +70,14 @@ router.get('/awards/:resulttype',
 			{ id: 'receiver_email', label: 'Recipient Email', type: 'string' },
 			{ id: 'c_type', label: 'Award Type', type: 'string' },
 			{ id: 'issuer', label: 'Issuer', type: 'string' },
+			{ id: 'issuer_email', label: 'Issuer Email', type: 'string' },
 			{ id: 'granted_datetime', label: 'Date Granted', type: 'date' },
-			{ id: "domain", label: "User Domain", type: "string" }
+			{ id: "domain", label: "Recipient Domain", type: "string" },
+			{ id: "issuer_domain", label: "Issuer Domain", type: "string" }
 		]);
-
+			
 		pool.query(
-			"SELECT receiver_email, receiver_lname, receiver_fname, c_type, YEAR(granted_datetime) as granted_year, MONTH(granted_datetime) as granted_month, DAY(granted_datetime) as granted_day , u.fname, u.lname " +
+			"SELECT receiver_email, receiver_lname, receiver_fname, c_type, YEAR(granted_datetime) as granted_year, MONTH(granted_datetime) as granted_month, DAY(granted_datetime) as granted_day , u.fname, u.lname, u.email " +
 			"FROM Award a " +
 			"LEFT JOIN User u on a.user_id = u.u_id " +
 			"ORDER BY a.receiver_lname;",
@@ -160,9 +86,15 @@ router.get('/awards/:resulttype',
 					console.log(err);
 				} else {
 					rows.forEach(function (element) {
-						googleTabletData.push([element.receiver_fname + " " + element.receiver_lname, element.receiver_email, element.c_type, element.fname + " " + element.lname
+						googleTabletData.push([
+							element.receiver_fname + " " + element.receiver_lname
+							, element.receiver_email
+							, element.c_type
+							, element.fname + " " + element.lname
+							, element.email
 							, 'Date('+element.granted_year+','+element.granted_month+','+element.granted_day+')'
-							, GetEmailParts(element.receiver_email).domain]);
+							, GetEmailParts(element.receiver_email).domain
+							, GetEmailParts(element.email).domain]);
 					});
 					res.send(googleTabletData);
 				}
@@ -211,23 +143,29 @@ function GetEmailParts(strEmail) {
 		domain: 'unknown',
 		ext: null
 	};
-
+	
 	// Get the parts of the email address by leveraging
 	// the String::replace method. Notice that we are 
 	// matching on the whole string using ^...$ notation.
-	strEmail.replace(
-		new RegExp("^(.+)@(.+)\\.(\\w+)$", "i"),
+	if (strEmail) {
+		strEmail.replace(
+			new RegExp("^(.+)@(.+)\\.(\\w+)$", "i"),
 
-		// Send the match to the sub-function.
-		function ($0, $1, $2, $3) {
-			objParts.user = $1;
-			objParts.domain = $2;
-			objParts.ext = $3;
-		}
-	);
+			// Send the match to the sub-function.
+			function($0, $1, $2, $3) {
+				objParts.user = $1;
+				objParts.domain = $2;
+				objParts.ext = $3;
+			}
+		);
+	}
+
+	if (objParts.domain) {
+		objParts.domain = objParts.domain.trim();
+	}
 
 	// Return the "potentially" updated parts structure.
 	return (objParts);
 }
 
-module.exports = router;
+module.exports = { router: router, getEmailParts: GetEmailParts }
