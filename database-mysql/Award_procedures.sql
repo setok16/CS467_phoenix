@@ -31,6 +31,28 @@ END$$
 
 
 
+DROP PROCEDURE IF EXISTS addAwardThenSelectID$$
+CREATE PROCEDURE addAwardThenSelectID (
+    IN input_c_type enum('week', 'month'),
+    IN input_user_id int,
+    IN input_receiver_fname varchar(63),
+    IN input_receiver_lname varchar(63),
+    IN input_receiver_email varchar(63),
+    IN input_granted_datetime_pacific DATETIME
+    )
+BEGIN
+    /* Convert the granted datetime to the server's time (UTC) in order to be stored in the database */
+    SET @input_granted_datetime_utc = CONVERT_TZ(input_granted_datetime_pacific, 'US/Pacific', @@global.time_zone);
+    SET FOREIGN_KEY_CHECKS = 1;
+
+    INSERT INTO Award (`c_type`, `user_id`, `receiver_fname`, `receiver_lname`, `receiver_email`, `granted_datetime`)
+        VALUES (input_c_type, input_user_id, input_receiver_fname, input_receiver_lname, input_receiver_email,
+        @input_granted_datetime_utc);
+    SELECT LAST_INSERT_ID() AS added_award_id;
+END$$
+
+
+
 DROP PROCEDURE IF EXISTS selectAwardByAwardID$$
 CREATE PROCEDURE selectAwardByAwardID (IN input_c_id int)
 BEGIN

@@ -14,6 +14,7 @@ var reportsApi = require('./api/reports');
 var awardsApi = require('./api/awards');
 var index = require('./routes/index');
 var users = require('./routes/users');
+var user_award = require('./routes/user_award');
 var users_error = require('./routes/users_error');
 var admin = require('./routes/admin');
 var registration = require('./routes/registration');
@@ -24,8 +25,32 @@ var logout = require('./routes/logout');
 
 var app = express();
 
+// Handlebars custom helper: equals
+hbs.registerHelper('equals', function(lvalue, rvalue, options) {
+  if (arguments.length < 3)
+    throw new Error("Handlebars Helper equal needs 2 parameters");
+  if( lvalue!=rvalue ) {
+    return options.inverse(this);
+  } else {
+    return options.fn(this);
+  }
+});
+
+// Handlebars custom helper: remove :00 seconds at the end in a time string
+hbs.registerHelper('remove_00_seconds', function(passedTime) {
+  if (passedTime.length > 3 && passedTime.substr(passedTime.length - 3) == ':00') {
+    let truncatedTime = passedTime.substring(0, passedTime.length - 3);
+    return new hbs.SafeString(truncatedTime);
+  }
+  else {
+    return new hbs.SafeString(passedTime);
+  }  
+});
+
+
 // view engine setup
 hbs.registerPartials(__dirname + '/views/partials');
+hbs.registerPartials(__dirname + '/views/partials/userAwards');
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
@@ -55,8 +80,9 @@ app.use('/public', express.static(__dirname + '/public'));
 app.use('/api/users', require('./api/users').router);
 app.use('/api/reports', reportsApi.router);
 app.use('/api/awards', awardsApi);
-app.use('/users', users);
+app.use('/user_award', user_award);
 app.use('/users_error', users_error);
+app.use('/users', users);
 app.use('/admin', admin);
 app.use('/registration', registration);
 app.use('/login', login);
