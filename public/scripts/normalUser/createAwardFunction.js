@@ -1,6 +1,6 @@
+// Function: user_award_reload
+// Redirect to or reload the Awards Management tab of the normal user page
 function user_award_reload() {
-
-    //alert("user_awards_reload!");
 
     let searchParams = new URLSearchParams(window.location.search);
 
@@ -50,7 +50,6 @@ createAwardForm.addEventListener("submit", function (event) {
     .then((response) => {
         
         //console.log("response = " + response.ok + ' ' + response.status);
-        //alert('response!');
 
         if (response.ok && response.status == 200) {
             console.log("response 200 ok");
@@ -123,16 +122,17 @@ createAwardForm.addEventListener("submit", function (event) {
         console.error('Error: ', error);
         window.location.href = '/users_error';
     });
-
-
 });
 
+
+// Create Award - Initialize Modal
 $('#createAwardModal').on('show.bs.modal', function (e) {
     document.getElementById("createAwardSubmitBtn").disabled = false;
     document.getElementById("createAwardCancelBtn").disabled = false;
     document.getElementById("createAwardWarning").innerHTML = '';
     document.getElementById("createAwardWarning").style.display = "none";
 
+    // Set the default award grant date and time to be the current date and time in the Pacific time zone
     today = new Date();
     today_date_string_in_pacific = today.toLocaleString("en-US", {timeZone: "America/Los_Angeles", year:"numeric"}) +
         "-" + today.toLocaleString("en-US", {timeZone: "America/Los_Angeles",month:"2-digit"}) +

@@ -1,6 +1,6 @@
+// Function: user_award_reload
+// Redirect to or reload the Awards Management tab of the normal user page
 function user_award_reload() {
-
-    //alert("user_awards_reload!");
 
     let searchParams = new URLSearchParams(window.location.search);
 
@@ -14,6 +14,7 @@ function user_award_reload() {
     }
 }
 
+// Delete Award - Initialize Modal
 $('#deleteUserAwardModal').on('show.bs.modal', function (event) {
     document.getElementById("deleteUserAwardWarning").innerHTML = '';
     document.getElementById("deleteUserAwardWarning").style.display = "none";
@@ -84,8 +85,8 @@ deleteUserAwardBtn.addEventListener("click", function (event) {
         }
         else if (response.status == 404) {
             console.error('Error: ', response.status + ' ' + response.statusText);
-            $("#deleteUserAwardWarning").html('<strong>Award deletion failed: The award no longer exists.</strong><br>' +
-                "Reloading the Awards Management tab in 5 seconds...");
+            $("#deleteUserAwardWarning").html('<strong>Award deletion failed: The award no longer exists.</strong>' +
+                "<br>Reloading the Awards Management tab in 5 seconds...");
             $("#deleteUserAwardWarning").fadeIn(300);
             setTimeout(function () {
                 user_award_reload();
@@ -93,7 +94,8 @@ deleteUserAwardBtn.addEventListener("click", function (event) {
         }
         else if (response.status == 500) {
             console.error('Error: ', response.status + ' ' + response.statusText);
-            $("#deleteUserAwardWarning").html('Award deletion failed. You may try again.');
+            $("#deleteUserAwardWarning").html('<strong>Award deletion failed: Server processing error.</strong>' +
+                '<br>You may try again.');
             $("#deleteUserAwardWarning").fadeIn(300);
         }
         
