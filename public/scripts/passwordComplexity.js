@@ -43,4 +43,4 @@ async function xcheckPasswordComplexity(password, confPassword, warningElementId
 }
 
 
-module.exports.checkPasswordComplexity = checkPasswordComplexity;
+//module.exports.checkPasswordComplexity = checkPasswordComplexity;

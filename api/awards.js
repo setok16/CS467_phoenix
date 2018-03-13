@@ -47,7 +47,7 @@ router.get('/',
 			return;
 		};
 
-		var sql = "SELECT a.receiver_fname as fname, a.receiver_lname as lname, a.receiver_email as email, a.c_type as award_type, u.email as issuer_email, a.granted_datetime as granted_date FROM Award a";
+		var sql = "SELECT a.receiver_fname as fname, a.receiver_lname as lname, a.receiver_email as email, a.c_type as award_type, u.email as issuer_email, CONVERT_TZ(a.granted_datetime,'UTC', 'US/Pacific') as granted_date FROM Award a";
 		sql += " LEFT JOIN User u ON u.u_id = a.user_id";
 		sql += " WHERE 1=1";
 

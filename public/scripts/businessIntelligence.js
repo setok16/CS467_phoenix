@@ -141,7 +141,7 @@ async function drawUserVisuals() {
 		'options': {
 			'filterColumnLabel': 'User Type',
 			'ui': {
-				'caption': 'All awards',
+				'caption': 'All User Types',
 				'label': 'User Type',
 				'allowTyping': false,
 				'allowMultiple': false
