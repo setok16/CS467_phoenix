@@ -112,7 +112,13 @@ router.patch('/changePwd',
 			.has().digits()			// Must have digits 
 			.has().not().spaces();	// Should not have space
 
-        if (req.body.input_pwd !== req.body.input_pwd_verify) {
+		if ( (!req.body.input_pwd) || (!req.body.input_pwd_verify) ) {
+			console.log("Error: No passwords received.");
+			//res.setHeader('Content-Type', 'text/event-stream');
+			res.status(400).send("New passwords must be specified.");
+			return;
+		}
+        else if (req.body.input_pwd !== req.body.input_pwd_verify) {
 			console.log("Error: Received passwords do not match.");
 			//res.setHeader('Content-Type', 'text/event-stream');
 			res.status(400).send("Passwords do not match.");
