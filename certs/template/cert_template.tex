@@ -1,0 +1,61 @@
+\documentclass[letterpaper, landscape]{article}
+
+\usepackage{niceframe}
+\usepackage{xcolor}
+\usepackage{ulem}
+\usepackage{graphicx}
+\usepackage{geometry}
+\geometry{tmargin=1.3cm,bmargin=1.3cm,lmargin=.8cm,rmargin=.8cm}
+
+\setlength{\columnseprule}{0.4pt}
+\columnwidth=0.3\textwidth
+
+\begin{document}
+\thispagestyle{empty}
+\centering
+\scalebox{3}{\color{green!30!black!60}
+\begin{minipage}{.33\textwidth}
+\font\border=umrandb
+\generalframe
+{\border \char113}
+{\border \char109}
+{\border \char112}
+{\border \char108}
+{\border \char110}
+{\border \char114}
+{\border \char111}
+{\border \char115}
+{\centering
+\smallskip
+\textcolor{red!10!black!90}
+{Employee Recognition Award}\\
+
+\medskip
+
+\textcolor{green!10!black!90}{
+\small In grateful recognition of outstanding performance and dedicated service, I am honored to award the}
+
+\medskip
+
+\textcolor{red!30!black!90}
+{\textit{Certificate of}}
+
+\textcolor{black}{\large \textsc{Star of the [Week or Month]}}
+
+\vspace{2mm}
+
+\small{to:} \uline{\textcolor{black}{[Full Name of the Receiver]}}
+
+\vspace{4mm}
+
+{\color{blue!40!black}
+\scalebox{.8}{ \normalsize {
+\begin{tabular*}{\textwidth}{@{} c @{\extracolsep{\fill}} c @{} }
+\includegraphics[height=1.2cm]{[signature_filename]} & \textcolor{black}{[Award Grant Date]} \\
+\cline{1-1} \cline{2-2}\\
+[Full Name of the User] & Date \\ 
+\end{tabular*}
+}}}}
+\end{minipage}
+}
+\end{document}

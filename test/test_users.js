@@ -82,7 +82,7 @@ describe('/users', function() {
         });
     });
 
-    it ('should return 401 if no names are specified', function(done) {
+    it ('should return 400 if no names are specified', function(done) {
 
       var agent = chai.request.agent(app);
       agent // Retaining session cookie
@@ -149,7 +149,7 @@ describe('/users', function() {
       });
     });
 
-    it ('should return 401 if passwords aren\'t specified', function(done) {
+    it ('should return 400 if passwords aren\'t specified', function(done) {
       var passwords = {
       };
       var agent = chai.request.agent(app);

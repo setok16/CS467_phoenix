@@ -10,140 +10,7 @@ var bcrypt = require('bcrypt');
 const { body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 
-/*
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
-*/
-
-var signature_local = null;
-
-
-// Function: validateNormalUser
-var validateNormalUser = function (req, res, next) {
-	console.log("Exectuing validateNormalUser");
-	
-	if (req.session.u_type == 'normal') { // If user has session and session variable shows a normal user
-		
-		/*
-		if (req.session.justLoggedIn) {	// User is just logged in, skip checking db
-			console.log("skip checking db");
-			req.session.justLoggedIn = false;
-			req.session.save(function(err) {
-				next();
-			});
-		}
-		else
-		*/
-		{	
-			// Check if session exists
-			if (!req.session.u_id) {
-			
-				return res.redirect(303, '/logout');
-
-			}
-
-			// Compare user data with those in db
-			console.log("checking User db");
-			pool.query("CALL selectUserByID(?)", [req.session.u_id], function(err, result, fields) {
-			
-				//console.log(typeof result); // Object
-				//console.log(result); // result[0] is the array of rows
-				//console.log(JSON.stringify( result[0][0]) );
-				//console.log(result[0][0]['u_id'] + result[0][0]['lname']);
-				//console.log(result[0].length);
-	
-				if (err) {	// Database connection error
-					console.log(err);
-					req.session.user_error_message = 'User table connection failed.';
-					req.session.user_redirect_message = 'Logging out in 5 seconds.';
-					req.session.redirect_location = '/logout';
-					req.session.timeout_ms = 5000;
-
-					req.session.save(function(e) {
-						res.redirect(303, '/users_error');
-					});
-					/*
-					res.render('users_error', {
-						title: 'User Account - Error',
-						error_message: 'User table connection failed.',
-						redirect_message: 'Logging out in 5 seconds.',
-						redirect_location: '/logout',
-						timeout_ms: 5000
-					});
-					*/
-					
-				}
-				else if (result[0].length != 1) {	// No user with u_id = req.session.u_id in db
-
-					req.session.user_error_message = 'User does not exist.';
-					req.session.user_redirect_message = 'Logging out in 5 seconds.';
-					req.session.redirect_location = '/logout';
-					req.session.timeout_ms = 5000;
-
-					req.session.save(function(e) {
-						res.redirect(303, '/users_error');
-					});
-					/*
-					res.render('users_error', {
-						title: 'User Account - Error',
-						error_message: 'User does not exist.',
-						redirect_message: 'Logging out in 5 seconds.',
-						redirect_location: '/logout',
-						timeout_ms: 5000
-					});
-					*/
-				}
-				else if (result[0][0]['creation_datetime'] != req.session.creation_datetime) {
-					// creation timestamp doesn't match
-
-					req.session.user_error_message = 'User creation timestamp does not match.';
-					req.session.user_redirect_message = 'Logging out in 5 seconds.';
-					req.session.redirect_location = '/logout';
-					req.session.timeout_ms = 5000;
-
-					req.session.save(function(e) {
-						res.redirect(303, '/users_error');
-					});
-					/*
-					res.render('users_error', {
-						title: 'User Account - Error',
-						error_message: 'User creation timestamp does not match.',
-						redirect_message: 'Logging out in 5 seconds.',
-						redirect_location: '/logout',
-						timeout_ms: 5000
-					});
-					*/
-				}
-				else {	// User exists. Compare session variables with db data
-					if (result[0][0]['email'] != req.session.email) {
-						req.session.email = result[0][0]['email'];
-					}
-					if (result[0][0]['fname'] != req.session.fname) {
-						req.session.fname = result[0][0]['fname'];
-					}
-					if (result[0][0]['lname'] != req.session.lname) {
-						req.session.lname = result[0][0]['lname'];
-					}
-					signature_local = result[0][0]['signature'];
-					req.session.justLoggedIn = false;
-					req.session.save(function(err) {
-						next();
-					});
-				}
-				
-			});
-		}
-		
-	} else if (req.session.u_type == 'admin') {
-		res.redirect('/admin'); // If user has session but is an admin user, direct to /admin
-	} else {
-		res.redirect('/'); // If there is no session, go back to login page
-	}
-};
-
+var validateNormalUser = require('../utils-module/validateNormalUser.js');
 
 // Router: PATCH '/editName'
 router.patch('/editName',
@@ -245,7 +112,13 @@ router.patch('/changePwd',
 			.has().digits()			// Must have digits 
 			.has().not().spaces();	// Should not have space
 
-        if (req.body.input_pwd !== req.body.input_pwd_verify) {
+		if ( (!req.body.input_pwd) || (!req.body.input_pwd_verify) ) {
+			console.log("Error: No passwords received.");
+			//res.setHeader('Content-Type', 'text/event-stream');
+			res.status(400).send("New passwords must be specified.");
+			return;
+		}
+        else if (req.body.input_pwd !== req.body.input_pwd_verify) {
 			console.log("Error: Received passwords do not match.");
 			//res.setHeader('Content-Type', 'text/event-stream');
 			res.status(400).send("Passwords do not match.");
@@ -375,15 +248,13 @@ router.get('/', validateNormalUser, function(req, res) {
 	// Store the signature to be inserted to the .hbs html file
 	var signature_inserted_to_html = '';
 
-	if (signature_local) {	// signature is not Null
-		signature_inserted_to_html = '<img class="img-fluid" src="' + signature_local + '"/>';
+	if (res.locals.signature_local) {	// signature is not Null
+		signature_inserted_to_html = '<img class="img-fluid" src="' + res.locals.signature_local + '"/>';
 	} else {	// signature is Null
 		signature_inserted_to_html = 'No signature on file.';
 	}
 
 	// Import user-created awards
-	var user_num_of_awards = 0;
-
 	console.log("checking Award db");
 	pool.query("CALL selectAwardByUserID(?)", [req.session.u_id], function(err, award_result, fields) {
 
@@ -398,36 +269,42 @@ router.get('/', validateNormalUser, function(req, res) {
 			});
 		}
 		else {
-			user_num_of_awards = award_result[0].length;
+			let user_num_of_awards = award_result[0].length;
+
+			var context = {};
+			context = {
+				title: 'User Account',
+				session: {
+					email: req.session.email,
+					fname: req.session.fname,
+					lname: req.session.lname,
+					timestamp: creation_datetime_formatted,
+					signature: signature_inserted_to_html,
+					elapsed_days: days,
+					userAwardsRow: award_result[0],
+					num_of_awards: user_num_of_awards
+				},
+				showProfileTab: 1,
+				customHeader: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css">',
+				customScript: '<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js"></script>\n' +
+					'<script src="/scripts/signature_pad/dist/signature_pad.min.js"></script>\n' +
+					'<script src="/public/scripts/normalUser/userProfileFunctions.js"></script>\n' +
+					'<script src="/public/scripts/normalUser/createAwardFunction.js"></script>\n' +
+					'<script src="/public/scripts/normalUser/deleteUserAwardFunction.js"></script>\n'
+			
+			};
+
+			if (req.query.tab == 'awards') { // use /users?tab=awards in the URL to first display the awards tab
+				context.showProfileTab = 0;
+			}
+
+			console.log("Exectuing user page rendering");
+			res.render('users.hbs', context);
 		}
 
 	});
 	
-
-	var context = {};
-	context = {
-		title: 'User Account',
-		session: {
-			email: req.session.email,
-			fname: req.session.fname,
-			lname: req.session.lname,
-			timestamp: creation_datetime_formatted,
-			signature: signature_inserted_to_html,
-			elapsed_days: days,
-			num_of_awards: user_num_of_awards
-		},
-		showProfileTab: 1,
-		//customHeader: '<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>',
-		customScript: '<script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>\r\n' +
-			'<script src="/public/scripts/normalUser/userProfileFunctions.js"></script>',
-	};
-
-	if (req.query.tab == 'awards') { // use /users?tab=awards in the URL to first display the awards tab
-		context.showProfileTab = 0;
-	}
-
-	console.log("Exectuing user page rendering");
-	res.render('users.hbs', context);
+	
 });
 
 
