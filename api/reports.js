@@ -77,7 +77,7 @@ router.get('/awards/:resulttype',
 		]);
 			
 		pool.query(
-			"SELECT receiver_email, receiver_lname, receiver_fname, c_type, YEAR(granted_datetime) as granted_year, MONTH(granted_datetime) as granted_month, DAY(granted_datetime) as granted_day , u.fname, u.lname, u.email " +
+			"SELECT receiver_email, receiver_lname, receiver_fname, c_type, YEAR(CONVERT_TZ(granted_datetime,'UTC', 'US/Pacific')) as granted_year, MONTH(CONVERT_TZ(granted_datetime,'UTC', 'US/Pacific')) - 1 as granted_month, DAY(CONVERT_TZ(granted_datetime,'UTC', 'US/Pacific')) as granted_day, u.fname, u.lname, u.email " +
 			"FROM Award a " +
 			"LEFT JOIN User u on a.user_id = u.u_id " +
 			"ORDER BY a.receiver_lname;",
@@ -111,7 +111,7 @@ router.get('/awards/:resulttype',
 			pool.query(
 				"SELECT receiver_email, " +
 				"c_type, " +
-				"YEAR(granted_datetime) as granted_year, MONTH(granted_datetime) as granted_month, DAY(granted_datetime) as granted_day  " +
+				"YEAR(CONVERT_TZ(granted_datetime,'UTC', 'US/Pacific')) as granted_year, MONTH(CONVERT_TZ(granted_datetime,'UTC', 'US/Pacific')) - 1 as granted_month, DAY(CONVERT_TZ(granted_datetime,'UTC', 'US/Pacific')) as granted_day  " +
 				"FROM Award a ",
 				function (err, rows) {
 					if (err) {
