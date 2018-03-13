@@ -98,7 +98,7 @@ router.patch('/changePwd',
     // password validation should have been completed on the client side
     
     // validate user
-    //validateNormalUser,
+    validateNormalUser,
 
     // Process request after validation and sanitization
     function(req, res) {
