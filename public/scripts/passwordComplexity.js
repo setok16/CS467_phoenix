@@ -38,9 +38,4 @@ async function checkPasswordComplexity(password, confPassword, warningElementId)
 	return { success: true, errors: [] }
 };
 
-async function xcheckPasswordComplexity(password, confPassword, warningElementId) {
-	return { success: false, errors: [] }
-}
 
-
-//module.exports.checkPasswordComplexity = checkPasswordComplexity;
