@@ -11,14 +11,18 @@
     <div class="form-group">
       <input type="email" class="form-control" name="email" placeholder="Email" onblur="checkEmailAvailability(this.value, 'email-alert-box');" id="email">
     </div>
+    <div id="email-alert-box" class="alert alert-danger fade collapse" role="alert"></div>
+    
     <div class="form-row">
       <div class="form-group col-md-6">
         <input type="password" class="form-control" name="password" placeholder="Password" onchange="checkPasswordComplexity(this.value,document.getElementById('rpt-password').value,'pass-alert-box')" id="password">
       </div>
       <div class="form-group col-md-6">
-        <input type="password" class="form-control" name="rpt-password" placeholder="Confirm Password"  onchange="checkPasswordComplexity(document.getElementById('password').value,this.value,'pass-alert-box')" id="rpt-password">
+        <input type="password" class="form-control" name="rpt-password" placeholder="Confirm Password" onchange="checkPasswordComplexity(document.getElementById('password').value,this.value,'pass-alert-box')" id="rpt-password">
       </div>
     </div>
+    <div id="pass-alert-box" class="alert alert-danger fade collapse" role="alert"></div>
+
     <div class="form-group">
       <div id="accordion">
         <div class="card">
@@ -30,10 +34,10 @@
           <div id="passwordRequirement" class="collapse" aria-labelledby="passwordRequirementHeading" data-parent="#accordion">
             <div class="card-body">
               <ul>
-                <li>At least 8 characters</li>
-                <li>Lowercase Alphabet</li>
-                <li>Uppercase Alphabet</li>
-                <li>Number</li>
+                <li>Contains at least 8 Characters</li>
+                <li>Contains at least 1 Lowercase Alphabet</li>
+                <li>Contains at least 1 Uppercase Alphabet</li>
+                <li>Contains at least 1 Number</li>
               </ul>
             </div>
           </div>
@@ -49,8 +53,7 @@
       <button id="clear" type="button" onclick="return clearPad()">Clear</button> 
     </div>
     <!--<p>By creating an account with us, you agree to our <a href="#">Terms & Privacy</a>.</p>-->
-    <div id="email-alert-box" class="alert alert-danger fade collapse" role="alert"></div>
-    <div id="pass-alert-box" class="alert alert-danger fade collapse" role="alert"></div>
+    
     <div id="alert-box" class="alert alert-danger fade collapse" role="alert"></div>
     <button type="submit" class="btn btn-primary" onclick="return addUser()">Sign Up</button>
     <button type="button" class="btn btn-secondary" onclick="window.location='/';">Cancel</button>
@@ -96,7 +99,14 @@
     var passAlertBox = document.getElementById('pass-alert-box');
 
     // Form input validation
-    if (fname.length > 50 || lname.length > 50 || email.length > 50 || password.length > 50){ 
+    alertBox.style.display = "none";
+
+    if ( !fname || !lname || !email || !password || !rptPassword){ 
+      alertBox.className = "alert alert-danger"
+      alertBox.innerHTML = "Please input all fields";
+      alertBox.style.display = "block";
+    }
+    else if (fname.length > 50 || lname.length > 50 || email.length > 50 || password.length > 50){ 
       alertBox.className = "alert alert-danger"
       alertBox.innerHTML = "Maximum of 50 characters per field";
       alertBox.style.display = "block";
@@ -104,8 +114,8 @@
       alertBox.className = "alert alert-danger"
       alertBox.innerHTML = "Please enter your signature";
       alertBox.style.display = "block";
-    } else {
-      alertBox.style.display = "none";
+    } else if ( (! emailAlertBox.classList.contains("show")) && (! passAlertBox.classList.contains("show"))) {
+      
       var formData = {fname, lname, email, password, rptPassword, base64};
 
       var req = new XMLHttpRequest();
