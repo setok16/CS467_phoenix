@@ -1,0 +1,82 @@
+<div class="modal fade" id="createAwardModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+		<div class="modal-content">
+
+			<!-- Dialog Box Header -->
+			<div class="modal-header">
+				<h4 class="modal-title">Create a New Award</h4>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+
+			<!-- Form section -->
+			<form name="createAwardForm" id="createAwardForm" accept-charset="UTF-8" >
+
+				<!-- Dialog Box Body -->
+				<div class="modal-body">
+					<div class="form-group">
+						<p class="h5">Creator: {{session.fname}} {{session.lname}}</p>
+					</div>
+
+					<div class="alert" id="createAwardWarning" role="alert" style="display: none;">
+					</div>
+
+                    <div class="form-group">
+                        <label for="awardType">Type of Award</label>
+                        <select class="custom-select" required="required" id="award_type" name="award_type">
+                            <option value="week" selected>Star of the Week</option>
+                            <option value="month">Star of the Month</option>
+                        </select>
+                    </div>
+                    
+					<div class="row">
+						<div class="col-6">
+							<div class="form-group">
+								<label for="awardFirstName">Receiver's First Name</label>
+								<input type="text" required="required" class="form-control" id="award_fname" name="award_fname"
+									placeholder="Receiver's First Name">
+							</div>
+						</div>
+						<div class="col-6">
+							<div class="form-group">
+								<label for="editLastName">Receiver's Last Name</label>
+								<input type="text" required="required" class="form-control" id="award_lname" name="award_lname"
+									placeholder="Receiver's Last Name">
+							</div>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label for="awardEmail">Receiver's Email Address</label>
+						<input type="email" required="required" class="form-control" id="award_email" name="award_email"
+								placeholder="Receiver's Email Address">
+					</div>
+
+					<div class="row">
+						<div class="col-6">
+							<div class="form-group">
+								<label for="awardDate">Award Grant Date (in US Pacific time)</label>
+								<input type="date" required="required" class="form-control" id="award_date" name="award_date">
+							</div>
+						</div>
+						<div class="col-6">
+							<div class="form-group">
+								<label for="awardTime">Award Grant Time (in US Pacific time)</label>
+								<input type="time" required="required" class="form-control" id="award_time" name="award_time">
+							</div>
+						</div>
+					</div>
+					
+					
+				</div>
+
+				<!-- Dialog Box Footer - Buttons -->
+				<div class="modal-footer">
+					<button type="button" id="createAwardCancelBtn" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+					<button type="submit" id="createAwardSubmitBtn" class="btn btn-primary">Submit</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

@@ -42,13 +42,13 @@ describe('Login', function () {
     it('should return a 200 (Login success) if the email exists and the password is correct', function(done) {
       let credentials = {
         email: process.env.EXISTING_BASIC_EMAIL,
-        password: process.env.EXSITING_BASIC_PASS
+        password: process.env.EXISTING_BASIC_PASS
       }
       chai.request(app)
       .post('/login')
       .send(credentials)
       .end((err, res) => {
-        res.should.have.status(401);
+        res.should.have.status(200);
         done();
       });
     });
