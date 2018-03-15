@@ -5,30 +5,26 @@ var pool = mysql.pool;
 const bcrypt = require('bcrypt');
 var router = express.Router();
 
+router.get('/email/available/:email',
+	function (req, res, next) {
+		pool.query("SELECT false available FROM User where email = ? LIMIT 1",
+			[req.params.email],
+			function (err, rows, fields) {
+				if (err) {
+					console.log(err);
+				} else {
+					let available = true;
+					if (rows.length > 0)
+						available = false;
+					res.json({ "available": available });
+				}
+			});
+	});
+
 router.all('/*', auth.adminUser);
 
 router.delete('/:u_id',
 	function (req, res, next) {
-		////if we need to prevent admin user from being deleted
-		//pool.query("CALL selectUserByID(?)",
-		//	[req.params.u_id],
-		//	function (err, rows, fields) {
-		//		if (err) {
-		//			console.log(err);
-		//		} else {
-		//			if (rows[0].length === 0) {
-		//				res.statusCode = 200;
-		//				res.send();
-		//			} else {
-		//				if (rows[0].email = 'admin@oregonstate.edu') {
-		//					res.statusCode = 200;
-		//					res.send();
-		//				} else {
-		//					//run code here to delete th suer
-		//				}
-		//			}
-		//		}
-		//	});
 		pool.query("CALL deleteUserByID(?)",
 			[req.params.u_id],
 			function(err, result) {
@@ -38,22 +34,6 @@ router.delete('/:u_id',
 				}
 				res.statusCode = 200;
 				res.send();
-			});
-	});
-
-router.get('/email/available/:email',
-	function(req, res, next) {
-		pool.query("SELECT false available FROM User where email = ? LIMIT 1",
-			[req.params.email],
-			function(err, rows, fields) {
-				if (err) {
-					console.log(err);
-				} else {
-					let available = true;
-					if (rows.length > 0)
-						available = false;
-					res.json({ "available": available });
-				}
 			});
 	});
 
@@ -126,7 +106,6 @@ router.put('/admin/:u_id',
 
 router.put('/normal/:u_id',
 	function (req, res, next) {
-		console.log("updating an admin user " + req.params.u_id);
 		pool.query("UPDATE User SET `fname` = ?, `lname` =  ?, `email` = ? WHERE  `u_id` = ?",
 			[req.body.fname, req.body.lname, req.body.email, req.params.u_id],
 			function (err, result) {
@@ -142,7 +121,6 @@ router.put('/normal/:u_id',
 
 router.post('/admin',
 	 async function(req, res, next) {
-		console.log("saving admin user");
 		if (!isPasswordComplex(req.body.password)) {
 			return res.status(400).send("The password was not complex enough");
 		};
@@ -168,7 +146,6 @@ router.post('/admin',
 
 router.post('/normal',
 	async function (req, res, next) {
-		console.log("trying to add a user");
 		if (!isPasswordComplex(req.body.password)) {
 			return res.status(400).send("The password was not complex enough");
 		};
