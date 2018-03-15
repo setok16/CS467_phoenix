@@ -71,7 +71,6 @@ describe('api/awards', function(done) {
 						.end((err, res) => {
 							res.should.have.status(200);
 							res.body.length.should.be.above(0);
-							console.log(res.body);
 						});
 					
 					done();
