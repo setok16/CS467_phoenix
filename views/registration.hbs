@@ -96,7 +96,7 @@
     var passAlertBox = document.getElementById('pass-alert-box');
 
     // Form input validation
-    if (fname.length > 50 || lname.length > 50 || email > 50 || password > 50){ 
+    if (fname.length > 50 || lname.length > 50 || email.length > 50 || password.length > 50){ 
       alertBox.className = "alert alert-danger"
       alertBox.innerHTML = "Maximum of 50 characters per field";
       alertBox.style.display = "block";
@@ -105,6 +105,7 @@
       alertBox.innerHTML = "Please enter your signature";
       alertBox.style.display = "block";
     } else {
+      alertBox.style.display = "none";
       var formData = {fname, lname, email, password, rptPassword, base64};
 
       var req = new XMLHttpRequest();
