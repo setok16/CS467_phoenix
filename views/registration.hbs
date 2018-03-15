@@ -1,24 +1,24 @@
 <h2>{{title}}</h2>
 <div id="registration">
-  <form style="width:400px;">
+  <form style="width:400px;" id="signUpForm">
     <div class="form-group">
       <!--<label for="fname">First Name</label>-->
-      <input type="text" class="form-control" name="fname" placeholder="First Name" id="fname">
+      <input type="text" class="form-control" name="fname" placeholder="First Name" id="fname" required="required">
     </div>
     <div class="form-group">
-      <input type="text" class="form-control" name="lname" placeholder="Last Name" id="lname">
+      <input type="text" class="form-control" name="lname" placeholder="Last Name" id="lname" required="required">
     </div>
     <div class="form-group">
-      <input type="email" class="form-control" name="email" placeholder="Email" onblur="checkEmailAvailability(this.value, 'email-alert-box');" id="email">
+      <input type="email" class="form-control" name="email" placeholder="Email" required="required" onblur="checkEmailAvailability(this.value, 'email-alert-box');" id="email">
     </div>
     <div id="email-alert-box" class="alert alert-danger fade collapse" role="alert"></div>
     
     <div class="form-row">
       <div class="form-group col-md-6">
-        <input type="password" class="form-control" name="password" placeholder="Password" onchange="checkPasswordComplexity(this.value,document.getElementById('rpt-password').value,'pass-alert-box')" id="password">
+        <input type="password" class="form-control" name="password" placeholder="Password" required="required" onchange="checkPasswordComplexity(this.value,document.getElementById('rpt-password').value,'pass-alert-box')" id="password">
       </div>
       <div class="form-group col-md-6">
-        <input type="password" class="form-control" name="rpt-password" placeholder="Confirm Password" onchange="checkPasswordComplexity(document.getElementById('password').value,this.value,'pass-alert-box')" id="rpt-password">
+        <input type="password" class="form-control" name="rpt-password" placeholder="Confirm Password" required="required" onchange="checkPasswordComplexity(document.getElementById('password').value,this.value,'pass-alert-box')" id="rpt-password">
       </div>
     </div>
     <div id="pass-alert-box" class="alert alert-danger fade collapse" role="alert"></div>
@@ -55,7 +55,7 @@
     <!--<p>By creating an account with us, you agree to our <a href="#">Terms & Privacy</a>.</p>-->
     
     <div id="alert-box" class="alert alert-danger fade collapse" role="alert"></div>
-    <button type="submit" class="btn btn-primary" onclick="return addUser()">Sign Up</button>
+    <button type="submit" class="btn btn-primary">Sign Up</button>
     <button type="button" class="btn btn-secondary" onclick="window.location='/';">Cancel</button>
   </form>
 </div>
@@ -85,11 +85,12 @@
     return false;
   }
 
-  /* Sends form info to POST /addUser */
-  function addUser() {
-
-    var fname = document.getElementById('fname').value;
-    var lname = document.getElementById('lname').value;
+  /* Sends form info to POST */
+  document.getElementById("signUpForm").addEventListener("submit", function (event) {
+    event.preventDefault();
+    
+    var fname = document.getElementById('fname').value.trim();
+    var lname = document.getElementById('lname').value.trim();
     var email = document.getElementById('email').value;
     var password = document.getElementById('password').value;
     var rptPassword = document.getElementById('rpt-password').value;
@@ -101,12 +102,12 @@
     // Form input validation
     alertBox.style.display = "none";
 
-    if ( !fname || !lname || !email || !password || !rptPassword){ 
+    if ( !fname || !lname ) { 
       alertBox.className = "alert alert-danger"
       alertBox.innerHTML = "Please input all fields";
       alertBox.style.display = "block";
     }
-    else if (fname.length > 50 || lname.length > 50 || email.length > 50 || password.length > 50){ 
+    else if (fname.length > 50 || lname.length > 50 || email.length > 50 || password.length > 50) { 
       alertBox.className = "alert alert-danger"
       alertBox.innerHTML = "Maximum of 50 characters per field";
       alertBox.style.display = "block";
@@ -133,9 +134,9 @@
           setTimeout(function() {
             window.location = '/';
           }, 3000);
-        } else if (req.status == 409) {
+        } else if (req.status == 400) {
           alertBox.className = "alert alert-danger"
-          alertBox.innerHTML = "Please input all fields";
+          alertBox.innerHTML = "Please input valid fields";
           alertBox.style.display = "block";
         } else if (req.status == 408) {
           alertBox.className = "alert alert-danger"
@@ -145,11 +146,16 @@
           alertBox.className = "alert alert-danger"
           alertBox.innerHTML = "Invalid email";
           alertBox.style.display = "block";
+        } else if (req.status == 500) {
+          alertBox.className = "alert alert-danger"
+          alertBox.innerHTML = "Server processing error";
+          alertBox.style.display = "block";
         } else {
           console.log('Something seriously went wrong'); 
         }
       });
     }
     return false;
-  }
+  });
+
 </script>
