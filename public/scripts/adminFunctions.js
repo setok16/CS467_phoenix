@@ -3,6 +3,79 @@ function addUserTypeToForm(userType) {
 	userTypeElement.value = userType;
 }
 
+async function updateAdminPassword(u_id, password, confPassword, warnElementId) {
+	var warnElement;
+	if (warnElementId) {
+		warnElement = document.getElementById(warnElementId);
+	}
+
+	var alertArray = [];
+
+	var pwdComplex = await checkPasswordComplexity(password, confPassword);
+	if (!pwdComplex.success && pwdComplex.errors.length > 0) {
+		alertArray.push.apply(alertArray, pwdComplex.errors);
+	}
+
+	var response;
+	if (alertArray.length === 0) {
+		try {
+			response = await axios.put('api/users/admin/password/' + u_id,
+				{
+					password: password
+				});
+			if (response.status === 200) {
+				if (warnElement) {
+					warnElement.innerHTML = "Password Is Update";
+					if (warnElement.classList.contains("alert-danger")) {
+						warnElement.classList.remove("alert-danger");
+					}
+					if (!warnElement.classList.contains("aalert-success")) {
+						warnElement.classList.add("alert-success");
+					}
+					if (!warnElement.classList.contains("show")) {
+						warnElement.classList.add("show");
+					}
+
+					setTimeout(function() {
+							$('#updateAdminPasswordModal').modal('hide');
+						},
+						1000);
+				}
+			} else {
+				if (warnElement) {
+					warnElement.innerHTML = "There was a problem updateing your password.  Please try again.";
+					if (warnElement.classList.contains("alert-success")) {
+						warnElement.classList.remove("alert-success");
+					}
+					if (!warnElement.classList.contains("alert-danger")) {
+						warnElement.classList.add("alert-danger");
+					}
+					if (!warnElement.classList.contains("show")) {
+						warnElement.classList.add("show");
+					}
+				}
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	} else if (warnElement) {
+		warnElement.innerHTML = "";
+		alertArray.forEach(function(item) {
+				warnElement.innerHTML += "<p>" + item + "</p>";
+			}
+		);
+		if (warnElement.classList.contains("alert-success")) {
+			warnElement.classList.remove("alert-success");
+		}
+		if (!warnElement.classList.contains("alert-danger")) {
+			warnElement.classList.add("alert-danger");
+		}
+		if (!warnElement.classList.contains("show")) {
+			warnElement.classList.add("show");
+		}
+	}
+}
+
 async function deleteUser(u_id, elementId) {
 	try {
 		const response = await axios.delete('api/users/' + u_id);
@@ -245,7 +318,6 @@ async function addUser(fname, lname, email, pwd, confPwd, warnElementId, userTyp
 		}
 }
 
-
 $('#addUserModal').on('show.bs.modal', function (event) {
 	var button = $(event.relatedTarget);
 	var usertype = button.data('userType');
@@ -294,6 +366,28 @@ $('#updateAdminModal').on('show.bs.modal', function (event) {
 function isEmptyOrWhiteSpaces(str) {
 	return str === null || str.match(/^ *$/) !== null;
 }
+
+$('#updateAdminPasswordModal').on('hidden.bs.modal',
+	function (e) {
+		var modal = document.getElementById('updateAdminPasswordModal');
+
+		if (modal.classList.contains('show')) {
+			modal.classList.remove('show');
+		}
+
+		var form = modal.getElementsByTagName('form')[0];
+		form.reset();
+
+		var warnElement = document.getElementById('updateAdminPasswordWarning');
+		if (warnElement.classList.contains("show")) {
+			warnElement.classList.remove("show");
+		}
+		
+		var warnElement = document.getElementById('uaPasswordComplexityAlert');
+		if (warnElement.classList.contains("show")) {
+			warnElement.classList.remove("show");
+		}
+	});
 
 $('#addAdminUserModal').on('hidden.bs.modal',
 	function(e) {
@@ -382,4 +476,3 @@ $(document).ready(function() {
 		]
 	});
 });
-

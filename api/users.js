@@ -90,8 +90,36 @@ router.get('/',
 		}
 	});
 
+router.put('/admin/password/:u_id',
+	async function(req, res, next) {
+		if (req.session.u_type !== 'admin' || parseInt(req.session.u_id) !== parseInt(req.params.u_id)) {
+			return res.status(401).send();
+		}
+
+		if (!isPasswordComplex(req.body.password)) {
+			return res.status(400).send("The password was not complex enough");
+		};
+
+		var passwordHash;
+		try {
+			passwordHash = await saltPassword(req.body.password);
+		} catch (err) {
+			return res.status(400).send("Unable to updatepassword.  Please try again.");
+		};
+
+		pool.query("CALL changePwdByID(?,?)",
+			[req.params.u_id, passwordHash],
+			function(err, rows, fields) {
+				if (err) {
+					console.log(err);
+				} else {
+					return res.status(200).send();
+				}
+			});
+	});
+
 router.put('/admin/:u_id',
-	function(req, res, next) {
+	function (req, res, next) {
 		pool.query("CALL changeEmailByID(?,?)",
 			[req.params.u_id, req.body.email],
 			function(err, rows, fields) {

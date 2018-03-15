@@ -23,7 +23,7 @@ async function renderAdminPage (req, res) {
 
 			
 			context.title = 'Admin Account';
-			context.session = { email: req.session.email };
+			context.session = { email: req.session.email, u_id: req.session.u_id };
 
 			if (req.query) {
 				if (req.query.tab === 'admin') {
