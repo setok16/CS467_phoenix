@@ -1,11 +1,11 @@
-  <form class="form-signin">
+  <form class="form-signin" id="loginForm">
     <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
     <div class="alert alert-danger" id="warning-box" style="display:none; width:300px;"></div>
     <label for="inputEmail" class="sr-only">Email address</label>
-    <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+    <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required="required" autofocus>
     <label for="inputPassword" class="sr-only">Password</label>
-    <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
-    <button class="btn btn-lg btn-primary btn-block" type="submit" onclick="return login()">Sign in</button>
+    <input type="password" id="inputPassword" class="form-control" placeholder="Password" required="required">
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
     <br>
     <div class="row">
     <div class="col-sm-6"><a href="/registration">Registration</a></div>
@@ -14,7 +14,8 @@
   </form>
 
 <script>
-  function login() {
+  document.getElementById("loginForm").addEventListener("submit", function (event) {
+    event.preventDefault();
     
     var warning = document.getElementById('warning-box');
 
@@ -41,5 +42,5 @@
       }
     });
     return false; // prevents reload
-  }
+  });
 </script>
