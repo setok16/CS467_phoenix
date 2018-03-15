@@ -218,4 +218,3 @@ function isPasswordComplex(password) {
 }
 
 module.exports = { router: router, isPasswordComplex: isPasswordComplex}
-	
