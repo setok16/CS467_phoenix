@@ -1,8 +1,6 @@
 function addUserTypeToForm(userType) {
 	var userTypeElement = document.getElementById("addUserId");
 	userTypeElement.value = userType;
-
-	//const response = await axios.post('/admin/create/user');
 }
 
 async function deleteUser(u_id, elementId) {
@@ -192,7 +190,6 @@ async function addUser(fname, lname, email, pwd, confPwd, warnElementId, userTyp
 			}
 
 			if (response.status === 200) {
-				//var warningElement = document.getElementById(warnElementId);
 				if (warnElement) {
 					warnElement.innerHTML = "The new user is created";
 					if (warnElement.classList.contains("alert-danger")) {
@@ -210,8 +207,6 @@ async function addUser(fname, lname, email, pwd, confPwd, warnElementId, userTyp
 
 					if (userType === admin) {
 						window.location = window.location.href.split("?")[0] + "?tab=admin";
-						//window.location.href += "?tab=admin";
-						//window.location.reload();
 					}
 				} 
 			} else {

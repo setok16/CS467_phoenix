@@ -98,7 +98,6 @@ router.put('/admin/:u_id',
 				if (err) {
 					console.log(err);
 				} else {
-					console.log(JSON.stringify(rows));
 					return res.status(200).send(); 
 				}
 			});
@@ -124,7 +123,6 @@ router.post('/admin',
 		if (!isPasswordComplex(req.body.password)) {
 			return res.status(400).send("The password was not complex enough");
 		};
-		console.log("saving admin user");
 		var passwordHash;
 		try {
 			passwordHash = await saltPassword(req.body.password);

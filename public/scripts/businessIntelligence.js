@@ -6,7 +6,6 @@ async function drawAwardVisuals() {
 	try {
 		const response = await axios.get('/api/reports/awards/table');
 		apiData = response.data;
-		//console.log(response.data);
 	} catch (error) {
 		console.log(error);
 		return;
@@ -44,7 +43,6 @@ async function drawAwardVisuals() {
 		'containerId': 'filter_awards_by_type',
 		'options': {
 			'filterColumnLabel': 'Award Type',
-			//'ormatTyp': 'short',
 			'ui': {
 				'caption': 'All awards',
 				'label': 'Award Type',
@@ -56,7 +54,6 @@ async function drawAwardVisuals() {
 
 	var tableWrapper = new google.visualization.ChartWrapper({
 		chartType: 'Table',
-		//	dataTable: result,
 		options: { showRowNumber: false, width: '100%', height: '100%' },
 		containerId: 'chart_awards_table'
 	});
@@ -174,7 +171,6 @@ async function drawUserVisuals() {
 		chart.draw(aggregatedData, options);
 	});
 	
-	//put everything together is a dashboard
 	var dashboard = new google.visualization.Dashboard(
 		document.getElementById('users_dashboard'));
 
