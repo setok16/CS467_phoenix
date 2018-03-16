@@ -285,8 +285,8 @@ router.get('/', validateNormalUser, function(req, res) {
                     num_of_awards: user_num_of_awards
                 },
                 showProfileTab: 1,
-                customHeader: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.css">',
-                customScript: '<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.1/bootstrap-table.min.js"></script>\n' +
+                customHeader: '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.css">',
+                customScript: '<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.js"></script>\n' +
                     '<script src="/scripts/signature_pad/dist/signature_pad.min.js"></script>\n' +
                     '<script src="/public/scripts/normalUser/userProfileFunctions.js"></script>\n' +
                     '<script src="/public/scripts/normalUser/createAwardFunction.js"></script>\n' +
