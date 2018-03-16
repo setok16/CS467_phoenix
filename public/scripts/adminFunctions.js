@@ -116,11 +116,14 @@ async function updateUser(fname, lname, email, originalEmail, uid, warnElementId
 		};
 	}
 
-	if (isEmptyOrWhiteSpaces(email)) {
-		alertArray.push("Email cannot be empty");
-	} else
-	if (!(await checkEmailAvailability(email, null, originalEmail))) {
-		alertArray.push("Email is not available");
+	if (email.toLowerCase() !== originalEmail.toLowerCase()) {
+		if (isEmptyOrWhiteSpaces(email)) {
+			alertArray.push("Email cannot be empty");
+		} else if (!validateEmail(email)) {
+			alertArray.push("Email address is not a valid email");
+		} else if (!(await checkEmailAvailability(email, null, originalEmail))) {
+			alertArray.push("Email is not available");
+		}
 	}
 
 	if (alertArray.length < 1) {
@@ -230,12 +233,15 @@ async function addUser(fname, lname, email, pwd, confPwd, warnElementId, userTyp
 			alertArray.push("Last name cannot be empty");
 		};
 	}
+
 	if (isEmptyOrWhiteSpaces(email)) {
 		alertArray.push("Email cannot be empty");
-	} else
-	if (!(await checkEmailAvailability(email))) {
+	} else if (!validateEmail(email)) {
+		alertArray.push("Email address is not a valid email");
+	} else if (!(await checkEmailAvailability(email))) {
 		alertArray.push("Email is not available");
 	}
+
 	var pwdComplex = await checkPasswordComplexity(pwd, confPwd);
 	if (!pwdComplex.success && pwdComplex.errors.length > 0 ) {
 		alertArray.push.apply(alertArray, pwdComplex.errors);

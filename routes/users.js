@@ -255,7 +255,7 @@ router.get('/', validateNormalUser, function(req, res) {
     }
 
     // Import user-created awards
-    console.log("checking Award db");
+   // console.log("checking Award db");
     pool.query("CALL selectAwardByUserID(?)", [req.session.u_id], function(err, award_result, fields) {
 
         if (err) {	// Database connection error
@@ -298,7 +298,7 @@ router.get('/', validateNormalUser, function(req, res) {
                 context.showProfileTab = 0;
             }
 
-            console.log("Exectuing user page rendering");
+            //console.log("Exectuing user page rendering");
             res.render('users.hbs', context);
         }
 

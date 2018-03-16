@@ -54,31 +54,5 @@ describe('parsing for domain', (done) => {
 		});
 });
 
-describe('api/awards', function(done) {
-	beforeEach(() => {
-	});
-	afterEach(() => {
-	});
-	describe('GET',
-		() => {
-			it('should return an award',
-				(done) => {
-					chai.use(chaiHttp);
-					chai.request(require('../app.js'))
-						.get('/api/awards')
-						.query({fname:'you'})
-						.send()
-						.end((err, res) => {
-							res.should.have.status(200);
-							res.body.length.should.be.above(0);
-						});
-					
-					done();
-				});
-
-		});
-
-});
-
 
 

@@ -76,7 +76,7 @@ module.exports = function (req, res, next) {
 					
 				}
                 else {	// User exists. Compare session variables with db data
-                    console.log('User validated');
+                    //console.log('User validated');
 					if (result[0][0]['email'] != req.session.email) {
 						req.session.email = result[0][0]['email'];
 					}

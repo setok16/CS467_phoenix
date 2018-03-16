@@ -120,6 +120,10 @@ router.put('/admin/password/:u_id',
 
 router.put('/admin/:u_id',
 	function (req, res, next) {
+		if (!emailFormatIsValid(req.body.email)) {
+			return res.status(400).send("invalid email format");
+		}
+
 		pool.query("CALL changeEmailByID(?,?)",
 			[req.params.u_id, req.body.email],
 			function(err, rows, fields) {
@@ -133,6 +137,9 @@ router.put('/admin/:u_id',
 
 router.put('/normal/:u_id',
 	function (req, res, next) {
+		if (!emailFormatIsValid(req.body.email)) {
+			return res.status(400).send("invalid email format");
+		}
 		pool.query("UPDATE User SET `fname` = ?, `lname` =  ?, `email` = ? WHERE  `u_id` = ?",
 			[req.body.fname, req.body.lname, req.body.email, req.params.u_id],
 			function (err, result) {
@@ -147,7 +154,10 @@ router.put('/normal/:u_id',
 );
 
 router.post('/admin',
-	 async function(req, res, next) {
+	async function (req, res, next) {
+		if (!emailFormatIsValid(req.body.email)) {
+			return res.status(400).send("invalid email format");
+		}
 		if (!isPasswordComplex(req.body.password)) {
 			return res.status(400).send("The password was not complex enough");
 		};
@@ -172,6 +182,9 @@ router.post('/admin',
 
 router.post('/normal',
 	async function (req, res, next) {
+		if (!emailFormatIsValid(req.body.email)) {
+			return res.status(400).send("invalid email format");
+		}
 		if (!isPasswordComplex(req.body.password)) {
 			return res.status(400).send("The password was not complex enough");
 		};
@@ -220,4 +233,9 @@ function isPasswordComplex(password) {
 	return isComplex;
 }
 
-module.exports = { router: router, isPasswordComplex: isPasswordComplex}
+function emailFormatIsValid(email) {
+	var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+	return re.test(String(email).toLowerCase());
+}
+
+module.exports = { router: router, isPasswordComplex: isPasswordComplex, emailFormatIsValid: emailFormatIsValid}
