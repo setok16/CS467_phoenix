@@ -109,6 +109,14 @@ createAwardForm.addEventListener("submit", function (event) {
             console.error('Error: ', response.status + ' ' + response.statusText);
             window.location.href = '/users_error';
         }
+        else if (response.status == 406) {
+            console.error('Error: ', response.status + ' ' + response.statusText);
+            $("#createAwardWarning").attr('class', "alert alert-danger");
+            $("#createAwardWarning").html('Award creation failed. You must have a signature on file.');
+            $("#createAwardWarning").fadeIn(300);
+            document.getElementById("createAwardSubmitBtn").disabled = false;
+            document.getElementById("createAwardCancelBtn").disabled = false;
+        }
         else {
             console.error('Error: ', response.status + ' ' + response.statusText);
             $("#createAwardWarning").attr('class', "alert alert-danger");

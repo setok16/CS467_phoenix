@@ -48,7 +48,14 @@ router.post('/',
 			//res.setHeader('Content-Type', 'text/event-stream');
 			res.status(400).send(validattion_errors.array().toString());
             return;
-        }
+		}
+		else if (!res.locals.signature_local) {
+			// No signature on file
+			console.log("Signature required for user to create an award");
+			//res.setHeader('Content-Type', 'text/event-stream');
+			res.status(406).send("Signature required");
+            return;
+		}
         else {
 			// Data from form is valid. Submit to Award table in database
 			pool.query("CALL addAwardThenSelectID(?,?,?,?,?,?)", [
